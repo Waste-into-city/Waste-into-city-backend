@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace WasteIntoCity.Core.Models
 {
-    internal class Class1
+    public class WorkStatusesEntity
     {
+        public Guid Id { get; set; }
+
+        public string Name { get; } = string.Empty;
     }
 }
