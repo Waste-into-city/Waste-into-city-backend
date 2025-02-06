@@ -6,10 +6,16 @@ using System.Threading.Tasks;
 
 namespace WasteIntoCity.Core.Models
 {
-    public class WorkStatusesEntity
+    public class WorkComplexityEntity
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; }
 
         public string Name { get; } = string.Empty;
+
+        public int ParticipantsMin { get; }
+
+        public int ParticipantsMax { get; }
+
+        public int DurationHours {  get; }
     }
 }

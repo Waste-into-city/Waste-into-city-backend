@@ -1,6 +1,6 @@
 ﻿namespace WasteIntoCity.Core.Models
 {
-    public class WorkColleagueEntity
+    public class WorkColleagueReportEntity
     {
         public Guid Id { get; }
 

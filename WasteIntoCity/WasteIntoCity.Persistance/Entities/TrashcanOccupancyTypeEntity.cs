@@ -1,6 +1,6 @@
 ﻿namespace WasteIntoCity.Core.Models
 {
-    public class RolesEntity
+    public class TrashcanOccupancyTypeEntity
     {
         public Guid Id { get; }
 

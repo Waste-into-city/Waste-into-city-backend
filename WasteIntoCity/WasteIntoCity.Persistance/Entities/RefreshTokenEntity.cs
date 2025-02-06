@@ -1,11 +1,11 @@
 ﻿namespace WasteIntoCity.Core.Models
 {
-    public class AccessTokensEntity
+    public class RefreshTokenEntity
     {
         public Guid UserId { get; }
 
         public string Value { get; } = string.Empty;
 
-        public DateTime ExpiratonTimestamp { get; }
+        public DateTime ExpirationTimestamp { get; }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace WasteIntoCity.Core.Models
 {
-    public class NotificationsEntity
+    public class NotificationEntity
     {
         public Guid Id { get; }
 
