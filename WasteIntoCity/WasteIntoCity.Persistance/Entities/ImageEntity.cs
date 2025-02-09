@@ -2,12 +2,20 @@
 {
     public class ImageEntity
     {
-        public Guid Id { get; }
+        public Guid Id { get; set; }
 
-        public Guid? WorkApplicationsId { get; }
+        public string Name { get; set; } = string.Empty;
 
-        public Guid? WorkReportResultsId { get; }
+        public Guid? WorkApplicationsId { get; set; }
 
-        public string Name { get; } = string.Empty;
+        public Guid? WorkReportComplaintsId { get; set; }
+
+        public Guid? WorkReportResultsId { get; set; }
+        
+        public WorkApplicationEntity? WorkApplication { get; set; }
+
+        public WorkReportComplaintEntity? WorkReportComplaint { get; set; }
+
+        public WorkReportResultEntity? WorkReportResultEntity { get; set; }
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WasteIntoCity.Core.Models
 {
-    public class WorkEntity
+    public class Work
     {
         public Guid Id { get; set; }
 
@@ -22,14 +22,14 @@ namespace WasteIntoCity.Core.Models
 
         public Guid WorkStatusesId { get; set; }
 
-        public WorkComplexityEntity? WorkComplexity { get; set; }
+        public WorkComplexity? WorkComplexity { get; set; }
 
-        public WorkStatusEntity? WorkStatus { get; set; }
+        public WorkStatus? WorkStatus { get; set; }
 
-        public List<WorkReportComplaintEntity> WorkReportComplaints { get; set; } = [];
+        public List<WorkReportComplaint> WorkReportComplaints { get; set; } = [];
 
-        public List<WorkColleagueReportEntity> WorkColleagueReports { get; set; } = [];
+        public List<WorkColleagueReport> WorkColleagueReports { get; set; } = [];
 
-        public ICollection<UserEntity> Users { get; set; } = [];
+        public ICollection<User> Users { get; set; } = [];
     }
 }

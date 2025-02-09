@@ -1,6 +1,6 @@
 ﻿namespace WasteIntoCity.Core.Models
 {
-    public class WorkReportComplaintEntity
+    public class WorkReportComplaint
     {
         public Guid Id { get; set; }
 
@@ -12,8 +12,8 @@
 
         public Guid FromUsersId { get; set; }
 
-        public WorkEntity? Work { get; set; }
+        public Work? Work { get; set; }
 
-        public List<ImageEntity> Images { get; set; } = [];
+        public List<Image> Images { get; set; } = [];
     }
 }

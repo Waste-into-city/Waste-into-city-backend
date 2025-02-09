@@ -2,8 +2,8 @@
 {
     public class WorkParticipantEntity
     {
-        public Guid WorksId { get; }
+        public Guid WorksId { get; set; }
 
-        public Guid ParticipantsId { get; }
+        public Guid ParticipantsId { get; set; }
     }
 }

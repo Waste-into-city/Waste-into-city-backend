@@ -2,10 +2,10 @@
 {
     public class RefreshTokenEntity
     {
-        public Guid UserId { get; }
+        public Guid UserId { get; set; }
 
-        public string Value { get; } = string.Empty;
+        public string Value { get; set; } = string.Empty;
 
-        public DateTime ExpirationTimestamp { get; }
+        public DateTime ExpirationTimestamp { get; set; }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace WasteIntoCity.Core.Models
 {
-    public class WorkColleagueReportEntity
+    public class WorkColleagueReport
     {
         public Guid Id { get; set; }
 
@@ -12,12 +12,12 @@
 
         public Guid WorkMarkTypesId { get; set; }
 
-        public WorkEntity? Work { get; set; }
+        public Work? Work { get; set; }
 
-        public UserEntity? UserFromParticipant { get; set; }
+        public User? UserFromParticipant { get; set; }
 
-        public UserEntity? UserAboutColleague { get; set; }
+        public User? UserAboutColleague { get; set; }
 
-        public WorkMarkTypeEntity? WorkMarkType { get; set; }
+        public WorkMarkType? WorkMarkType { get; set; }
     }
 }

@@ -2,10 +2,10 @@
 {
     public class AccessTokenEntity
     {
-        public Guid UserId { get; }
+        public Guid UserId { get; set; }
 
-        public string Value { get; } = string.Empty;
+        public string Value { get; set; } = string.Empty;
 
-        public DateTime ExpiratonTimestamp { get; }
+        public DateTime ExpiratonTimestamp { get; set; }
     }
 }

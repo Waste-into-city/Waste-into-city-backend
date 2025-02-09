@@ -1,6 +1,6 @@
 ﻿namespace WasteIntoCity.Core.Models
 {
-    public class TrashcanPointReportEntity
+    public class TrashcanPointReport
     {
         public Guid Id { get; set; }
 
@@ -12,10 +12,10 @@
 
         public DateTime SubmissionTime { get; set; }
 
-        public UserEntity? User { get; set; }
+        public User? User { get; set; }
 
-        public TrashcanPointEntity? TrashcanPoint { get; set; }
+        public TrashcanPoint? TrashcanPoint { get; set; }
 
-        public List<TrashcanPointReportEachMarkEntity> TrashcanPointReportEachMark { get; set; } = [];
+        public List<TrashcanPointReportEachMark> TrashcanPointReportEachMark { get; set; } = [];
     }
 }

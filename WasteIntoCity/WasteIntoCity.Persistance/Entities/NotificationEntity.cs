@@ -2,14 +2,18 @@
 {
     public class NotificationEntity
     {
-        public Guid Id { get; }
+        public Guid Id { get; set; }
 
-        public Guid? FromUsersId { get; }
+        public string Title { get; set; } = string.Empty;
 
-        public Guid ToUsersId { get; }
+        public string Description { get; set; } = string.Empty;
 
-        public string Title { get; } = string.Empty;
+        public Guid? FromUsersId { get; set; }
 
-        public string Description { get; } = string.Empty;
+        public Guid ToUsersId { get; set; }
+
+        public UserEntity? FromUser { get; set; }
+
+        public UserEntity? ToUser { get; set; }
     }
 }

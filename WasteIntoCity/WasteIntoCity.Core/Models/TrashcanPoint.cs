@@ -1,6 +1,6 @@
 ﻿namespace WasteIntoCity.Core.Models
 {
-    public class TrashcanPointEntity
+    public class TrashcanPoint
     {
         public Guid Id { get; set; }
 
@@ -8,8 +8,8 @@
 
         public string Lng { get; set; } = string.Empty;
 
-        public List<TrashcanEntity> TrashcanEntities { get; set; } = [];
+        public List<Trashcan> TrashcanEntities { get; set; } = [];
 
-        public List<TrashcanPointReportEntity> TrashcanPointReportEntities { get; set; } = [];
+        public List<TrashcanPointReport> TrashcanPointReportEntities { get; set; } = [];
     }
 }

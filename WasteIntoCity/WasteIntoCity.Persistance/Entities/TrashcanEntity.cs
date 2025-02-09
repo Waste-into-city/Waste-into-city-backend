@@ -2,14 +2,22 @@
 {
     public class TrashcanEntity
     {
-        public Guid Id { get; }
+        public Guid Id { get; set; }
 
-        public string TrashcanPointsId { get; } = string.Empty;
+        public int Volume { get; set; }
 
-        public string TrashcanTypesId { get; } = string.Empty;
+        public Guid TrashcanPointsId { get; set; }
 
-        public int Volume { get; }
+        public Guid TrashcanTypesId { get; set; }
 
-        public Guid? AverageTrashcanOccupancyTypeId { get; }
+        public Guid? AverageTrashcanOccupancyTypeId { get; set; }
+
+        public TrashcanPointEntity? TrashcanPoint { get; set; }
+
+        public TrashcanTypeEntity? TrashcanType { get; set; } 
+
+        public TrashcanOccupancyTypeEntity? TrashcanOccupancyType { get; set; }
+
+        public List<TrashcanPointReportEachMarkEntity> TrashcanPointReportEachMarkList { get; set; } = [];
     }
 }

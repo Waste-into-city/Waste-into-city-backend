@@ -2,8 +2,8 @@
 {
     public class UserAccordingRoleEntity
     {
-        public Guid UsersId { get; }
+        public Guid UsersId { get; set; }
 
-        public Guid RolesId { get; }
+        public Guid RolesId { get; set; }
     }
 }
