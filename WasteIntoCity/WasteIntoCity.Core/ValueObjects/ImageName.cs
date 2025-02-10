@@ -1,31 +1,24 @@
-﻿namespace WasteIntoCity.Core.ValueObjects
+﻿using WasteIntoCity.Core.Errors;
+
+namespace WasteIntoCity.Core.ValueObjects
 {
-    public class ImageName : ValueObject
+    public class MeanText : ValueObject
     {
-        private ImageName(string value)
+        private MeanText(string value)
         {
             Value = value;
         }
 
-        public const int VALUE_LENGTH_MIN = 20;
-
-        public const int VALUE_LENGTH_MAX = 255;
-
         public string Value { get; }
 
-        public ImageName Create(string value)
+        public MeanText Create(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
             {
-                throw new ArgumentException("Image name cannot be empty, null or white spaces.", "name");
+                throw new NullOrWhiteSpaceException("value", null);
             }
 
-            if (value.Length is < VALUE_LENGTH_MIN or > VALUE_LENGTH_MAX)
-            {
-                throw new ArgumentOutOfRangeException("value", value, $"Image name length not in range [{VALUE_LENGTH_MIN,VALUE_LENGTH_MAX}].");
-            }
-
-            return new ImageName(value);
+            return new MeanText(value);
         }
 
         protected override IEnumerable<object> GetEqualityComponents()

@@ -6,7 +6,7 @@
         {
         }
 
-        public NullOrWhiteSpaceException(string argName, string? message) : base($"{argName}: {message ?? "Value should be not null, empty, or only with white spaces."}")
+        public NullOrWhiteSpaceException(string argName, string? message) : base($"{argName}: {message ?? "Value should be not null, empty, or only with white spaces."}.")
         {
         }
     }

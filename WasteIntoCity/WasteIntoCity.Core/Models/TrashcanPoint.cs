@@ -2,14 +2,19 @@
 {
     public class TrashcanPoint
     {
-        public Guid Id { get; set; }
+        private TrashcanPoint(Guid id, string lat, string lng)
+        {
+            Id = id;
+            Lat = lat;
+            Lng = lng;
+        }
 
-        public string Lat { get; set; } = string.Empty;
+        public Guid Id { get; }
 
-        public string Lng { get; set; } = string.Empty;
+        public string Lat { get; }
 
-        public List<Trashcan> TrashcanEntities { get; set; } = [];
+        public string Lng { get; }
 
-        public List<TrashcanPointReport> TrashcanPointReportEntities { get; set; } = [];
+
     }
 }

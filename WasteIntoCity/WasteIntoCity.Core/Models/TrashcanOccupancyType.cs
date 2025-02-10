@@ -1,13 +1,15 @@
 ﻿namespace WasteIntoCity.Core.Models
 {
-    public class TrashcanOccupancyType
+    public enum TrashcanOccupancyType
     {
-        public Guid Id { get; set; }
+        EMPTY,
 
-        public string Name { get; set; } = string.Empty;
+        SPARSE,
 
-        public List<Trashcan> Trashcans { get; set; } = [];
+        MEDIUM,
 
-        public List<TrashcanPointReportEachMark> TrashcanPointReportEachMarkList { get; set; } = [];
+        ALMOST_FULL,
+
+        FULL
     }
 }
