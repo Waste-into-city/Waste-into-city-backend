@@ -1,35 +1,56 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using WasteIntoCity.Core.Errors;
+using WasteIntoCity.Core.ValueObjects;
 
 namespace WasteIntoCity.Core.Models
 {
     public class Work
     {
-        public Guid Id { get; set; }
+        private const int NAME_LENGTH_MIN = 1;
 
-        public string Name { get; set; } = string.Empty;
+        private const int NAME_LENGTH_MAX = 100;
 
-        public string Description { get; set; } = string.Empty;
+        private const int DESCRIPTION_LENGTH_MIN = 0;
 
-        public DateTime StartedDatetime { get; set; }
+        private const int DESCRIPTION_LENGTH_MAX = 1000;
 
-        public DateTime FinishDatetime { get; set; }
+        private Work(Guid id, Title title, Description description, DateTime startedDatetime, DateTime finishDatetime, Guid workComplexityId, Guid workStatusesId)
+        {
+            Id = id;
+            Title = title;
+            Description = description;
+            StartedDatetime = startedDatetime;
+            FinishDatetime = finishDatetime;
+            WorkComplexityId = workComplexityId;
+            WorkStatusesId = workStatusesId;
+        }
 
-        public Guid WorkComplexityId { get; set; }
+        public Guid Id { get; }
 
-        public Guid WorkStatusesId { get; set; }
+        public Title Title { get; }
 
-        public WorkComplexity? WorkComplexity { get; set; }
+        public Description Description { get; }
 
-        public WorkStatus? WorkStatus { get; set; }
+        public DateTime StartedDatetime { get; }
 
-        public List<WorkReportComplaint> WorkReportComplaints { get; set; } = [];
+        public DateTime FinishDatetime { get; }
 
-        public List<WorkColleagueReport> WorkColleagueReports { get; set; } = [];
+        public Guid WorkComplexityId { get; }
 
-        public ICollection<User> Users { get; set; } = [];
+        public Guid WorkStatusesId { get; }
+
+        public Work Create(Guid id, Title title, Description description, DateTime startedDatetime, DateTime finishDatetime, Guid workComplexityId, Guid workStatusesId)
+        {
+            if (title.Value.Length is < NAME_LENGTH_MIN or > NAME_LENGTH_MAX)
+            {
+                throw new ValueOutOfRangeException<int>("name", NAME_LENGTH_MIN, NAME_LENGTH_MAX);
+            }
+
+            if (description.Value.Length is < DESCRIPTION_LENGTH_MIN or > DESCRIPTION_LENGTH_MAX)
+            {
+                throw new ValueOutOfRangeException<int>("description", DESCRIPTION_LENGTH_MIN, DESCRIPTION_LENGTH_MAX);
+            }
+
+            return new Work(id, title, description, startedDatetime, finishDatetime, workComplexityId, workStatusesId);
+        }
     }
 }

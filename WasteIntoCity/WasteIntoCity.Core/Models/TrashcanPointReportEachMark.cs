@@ -2,18 +2,25 @@
 {
     public class TrashcanPointReportEachMark
     {
-        public Guid Id { get; set; }
+        private TrashcanPointReportEachMark(Guid id, Guid trashcanPointReportsId, Guid trashcansId, Guid trashcanOccupancyTypesId)
+        {
+            Id = id;
+            TrashcanPointReportsId = trashcanPointReportsId;
+            TrashcansId = trashcansId;
+            TrashcanOccupancyTypesId = trashcanOccupancyTypesId;
+        }
 
-        public Guid TrashcanPointReportsId { get; set; }
+        public Guid Id { get; }
 
-        public Guid TrashcansId { get; set; }
+        public Guid TrashcanPointReportsId { get; }
 
-        public Guid TrashcanOccupancyTypesId { get; set; }
+        public Guid TrashcansId { get; }
 
-        public Trashcan? Trashcan {  get; set; }
+        public Guid TrashcanOccupancyTypesId { get; }
 
-        public TrashcanPointReport? TrashcanPointReport { get; set; }
-
-        public TrashcanOccupancyType? TrashcanOccupancyType { get; set; }
+        public TrashcanPointReportEachMark Create(Guid id, Guid trashcanPointReportsId, Guid trashcansId, Guid trashcanOccupancyTypesId)
+        {
+            return new TrashcanPointReportEachMark(id, trashcanPointReportsId, trashcansId, trashcanOccupancyTypesId);
+        }
     }
 }

@@ -1,11 +1,15 @@
 ﻿namespace WasteIntoCity.Core.Models
 {
-    public class WorkMarkType
+    public enum WorkMarkType
     {
-        public Guid Id { get; set; }
+        ONE,
 
-        public string Name { get; set; } = string.Empty;
+        TWO,
 
-        public List<WorkColleagueReport> WorkColleagueReports { get; set; } = [];
+        THREE,
+
+        FOUR,
+
+        FIVE
     }
 }

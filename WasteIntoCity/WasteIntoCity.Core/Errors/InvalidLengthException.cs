@@ -1,6 +1,6 @@
 ﻿namespace WasteIntoCity.Core.Errors
 {
-    public class InvalidLengthException : ValueOutOfRangeException<int>
+    public class InvalidLengthException : Exception
     {
         protected InvalidLengthException(string message) : base(message)
         {

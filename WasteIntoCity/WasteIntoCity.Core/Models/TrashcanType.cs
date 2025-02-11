@@ -1,11 +1,15 @@
 ﻿namespace WasteIntoCity.Core.Models
 {
-    public class TrashcanType
+    public enum TrashcanType
     {
-        public Guid Id { get; set; }
+        MIXED,
 
-        public string Name { get; set; } = string.Empty;
+        PLASTIC,
 
-        public List<Trashcan> Trashcans { get; set; } = [];
+        GLASS,
+
+        ELECTRONIC,
+
+        BATTERIES
     }
 }

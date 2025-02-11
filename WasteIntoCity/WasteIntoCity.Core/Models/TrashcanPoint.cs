@@ -2,6 +2,8 @@
 {
     public class TrashcanPoint
     {
+        // TODO: Add constraints for Lat and Lng
+
         private TrashcanPoint(Guid id, string lat, string lng)
         {
             Id = id;
@@ -15,6 +17,9 @@
 
         public string Lng { get; }
 
-
+        public TrashcanPoint Create(Guid id, string lat, string lng)
+        {
+            return new TrashcanPoint(Id, Lat, Lng);
+        }
     }
 }

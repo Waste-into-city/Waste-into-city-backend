@@ -1,10 +1,10 @@
 ﻿namespace WasteIntoCity.Core.Models
 {
-    public class WorkStatusEntity
+    public class WorkStatusTypeEntity
     {
         public Guid Id { get; set; }
 
-        public string Name { get; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
 
         public List<WorkEntity> Works { get; set; } = [];
     }

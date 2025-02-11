@@ -1,19 +1,31 @@
-﻿namespace WasteIntoCity.Core.Models
+﻿using WasteIntoCity.Core.ValueObjects;
+
+namespace WasteIntoCity.Core.Models
 {
     public class WorkReportComplaint
     {
-        public Guid Id { get; set; }
+        private WorkReportComplaint(Guid id, Title title, Description description, Guid worksId, Guid fromUsersId)
+        {
+            Id = id;
+            Title = title;
+            Description = description;
+            WorksId = worksId;
+            FromUsersId = fromUsersId;
+        }
 
-        public string Title { get; set; } = string.Empty;
+        public Guid Id { get; }
 
-        public string Description { get; set; } = string.Empty;
+        public Title Title { get; }
 
-        public Guid WorksId { get; set; }
+        public Description Description { get; }
 
-        public Guid FromUsersId { get; set; }
+        public Guid WorksId { get; }
 
-        public Work? Work { get; set; }
+        public Guid FromUsersId { get; }
 
-        public List<Image> Images { get; set; } = [];
+        public WorkReportComplaint Create(Guid id, Title title, Description description, Guid worksId, Guid fromUsersId)
+        {
+            return new WorkReportComplaint(id, title, description, worksId, fromUsersId);
+        }
     }
 }

@@ -2,17 +2,19 @@
 {
     public class WorkReportResultEntity
     {
-        public Guid Id { get; }
+        public Guid Id { get; set; }
 
-        string Description { get; } = string.Empty;
+        string Title { get; set; } = string.Empty;
 
-        public Guid FromParticipantId { get; }
+        string Description { get; set; } = string.Empty;
 
-        public Guid WorkStatusesId { get; }
+        public Guid FromParticipantId { get; set; }
+
+        public Guid WorkStatusesId { get; set; }
 
         public UserEntity? FromParticipant { get; set; }
 
-        public WorkStatusEntity? WorkStatus { get; set; }
+        public WorkStatusTypeEntity? WorkStatus { get; set; }
 
         public List<ImageEntity> Images { get; set; } = [];
     }

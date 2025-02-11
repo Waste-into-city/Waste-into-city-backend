@@ -2,20 +2,28 @@
 {
     public class TrashcanPointReport
     {
-        public Guid Id { get; set; }
+        private TrashcanPointReport(Guid id, bool isReviewed, Guid usersId, Guid trashcanPointsId, DateTime submissionTime)
+        {
+            Id = id;
+            this.isReviewed = isReviewed;
+            UsersId = usersId;
+            TrashcanPointsId = trashcanPointsId;
+            SubmissionTime = submissionTime;
+        }
 
-        public bool isReviewed { get; set; }
+        public Guid Id { get; }
 
-        public Guid UsersId { get; set; }
+        public bool isReviewed { get; }
 
-        public Guid TrashcanPointsId { get; set; }
+        public Guid UsersId { get; }
 
-        public DateTime SubmissionTime { get; set; }
+        public Guid TrashcanPointsId { get; }
 
-        public User? User { get; set; }
+        public DateTime SubmissionTime { get; }
 
-        public TrashcanPoint? TrashcanPoint { get; set; }
-
-        public List<TrashcanPointReportEachMark> TrashcanPointReportEachMark { get; set; } = [];
+        public TrashcanPointReport Create(Guid id, bool isReviewed, Guid usersId, Guid trashcanPointsId, DateTime submissionTime)
+        {
+            return new TrashcanPointReport(id, isReviewed, usersId, trashcanPointsId, submissionTime);
+        }
     }
 }

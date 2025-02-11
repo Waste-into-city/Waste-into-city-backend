@@ -3,22 +3,24 @@ using WasteIntoCity.Core.Errors;
 
 namespace WasteIntoCity.Core.ValueObjects
 {
-    public class ImageName : ValueObject
+    public class Email : ValueObject
     {
-        private const string VALUE_PATTERN = @"^[\w\.\-\~]*[\.](jpg|jpeg|png)\z";
+        private const string VALUE_PATTERN = @"^[\w!#$%&'*+\-/=?\^_`{|}~]+(\.[\w!#$%&'*+\-/=?\^_`{|}~]+)*"
+            + "@"
+            + @"((([\-\w]+\.)+[a-zA-Z]{2,4})|(([0-9]{1,3}\.){3}[0-9]{1,3}))\z";
 
-        private const int VALUE_LENGTH_MIN = 1;
+        private const int VALUE_LENGTH_MIN = 6;
 
-        private const int VALUE_LENGTH_MAX = 255;
+        private const int VALUE_LENGTH_MAX = 45;
 
-        private ImageName(string value)
+        private Email(string value)
         {
             Value = value;
         }
 
         public string Value { get; }
 
-        public ImageName Create(string value)
+        public Email Create(string value)
         {
             if (Regex.IsMatch(value, VALUE_PATTERN))
             {
@@ -30,7 +32,7 @@ namespace WasteIntoCity.Core.ValueObjects
                 throw new InvalidLengthException("value", VALUE_LENGTH_MIN, VALUE_LENGTH_MAX);
             }
 
-            return new ImageName(value);
+            return new Email(value);
         }
 
         protected override IEnumerable<object> GetEqualityComponents()

@@ -1,23 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using WasteIntoCity.Core.ValueObjects;
 
 namespace WasteIntoCity.Core.Models
 {
     public class WorkApplication
     {
-        public Guid Id { get; set; }
+        private WorkApplication(Guid id, Title title, Description description, Guid workComplexitiesId)
+        {
+            Id = id;
+            Title = title;
+            Description = description;
+            WorkComplexitiesId = workComplexitiesId;
+        }
 
-        public string Name { get; set; } = string.Empty;
+        public Guid Id { get; }
 
-        public string Description { get; set; } = string.Empty;
+        public Title Title { get; }
 
-        public Guid WorkComplexitiesId { get; set; }
+        public Description Description { get; }
 
-        public WorkComplexity? WorkComplexity { get; set; }
+        public Guid WorkComplexitiesId { get; }
 
-        public List<Image> Images { get; set; } = [];
+        public WorkApplication Create(Guid id, Title title, Description description, Guid workComplexitiesId)
+        {
+            return new WorkApplication(id, title, description, workComplexitiesId);
+        }
     }
 }

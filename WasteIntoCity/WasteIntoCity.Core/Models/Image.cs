@@ -9,7 +9,7 @@ namespace WasteIntoCity.Core.Models
 
         private const int NAME_LENGTH_MAX = 255;
 
-        private Image(Guid id, MeanText name, Guid? workApplicationsId, Guid? workReportComplaintsId, Guid? workReportResultsId)
+        private Image(Guid id, ImageName name, Guid? workApplicationsId, Guid? workReportComplaintsId, Guid? workReportResultsId)
         {
             Id = id;
             Name = name;
@@ -20,7 +20,7 @@ namespace WasteIntoCity.Core.Models
 
         public Guid Id { get; }
 
-        public MeanText Name { get; }
+        public ImageName Name { get; }
 
         public Guid? WorkApplicationsId { get; }
 
@@ -30,7 +30,7 @@ namespace WasteIntoCity.Core.Models
 
         public static Image Create(
             Guid id,
-            MeanText name,
+            ImageName name,
             Guid? workApplicationsId,
             Guid? workReportComplaintsId,
             Guid? workReportResultsId

@@ -1,23 +1,28 @@
-﻿namespace WasteIntoCity.Core.Models
+﻿using WasteIntoCity.Core.ValueObjects;
+
+namespace WasteIntoCity.Core.Models
 {
     public class User
     {
-        public Guid Id { get; set; }
+        private User(Guid id, Nickname nickname, Title email, Password password)
+        {
+            Id = id;
+            Nickname = nickname;
+            Email = email;
+            Password = password;
+        }
 
-        public string Nickname { get; set; } = string.Empty;
+        public Guid Id { get; }
 
-        public string Email { get; set; } = string.Empty;
+        public Nickname Nickname { get; }
 
-        public string Password { get; set; } = string.Empty;
+        public Title Email { get; }
 
-        public List<WorkReportResult> WorkReportResults { get; set; } = [];
+        public Password Password { get; }
 
-        public ICollection<Work> Works { get; set; } = [];
-
-        public List<WorkReportComplaint> WorkReportComplaints { get; set; } = [];
-
-        public List<WorkColleagueReport> WorkColleagueReports { get; set; } = [];
-
-        public ICollection<RoleEntity> Roles { get; set; } = [];
+        public User Create(Guid id, Nickname nickname, Title email, Password password)
+        {
+            return new User(id, nickname, email, password);
+        }
     }
 }

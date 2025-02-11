@@ -2,22 +2,28 @@
 {
     public class WorkColleagueReport
     {
-        public Guid Id { get; set; }
+        private WorkColleagueReport(Guid id, Guid fromParticipantid, Guid aboutColleagueId, Guid worksId, Guid workMarkTypesId)
+        {
+            Id = id;
+            FromParticipantid = fromParticipantid;
+            AboutColleagueId = aboutColleagueId;
+            WorksId = worksId;
+            WorkMarkTypesId = workMarkTypesId;
+        }
 
-        public Guid FromParticipantid { get; set; }
+        public Guid Id { get; }
 
-        public Guid AboutColleagueId { get; set; }
+        public Guid FromParticipantid { get; }
 
-        public Guid WorksId { get; set; }
+        public Guid AboutColleagueId { get; }
 
-        public Guid WorkMarkTypesId { get; set; }
+        public Guid WorksId { get; }
 
-        public Work? Work { get; set; }
+        public Guid WorkMarkTypesId { get; }
 
-        public User? UserFromParticipant { get; set; }
-
-        public User? UserAboutColleague { get; set; }
-
-        public WorkMarkType? WorkMarkType { get; set; }
+        public WorkColleagueReport Create(Guid id, Guid fromParticipantid, Guid aboutColleagueId, Guid worksId, Guid workMarkTypesId)
+        {
+            return new WorkColleagueReport(id, fromParticipantid, aboutColleagueId, worksId, workMarkTypesId);
+        }
     }
 }
