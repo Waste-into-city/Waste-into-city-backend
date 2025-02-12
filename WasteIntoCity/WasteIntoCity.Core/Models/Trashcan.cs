@@ -8,13 +8,13 @@ namespace WasteIntoCity.Core.Models
 
         private const int VOLUME_MAX = 1100;
 
-        private Trashcan(Guid id, int volume, Guid trashcanPointsId, TrashcanType trashcanTypes, TrashcanOccupancyType? averageTrashcanOccupancyType)
+        private Trashcan(Guid id, int volume, Guid trashcanPointsId, Guid trashcanTypesId, Guid? averageTrashcanOccupancyTypesId)
         {
             Id = id;
             Volume = volume;
             TrashcanPointsId = trashcanPointsId;
-            TrashcanTypes = trashcanTypes;
-            AverageTrashcanOccupancyType = averageTrashcanOccupancyType;
+            TrashcanTypesId = trashcanTypesId;
+            AverageTrashcanOccupancyTypesId = averageTrashcanOccupancyTypesId;
         }
 
         public Guid Id { get; }
@@ -23,18 +23,18 @@ namespace WasteIntoCity.Core.Models
 
         public Guid TrashcanPointsId { get; }
 
-        public TrashcanType TrashcanTypes { get; }
+        public Guid TrashcanTypesId { get; }
 
-        public TrashcanOccupancyType? AverageTrashcanOccupancyType { get; }
+        public Guid? AverageTrashcanOccupancyTypesId { get; }
 
-        public Trashcan Create(Guid id, int volume, Guid trashcanPointsId, TrashcanType trashcanTypes, TrashcanOccupancyType? averageTrashcanOccupancyType)
+        public Trashcan Create(Guid id, int volume, Guid trashcanPointsId, Guid trashcanTypesId, Guid? averageTrashcanOccupancyTypesId)
         {
             if (volume is < VOLUME_MIN or > VOLUME_MAX)
             {
                 throw new ValueOutOfRangeException<int>("volume", VOLUME_MIN, VOLUME_MAX);
             }
 
-            return new Trashcan(id, volume, trashcanPointsId, trashcanTypes, averageTrashcanOccupancyType);
+            return new Trashcan(id, volume, trashcanPointsId, trashcanTypesId, averageTrashcanOccupancyTypesId);
         }
     }
 }

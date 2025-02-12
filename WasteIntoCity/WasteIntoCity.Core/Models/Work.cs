@@ -50,6 +50,11 @@ namespace WasteIntoCity.Core.Models
                 throw new ValueOutOfRangeException<int>("description", DESCRIPTION_LENGTH_MIN, DESCRIPTION_LENGTH_MAX);
             }
 
+            if (StartedDatetime > FinishDatetime)
+            {
+                throw new ValueOutOfRangeException<DateTime>("startDatetime", DateTime.MinValue, FinishDatetime);
+            }
+
             return new Work(id, title, description, startedDatetime, finishDatetime, workComplexityId, workStatusesId);
         }
     }

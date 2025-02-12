@@ -1,15 +1,22 @@
-﻿namespace WasteIntoCity.Core.Models
+﻿using WasteIntoCity.Core.ValueObjects;
+
+namespace WasteIntoCity.Core.Models
 {
-    public enum WorkMarkType
+    public class WorkMarkType
     {
-        ONE,
+        private WorkMarkType(Guid id, WorkMarkTypeName name)
+        {
+            Id = id;
+            Name = name;
+        }
 
-        TWO,
+        public Guid Id { get; }
 
-        THREE,
+        public WorkMarkTypeName Name { get; }
 
-        FOUR,
-
-        FIVE
+        public WorkMarkType Create(Guid id, WorkMarkTypeName name)
+        {
+            return new WorkMarkType(id, name);
+        }
     }
 }

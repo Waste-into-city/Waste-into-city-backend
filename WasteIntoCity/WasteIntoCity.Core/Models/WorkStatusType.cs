@@ -1,17 +1,22 @@
-﻿namespace WasteIntoCity.Core.Models
+﻿using WasteIntoCity.Core.ValueObjects;
+
+namespace WasteIntoCity.Core.Models
 {
-    public enum WorkStatusType
+    public class WorkStatusType
     {
-        PENDING,
+        private WorkStatusType(Guid id, WorkStatusTypeName name)
+        {
+            Id = id;
+            Name = name;
+        }
 
-        ACTIVE,
+        public Guid Id { get; }
 
-        IN_PROGRESS,
+        public WorkStatusTypeName Name { get; }
 
-        SUCCESSFUL,
-
-        FAILED,
-
-        UNKNOWN
+        public WorkStatusType Create(Guid id, WorkStatusTypeName name)
+        {
+            return new WorkStatusType(id, name);
+        }
     }
 }

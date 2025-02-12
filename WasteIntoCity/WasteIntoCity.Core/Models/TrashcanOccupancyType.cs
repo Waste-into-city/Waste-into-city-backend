@@ -1,15 +1,22 @@
-﻿namespace WasteIntoCity.Core.Models
+﻿using WasteIntoCity.Core.ValueObjects;
+
+namespace WasteIntoCity.Core.Models
 {
-    public enum TrashcanOccupancyType
+    public class TrashcanOccupancyType
     {
-        EMPTY,
+        private TrashcanOccupancyType(Guid id, TrashcanOccupancyTypeName name)
+        {
+            Id = id;
+            Name = name;
+        }
 
-        SPARSE,
+        public Guid Id { get; }
 
-        MEDIUM,
+        public TrashcanOccupancyTypeName Name { get; }
 
-        ALMOST_FULL,
-
-        FULL
+        public TrashcanOccupancyType Create(Guid id, TrashcanOccupancyTypeName name)
+        {
+            return new TrashcanOccupancyType(id, name);
+        }
     }
 }

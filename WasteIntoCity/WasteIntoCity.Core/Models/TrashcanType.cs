@@ -1,15 +1,22 @@
-﻿namespace WasteIntoCity.Core.Models
+﻿using WasteIntoCity.Core.ValueObjects;
+
+namespace WasteIntoCity.Core.Models
 {
-    public enum TrashcanType
+    public class TrashcanType
     {
-        MIXED,
+        private TrashcanType(Guid id, TrashcanTypeName name)
+        {
+            Id = id;
+            Name = name;
+        }
 
-        PLASTIC,
+        public Guid Id { get; }
 
-        GLASS,
+        public TrashcanTypeName Name { get; }
 
-        ELECTRONIC,
-
-        BATTERIES
+        public TrashcanType Create(Guid id, TrashcanTypeName name)
+        {
+            return new TrashcanType(id, name);
+        }
     }
 }
