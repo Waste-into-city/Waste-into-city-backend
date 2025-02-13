@@ -6,6 +6,8 @@
 
         public string Name { get; set; } = string.Empty;
 
+        public int AdditionRanking { get; set; }
+
         public List<WorkColleagueReportEntity> WorkColleagueReports { get; set; } = [];
     }
 }

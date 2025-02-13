@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace WasteIntoCity.Core.Models
+﻿namespace WasteIntoCity.Core.Models
 {
-    public class WorkComplexityEntity
+    public class WorkComplexityTypeEntity
     {
         public Guid Id { get; set; }
 
@@ -16,7 +10,11 @@ namespace WasteIntoCity.Core.Models
 
         public int ParticipantsMax { get; set; }
 
-        public int DurationHours {  get; set; }
+        public int DurationHours { get; set; }
+
+        public int MultiplierRanking { get; set; }
+
+        public int RadiusOnMap { get; set; }
 
         public List<WorkApplicationEntity> WorkApplications { get; set; } = [];
 

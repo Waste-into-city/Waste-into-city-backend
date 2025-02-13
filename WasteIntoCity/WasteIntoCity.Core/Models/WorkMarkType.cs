@@ -1,22 +1,44 @@
-﻿using WasteIntoCity.Core.ValueObjects;
+﻿using WasteIntoCity.Core.Errors;
+using WasteIntoCity.Core.ValueObjects;
 
 namespace WasteIntoCity.Core.Models
 {
     public class WorkMarkType
     {
-        private WorkMarkType(Guid id, WorkMarkTypeName name)
+        private const int RATING_CHANGING_MIN = -9999;
+
+        private const int RATING_CHANGING_MAX = 9999;
+
+        private const int NAME_LENGTH_MIN = 1;
+
+        private const int NAME_LENGTH_MAX = 100;
+
+        private WorkMarkType(Guid id, MeanText name, int additionRanking)
         {
             Id = id;
             Name = name;
+            AdditionRanking = additionRanking;
         }
 
         public Guid Id { get; }
 
-        public WorkMarkTypeName Name { get; }
+        public MeanText Name { get; }
 
-        public WorkMarkType Create(Guid id, WorkMarkTypeName name)
+        public int AdditionRanking { get; }
+
+        public WorkMarkType Create(Guid id, MeanText name, int additionRanking)
         {
-            return new WorkMarkType(id, name);
+            if (name.Value.Length is < NAME_LENGTH_MIN or > NAME_LENGTH_MAX)
+            {
+                throw new InvalidLengthException(nameof(name), NAME_LENGTH_MIN, NAME_LENGTH_MAX);
+            }
+
+            if (additionRanking is < RATING_CHANGING_MIN or > RATING_CHANGING_MAX)
+            {
+                throw new ValueOutOfRangeException<int>(nameof(additionRanking), RATING_CHANGING_MIN, RATING_CHANGING_MAX);
+            }
+
+            return new WorkMarkType(id, name, additionRanking);
         }
     }
 }

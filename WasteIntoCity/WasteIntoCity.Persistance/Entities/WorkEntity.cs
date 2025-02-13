@@ -16,7 +16,7 @@
 
         public Guid WorkStatusesId { get; set; }
 
-        public WorkComplexityEntity? WorkComplexity { get; set; }
+        public WorkComplexityTypeEntity? WorkComplexity { get; set; }
 
         public WorkStatusTypeEntity? WorkStatus { get; set; }
 

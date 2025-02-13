@@ -10,6 +10,8 @@
 
         public string Password { get; set; } = string.Empty;
 
+        public int Ranking { get; set; }
+
         public List<WorkReportResultEntity> WorkReportResults { get; set; } = [];
 
         public ICollection<WorkEntity> Works { get; set; } = [];

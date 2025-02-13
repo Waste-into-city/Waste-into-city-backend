@@ -1,10 +1,15 @@
-﻿using WasteIntoCity.Core.ValueObjects;
+﻿using WasteIntoCity.Core.Errors;
+using WasteIntoCity.Core.ValueObjects;
 
 namespace WasteIntoCity.Core.Models
 {
     public class TrashcanType
     {
-        private TrashcanType(Guid id, TrashcanTypeName name)
+        private const int NAME_LENGTH_MIN = 1;
+
+        private const int NAME_LENGTH_MAX = 100;
+
+        private TrashcanType(Guid id, MeanText name)
         {
             Id = id;
             Name = name;
@@ -12,10 +17,15 @@ namespace WasteIntoCity.Core.Models
 
         public Guid Id { get; }
 
-        public TrashcanTypeName Name { get; }
+        public MeanText Name { get; }
 
-        public TrashcanType Create(Guid id, TrashcanTypeName name)
+        public TrashcanType Create(Guid id, MeanText name)
         {
+            if (name.Value.Length is < NAME_LENGTH_MIN or > NAME_LENGTH_MAX)
+            {
+                throw new InvalidLengthException(nameof(name), NAME_LENGTH_MIN, NAME_LENGTH_MAX);
+            }
+
             return new TrashcanType(id, name);
         }
     }

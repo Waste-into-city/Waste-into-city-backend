@@ -1,15 +1,21 @@
-﻿using WasteIntoCity.Core.ValueObjects;
+﻿using WasteIntoCity.Core.Errors;
+using WasteIntoCity.Core.ValueObjects;
 
 namespace WasteIntoCity.Core.Models
 {
     public class User
     {
-        private User(Guid id, Nickname nickname, Title email, Password password)
+        private const int RANKING_MIN = -9999;
+
+        private const int RANKING_MAX = 9999;
+
+        private User(Guid id, Nickname nickname, Title email, Password password, int ranking)
         {
             Id = id;
             Nickname = nickname;
             Email = email;
             Password = password;
+            Ranking = ranking;
         }
 
         public Guid Id { get; }
@@ -20,9 +26,16 @@ namespace WasteIntoCity.Core.Models
 
         public Password Password { get; }
 
-        public User Create(Guid id, Nickname nickname, Title email, Password password)
+        public int Ranking { get; }
+
+        public User Create(Guid id, Nickname nickname, Title email, Password password, int ranking)
         {
-            return new User(id, nickname, email, password);
+            if (Ranking is < RANKING_MIN or > RANKING_MAX)
+            {
+                throw new ValueOutOfRangeException<int>(nameof(ranking), RANKING_MIN, RANKING_MAX);
+            }
+
+            return new User(id, nickname, email, password, ranking);
         }
     }
 }
