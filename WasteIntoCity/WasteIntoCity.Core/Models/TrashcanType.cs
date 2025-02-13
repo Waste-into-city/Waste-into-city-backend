@@ -5,9 +5,9 @@ namespace WasteIntoCity.Core.Models
 {
     public class TrashcanType
     {
-        private const int NAME_LENGTH_MIN = 1;
+        public const int NAME_LENGTH_MIN = 1;
 
-        private const int NAME_LENGTH_MAX = 100;
+        public const int NAME_LENGTH_MAX = 100;
 
         private TrashcanType(Guid id, MeanText name)
         {

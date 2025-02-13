@@ -5,13 +5,13 @@ namespace WasteIntoCity.Core.Models
 {
     public class TrashcanOccupancyType
     {
-        private const int VALUE_MIN = 0;
+        public const int VALUE_MIN = 0;
 
-        private const int VALUE_MAX = 100;
+        public const int VALUE_MAX = 100;
 
-        private const int NAME_LENGTH_MIN = 1;
+        public const int NAME_LENGTH_MIN = 1;
 
-        private const int NAME_LENGTH_MAX = 100;
+        public const int NAME_LENGTH_MAX = 100;
 
         private TrashcanOccupancyType(Guid id, MeanText name, int value)
         {

@@ -1,6 +1,6 @@
 ﻿namespace WasteIntoCity.Persistance.Entities
 {
-    public class AdminSettings
+    public class AdminSettingsEntity
     {
         public int TrueComplaintToAdditionRanking { get; set; }
 

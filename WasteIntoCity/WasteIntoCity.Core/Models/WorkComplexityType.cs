@@ -5,25 +5,25 @@ namespace WasteIntoCity.Core.Models
 {
     public class WorkComplexityType
     {
-        private const int NAME_LENGTH_MIN = 1;
+        public const int NAME_LENGTH_MIN = 1;
 
-        private const int NAME_LENGTH_MAX = 100;
+        public const int NAME_LENGTH_MAX = 100;
 
-        private const int PARTICIPANTS_MIN_VALUE_MIN = 1;
+        public const int PARTICIPANTS_MIN_VALUE_MIN = 1;
 
-        private const int PARTICIPANTS_MAX_VALUE_MAX = 9999;
+        public const int PARTICIPANTS_MAX_VALUE_MAX = 9999;
 
-        private const int DURATION_HOURS_MIN = 0;
+        public const int DURATION_HOURS_MIN = 0;
 
-        private const int DURATION_HOURS_MAX = 9999;
+        public const int DURATION_HOURS_MAX = 9999;
 
-        private const int RATING_CHANGING_MIN = -9999;
+        public const int RATING_CHANGING_MIN = -9999;
 
-        private const int RATING_CHANGING_MAX = 9999;
+        public const int RATING_CHANGING_MAX = 9999;
 
-        private const int RADIUS_ON_MAP_MIN = 0;
+        public const int RADIUS_ON_MAP_MIN = 0;
 
-        private const int RADIUS_ON_MAP_MAX = 100;
+        public const int RADIUS_ON_MAP_MAX = 100;
 
 
         private WorkComplexityType(Guid id, MeanText name, int participantsMin, int participantsMax, int durationHours, int multiplierRanking, int radiusOnMap)

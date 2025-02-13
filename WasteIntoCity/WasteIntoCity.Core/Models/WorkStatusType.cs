@@ -5,13 +5,13 @@ namespace WasteIntoCity.Core.Models
 {
     public class WorkStatusType
     {
-        private const int RATING_CHANGING_MIN = -9999;
+        public const int RATING_CHANGING_MIN = -9999;
 
-        private const int RATING_CHANGING_MAX = 9999;
+        public const int RATING_CHANGING_MAX = 9999;
 
-        private const int NAME_LENGTH_MIN = 1;
+        public const int NAME_LENGTH_MIN = 1;
 
-        private const int NAME_LENGTH_MAX = 100;
+        public const int NAME_LENGTH_MAX = 100;
 
         private WorkStatusType(Guid id, MeanText name, int multiplierRanking)
         {

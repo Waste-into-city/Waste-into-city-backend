@@ -5,13 +5,13 @@ namespace WasteIntoCity.Core.Models
 {
     public class Work
     {
-        private const int NAME_LENGTH_MIN = 1;
+        public const int NAME_LENGTH_MIN = 1;
 
-        private const int NAME_LENGTH_MAX = 100;
+        public const int NAME_LENGTH_MAX = 100;
 
-        private const int DESCRIPTION_LENGTH_MIN = 0;
+        public const int DESCRIPTION_LENGTH_MIN = 0;
 
-        private const int DESCRIPTION_LENGTH_MAX = 1000;
+        public const int DESCRIPTION_LENGTH_MAX = 1000;
 
         private Work(Guid id, Title title, Description description, DateTime startedDatetime, DateTime finishDatetime, Guid workComplexityId, Guid workStatusesId)
         {

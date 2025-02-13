@@ -5,9 +5,9 @@ namespace WasteIntoCity.Core.Models
 {
     public class Image
     {
-        private const int NAME_LENGTH_MIN = 20;
+        public const int NAME_LENGTH_MIN = 20;
 
-        private const int NAME_LENGTH_MAX = 255;
+        public const int NAME_LENGTH_MAX = 255;
 
         private Image(Guid id, ImageName name, Guid? workApplicationsId, Guid? workReportComplaintsId, Guid? workReportResultsId)
         {

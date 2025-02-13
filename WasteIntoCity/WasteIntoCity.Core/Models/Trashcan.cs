@@ -4,9 +4,9 @@ namespace WasteIntoCity.Core.Models
 {
     public class Trashcan
     {
-        private const int VOLUME_MIN = 120;
+        public const int VOLUME_MIN = 120;
 
-        private const int VOLUME_MAX = 1100;
+        public const int VOLUME_MAX = 1100;
 
         private Trashcan(Guid id, int volume, Guid trashcanPointsId, Guid trashcanTypesId, Guid? averageTrashcanOccupancyTypesId)
         {

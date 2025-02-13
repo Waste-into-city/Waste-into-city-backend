@@ -5,9 +5,9 @@ namespace WasteIntoCity.Core.Models
 {
     public class User
     {
-        private const int RANKING_MIN = -9999;
+        public const int RANKING_MIN = -9999;
 
-        private const int RANKING_MAX = 9999;
+        public const int RANKING_MAX = 9999;
 
         private User(Guid id, Nickname nickname, Title email, Password password, int ranking)
         {

@@ -11,11 +11,11 @@
         public Guid? WorkReportComplaintsId { get; set; }
 
         public Guid? WorkReportResultsId { get; set; }
-        
+
         public WorkApplicationEntity? WorkApplication { get; set; }
 
         public WorkReportComplaintEntity? WorkReportComplaint { get; set; }
 
-        public WorkReportResultEntity? WorkReportResultEntity { get; set; }
+        public WorkReportResultEntity? WorkReportResult { get; set; }
     }
 }
