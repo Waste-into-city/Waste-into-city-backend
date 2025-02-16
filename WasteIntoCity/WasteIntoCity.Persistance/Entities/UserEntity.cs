@@ -18,8 +18,16 @@
 
         public List<WorkReportComplaintEntity> WorkReportComplaints { get; set; } = [];
 
-        public List<WorkColleagueReportEntity> WorkColleagueReports { get; set; } = [];
+        public List<WorkColleagueReportEntity> WorkColleagueReportsFrom { get; set; } = [];
+
+        public List<WorkColleagueReportEntity> WorkColleagueReportsAbout { get; set; } = [];
 
         public ICollection<RoleEntity> Roles { get; set; } = [];
+
+        public List<NotificationEntity> NotificationsFrom { get; set; } = [];
+
+        public List<NotificationEntity> NotificationsTo { get; set; } = [];
+
+        public List<TrashcanPointReportEntity> TrashcanPointReports { get; set; } = [];
     }
 }

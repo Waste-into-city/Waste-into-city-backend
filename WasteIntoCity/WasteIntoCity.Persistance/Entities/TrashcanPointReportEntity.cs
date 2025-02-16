@@ -4,7 +4,7 @@
     {
         public Guid Id { get; set; }
 
-        public bool isReviewed { get; set; }
+        public bool IsReviewed { get; set; }
 
         public Guid UsersId { get; set; }
 
@@ -16,6 +16,6 @@
 
         public TrashcanPointEntity? TrashcanPoint { get; set; }
 
-        public List<TrashcanPointReportEachMarkEntity> TrashcanPointReportEachMark { get; set; } = [];
+        public List<TrashcanPointReportEachMarkEntity> TrashcanPointReportEachMarkList { get; set; } = [];
     }
 }

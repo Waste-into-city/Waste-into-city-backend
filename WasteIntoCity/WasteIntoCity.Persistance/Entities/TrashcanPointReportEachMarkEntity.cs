@@ -10,7 +10,7 @@
 
         public Guid TrashcanOccupancyTypesId { get; set; }
 
-        public TrashcanEntity? Trashcan {  get; set; }
+        public TrashcanEntity? Trashcan { get; set; }
 
         public TrashcanPointReportEntity? TrashcanPointReport { get; set; }
 

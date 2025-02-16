@@ -8,8 +8,8 @@
 
         public string Lng { get; set; } = string.Empty;
 
-        public List<TrashcanEntity> TrashcanEntities { get; set; } = [];
+        public List<TrashcanEntity> Trashcans { get; set; } = [];
 
-        public List<TrashcanPointReportEntity> TrashcanPointReportEntities { get; set; } = [];
+        public List<TrashcanPointReportEntity> TrashcanPointReports { get; set; } = [];
     }
 }

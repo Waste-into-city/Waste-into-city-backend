@@ -5,7 +5,7 @@
         private TrashcanPointReport(Guid id, bool isReviewed, Guid usersId, Guid trashcanPointsId, DateTime submissionTime)
         {
             Id = id;
-            this.isReviewed = isReviewed;
+            IsReviewed = isReviewed;
             UsersId = usersId;
             TrashcanPointsId = trashcanPointsId;
             SubmissionTime = submissionTime;
@@ -13,7 +13,7 @@
 
         public Guid Id { get; }
 
-        public bool isReviewed { get; }
+        public bool IsReviewed { get; }
 
         public Guid UsersId { get; }
 

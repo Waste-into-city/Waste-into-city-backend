@@ -4,6 +4,6 @@
     {
         public Guid UsersId { get; set; }
 
-        public Guid RolesId { get; set; }
+        public int RolesId { get; set; }
     }
 }

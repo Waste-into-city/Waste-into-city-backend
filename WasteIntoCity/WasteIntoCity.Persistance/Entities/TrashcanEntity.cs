@@ -14,10 +14,10 @@
 
         public TrashcanPointEntity? TrashcanPoint { get; set; }
 
-        public TrashcanTypeEntity? TrashcanType { get; set; } 
+        public TrashcanTypeEntity? TrashcanType { get; set; }
 
-        public TrashcanOccupancyTypeEntity? TrashcanOccupancyType { get; set; }
+        public TrashcanOccupancyTypeEntity? AverageTrashcanOccupancyType { get; set; }
 
-        public List<TrashcanPointReportEachMarkEntity> TrashcanPointReportEachMarkList { get; set; } = [];
+        public TrashcanPointReportEachMarkEntity? TrashcanPointReportEachMark { get; set; }
     }
 }
