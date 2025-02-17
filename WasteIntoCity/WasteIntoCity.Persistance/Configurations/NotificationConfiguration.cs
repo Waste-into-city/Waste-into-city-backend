@@ -8,7 +8,9 @@ namespace WasteIntoCity.Persistance.Configurations
     {
         public void Configure(EntityTypeBuilder<NotificationEntity> builder)
         {
-            builder.HasKey(n => n.Id).HasName("id");
+            builder.ToTable("notifications");
+
+            builder.Property(n => n.Id).HasColumnName("id");
 
             builder.Property(n => n.Title).IsRequired().HasColumnName("title");
 
@@ -17,6 +19,8 @@ namespace WasteIntoCity.Persistance.Configurations
             builder.Property(n => n.FromUsersId).IsRequired().HasColumnName("from_users_id");
 
             builder.Property(n => n.ToUsersId).IsRequired().HasColumnName("to_users_id");
+
+            builder.HasKey(n => n.Id);
 
             builder.HasOne(n => n.FromUser)
                 .WithMany(u => u.NotificationsFrom);

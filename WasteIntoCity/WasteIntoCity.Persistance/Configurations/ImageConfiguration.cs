@@ -8,7 +8,9 @@ namespace WasteIntoCity.Persistance.Configurations
     {
         public void Configure(EntityTypeBuilder<ImageEntity> builder)
         {
-            builder.HasKey(i => i.Id).HasName("id");
+            builder.ToTable("images");
+
+            builder.Property(i => i.Id).HasColumnName("id");
 
             builder.Property(i => i.Name).IsRequired().HasMaxLength(Image.NAME_LENGTH_MAX).HasColumnName("name");
 
@@ -17,6 +19,8 @@ namespace WasteIntoCity.Persistance.Configurations
             builder.Property(i => i.WorkReportComplaintsId).HasColumnName("workReport_complaints_id");
 
             builder.Property(i => i.WorkReportResultsId).HasColumnName("work_report_results_id");
+
+            builder.HasKey(i => i.Id);
 
             builder.HasOne(i => i.WorkApplication)
                 .WithMany(wa => wa.Images);

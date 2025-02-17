@@ -9,17 +9,21 @@ namespace WasteIntoCity.Persistance.Configurations
     {
         public void Configure(EntityTypeBuilder<RoleEntity> builder)
         {
-            builder.HasKey(r => r.Id).HasName("id");
+            builder.ToTable("roles");
+
+            builder.Property(r => r.Id).HasColumnName("id");
 
             builder.Property(r => r.Name).IsRequired().HasColumnName("name");
+
+            builder.HasKey(r => r.Id);
 
             builder.HasIndex(r => r.Name).IsUnique();
 
             builder.HasMany(r => r.Users)
                 .WithMany(u => u.Roles)
                 .UsingEntity<UserAccordingRoleEntity>(
-                    r => r.HasOne<UserEntity>().WithMany().HasForeignKey("FK_users_according_role_users"),
-                    l => l.HasOne<RoleEntity>().WithMany().HasForeignKey("FK_users_according_role_roles")
+                    u => u.HasOne<UserEntity>().WithMany().HasForeignKey("FK_users_according_role_users"),
+                    r => r.HasOne<RoleEntity>().WithMany().HasForeignKey("FK_users_according_role_roles")
                 );
 
             IEnumerable<RoleEntity> roles = Enum.GetValues<RoleEnum>().Select(r => new RoleEntity

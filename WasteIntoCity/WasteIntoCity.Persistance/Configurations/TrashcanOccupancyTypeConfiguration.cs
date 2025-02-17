@@ -8,11 +8,15 @@ namespace WasteIntoCity.Persistance.Configurations
     {
         public void Configure(EntityTypeBuilder<TrashcanOccupancyTypeEntity> builder)
         {
-            builder.HasKey(t => t.Id).HasName("id");
+            builder.ToTable("trashcan_occupancy_types");
+
+            builder.Property(t => t.Id).HasColumnName("id");
 
             builder.Property(t => t.Name).IsRequired().HasColumnName("name");
 
             builder.Property(t => t.Value).IsRequired().HasColumnName("value");
+
+            builder.HasKey(t => t.Id);
 
             builder.HasIndex(t => t.Name).IsUnique();
 

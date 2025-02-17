@@ -8,11 +8,15 @@ namespace WasteIntoCity.Persistance.Configurations
     {
         public void Configure(EntityTypeBuilder<TrashcanPointEntity> builder)
         {
-            builder.HasKey(t => t.Id).HasName("id");
+            builder.ToTable("trashcan_points");
+
+            builder.Property(t => t.Id).HasColumnName("id");
 
             builder.Property(t => t.Lat).IsRequired().HasColumnName("lat");
 
             builder.Property(t => t.Lng).IsRequired().HasColumnName("lng");
+
+            builder.HasKey(t => t.Id);
 
             builder.HasMany(t => t.Trashcans)
                 .WithOne(tr => tr.TrashcanPoint).HasForeignKey("FK_trashcans_trashcan_point");

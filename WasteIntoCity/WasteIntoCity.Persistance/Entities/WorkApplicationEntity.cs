@@ -10,7 +10,7 @@
 
         public Guid WorkComplexitiesId { get; set; }
 
-        public WorkComplexityTypeEntity? WorkComplexity { get; set; }
+        public WorkComplexityTypeEntity? WorkComplexityType { get; set; }
 
         public List<ImageEntity> Images { get; set; } = [];
     }

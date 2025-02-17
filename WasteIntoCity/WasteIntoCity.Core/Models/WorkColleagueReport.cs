@@ -2,10 +2,10 @@
 {
     public class WorkColleagueReport
     {
-        private WorkColleagueReport(Guid id, Guid fromParticipantid, Guid aboutColleagueId, Guid worksId, Guid workMarkTypesId)
+        private WorkColleagueReport(Guid id, Guid fromParticipantId, Guid aboutColleagueId, Guid worksId, Guid workMarkTypesId)
         {
             Id = id;
-            FromParticipantid = fromParticipantid;
+            FromParticipantId = fromParticipantId;
             AboutColleagueId = aboutColleagueId;
             WorksId = worksId;
             WorkMarkTypesId = workMarkTypesId;
@@ -13,7 +13,7 @@
 
         public Guid Id { get; }
 
-        public Guid FromParticipantid { get; }
+        public Guid FromParticipantId { get; }
 
         public Guid AboutColleagueId { get; }
 
@@ -21,9 +21,9 @@
 
         public Guid WorkMarkTypesId { get; }
 
-        public WorkColleagueReport Create(Guid id, Guid fromParticipantid, Guid aboutColleagueId, Guid worksId, Guid workMarkTypesId)
+        public WorkColleagueReport Create(Guid id, Guid fromParticipantId, Guid aboutColleagueId, Guid worksId, Guid workMarkTypesId)
         {
-            return new WorkColleagueReport(id, fromParticipantid, aboutColleagueId, worksId, workMarkTypesId);
+            return new WorkColleagueReport(id, fromParticipantId, aboutColleagueId, worksId, workMarkTypesId);
         }
     }
 }

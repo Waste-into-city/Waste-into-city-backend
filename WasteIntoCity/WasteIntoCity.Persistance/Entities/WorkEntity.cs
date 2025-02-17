@@ -14,11 +14,11 @@
 
         public Guid WorkComplexityId { get; set; }
 
-        public Guid WorkStatusesId { get; set; }
+        public Guid WorkStatusTypesId { get; set; }
 
-        public WorkComplexityTypeEntity? WorkComplexity { get; set; }
+        public WorkComplexityTypeEntity? WorkComplexityType { get; set; }
 
-        public WorkStatusTypeEntity? WorkStatus { get; set; }
+        public WorkStatusTypeEntity? WorkStatusType { get; set; }
 
         public List<WorkReportComplaintEntity> WorkReportComplaints { get; set; } = [];
 

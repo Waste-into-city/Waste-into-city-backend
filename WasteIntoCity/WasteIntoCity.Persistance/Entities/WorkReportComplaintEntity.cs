@@ -15,5 +15,7 @@
         public WorkEntity? Work { get; set; }
 
         public List<ImageEntity> Images { get; set; } = [];
+
+        public UserEntity? FromParticipantUser { get; set; }
     }
 }

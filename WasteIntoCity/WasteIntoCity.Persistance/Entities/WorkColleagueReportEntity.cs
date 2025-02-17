@@ -4,7 +4,7 @@
     {
         public Guid Id { get; set; }
 
-        public Guid FromParticipantid { get; set; }
+        public Guid FromParticipantId { get; set; }
 
         public Guid AboutColleagueId { get; set; }
 

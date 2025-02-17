@@ -8,7 +8,9 @@ namespace WasteIntoCity.Persistance.Configurations
     {
         public void Configure(EntityTypeBuilder<TrashcanEntity> builder)
         {
-            builder.HasKey(t => t.Id).HasName("id");
+            builder.ToTable("trashcans");
+
+            builder.Property(t => t.Id).HasColumnName("id");
 
             builder.Property(t => t.Volume).IsRequired().HasColumnName("volume");
 
@@ -17,6 +19,8 @@ namespace WasteIntoCity.Persistance.Configurations
             builder.Property(t => t.TrashcanPointsId).IsRequired().HasColumnName("trashcan_points_id");
 
             builder.Property(t => t.AverageTrashcanOccupancyTypeId).HasColumnType("average_trashcan_occupancy_type_id");
+
+            builder.HasKey(t => t.Id);
 
             builder.HasOne(t => t.TrashcanPoint)
                 .WithMany(tp => tp.Trashcans);
