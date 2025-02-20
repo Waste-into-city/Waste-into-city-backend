@@ -32,7 +32,7 @@ namespace WasteIntoCity.Persistance.Configurations
                 .WithMany(to => to.Trashcans);
 
             builder.HasOne(t => t.TrashcanPointReportEachMark)
-                .WithOne(tpreml => tpreml.Trashcan).HasForeignKey("FK_trashcan_point_report_each_mark_trashcans");
+                .WithOne(tpreml => tpreml.Trashcan);
         }
     }
 }

@@ -22,8 +22,8 @@ namespace WasteIntoCity.Persistance.Configurations
             builder.HasMany(r => r.Users)
                 .WithMany(u => u.Roles)
                 .UsingEntity<UserAccordingRoleEntity>(
-                    u => u.HasOne<UserEntity>().WithMany().HasForeignKey("FK_users_according_role_users"),
-                    r => r.HasOne<RoleEntity>().WithMany().HasForeignKey("FK_users_according_role_roles")
+                    u => u.HasOne<UserEntity>().WithMany().HasForeignKey(e => e.UsersId),
+                    r => r.HasOne<RoleEntity>().WithMany().HasForeignKey(e => e.RolesId)
                 );
 
             IEnumerable<RoleEntity> roles = Enum.GetValues<RoleEnum>().Select(r => new RoleEntity

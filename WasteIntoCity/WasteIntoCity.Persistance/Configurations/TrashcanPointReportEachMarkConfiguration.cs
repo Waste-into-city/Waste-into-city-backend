@@ -21,7 +21,8 @@ namespace WasteIntoCity.Persistance.Configurations
             builder.HasKey(t => t.Id);
 
             builder.HasOne(t => t.Trashcan)
-                .WithOne(tr => tr.TrashcanPointReportEachMark);
+                .WithOne(tr => tr.TrashcanPointReportEachMark)
+                .HasForeignKey<TrashcanPointReportEachMarkEntity>(tr => tr.TrashcansId);
 
             builder.HasOne(t => t.TrashcanPointReport)
                 .WithMany(tr => tr.TrashcanPointReportEachMarkList);

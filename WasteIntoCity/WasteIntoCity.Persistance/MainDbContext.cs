@@ -1,0 +1,60 @@
+﻿using Microsoft.EntityFrameworkCore;
+using WasteIntoCity.Core.Models;
+using WasteIntoCity.Persistance.Entities;
+
+namespace WasteIntoCity.Persistance
+{
+    public class MainDbContext : DbContext
+    {
+        public MainDbContext(DbContextOptions<MainDbContext> options) : base(options)
+        {
+        }
+
+        public AdminSettingsEntity? AdminSettings { get; set; }
+
+        public DbSet<ImageEntity> Images { get; set; }
+
+        public DbSet<NotificationEntity> Notifications { get; set; }
+
+        public DbSet<RoleEntity> Roles { get; set; }
+
+        public DbSet<TrashcanEntity> Trashcans { get; set; }
+
+        public DbSet<TrashcanOccupancyTypeEntity> TrashcanOccupancyTypes { get; set; }
+
+        public DbSet<TrashcanPointEntity> TrashcanPoints { get; set; }
+
+        public DbSet<TrashcanPointReportEachMarkEntity> TrashcanPointReportEachMarkSet { get; set; }
+
+        public DbSet<TrashcanPointReportEntity> TrashcanPointReports { get; set; }
+
+        public DbSet<TrashcanTypeEntity> TrashcanTypes { get; set; }
+
+        public DbSet<UserAccordingRoleEntity> UserAccordingRoles { get; set; }
+
+        public DbSet<UserEntity> Users { get; set; }
+
+        public DbSet<WorkApplicationEntity> WorkApplications { get; set; }
+
+        public DbSet<WorkColleagueReportEntity> WorkColleagueReports { get; set; }
+
+        public DbSet<WorkComplexityTypeEntity> WorkComplexityTypes { get; set; }
+
+        public DbSet<WorkEntity> Works { get; set; }
+
+        public DbSet<WorkMarkTypeEntity> WorkMarkTypes { get; set; }
+
+        public DbSet<WorkParticipantEntity> WorkParticipants { get; set; }
+
+        public DbSet<WorkReportComplaintEntity> WorkReportComplaints { get; set; }
+
+        public DbSet<WorkReportResultEntity> WorkReportResults { get; set; }
+
+        public DbSet<WorkStatusTypeEntity> WorkStatuses { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(MainDbContext).Assembly);
+        }
+    }
+}
