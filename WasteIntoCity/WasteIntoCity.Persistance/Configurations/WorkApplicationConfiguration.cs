@@ -25,7 +25,7 @@ namespace WasteIntoCity.Persistance.Configurations
 
             builder.HasMany(w => w.Images)
                 .WithOne(i => i.WorkApplication)
-                .HasForeignKey("FK_images_work_applications");
+                .HasForeignKey(i => i.WorkApplicationsId);
         }
     }
 }

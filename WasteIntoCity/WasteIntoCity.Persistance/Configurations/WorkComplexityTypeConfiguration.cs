@@ -29,12 +29,12 @@ namespace WasteIntoCity.Persistance.Configurations
             builder.HasIndex(w => w.Name).IsUnique();
 
             builder.HasMany(w => w.WorkApplications)
-                .WithOne(w => w.WorkComplexityType)
-                .HasForeignKey("FK_work_applications_work_complexities");
+                .WithOne(wo => wo.WorkComplexityType)
+                .HasForeignKey(wo => wo.WorkComplexitiesId);
 
             builder.HasMany(w => w.Works)
-                .WithOne(w => w.WorkComplexityType)
-                .HasForeignKey("FK_works_work_complexity_types");
+                .WithOne(wo => wo.WorkComplexityType)
+                .HasForeignKey(wo => wo.WorkComplexityTypesId);
         }
     }
 }

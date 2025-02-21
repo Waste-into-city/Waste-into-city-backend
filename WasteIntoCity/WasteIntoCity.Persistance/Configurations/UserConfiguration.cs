@@ -26,31 +26,31 @@ namespace WasteIntoCity.Persistance.Configurations
 
             builder.HasMany(u => u.WorkReportResults)
                 .WithOne(w => w.FromParticipant)
-                .HasForeignKey("FK_work_report_results_users");
+                .HasForeignKey(w => w.FromParticipantsId);
 
             builder.HasMany(u => u.WorkReportComplaints)
-                .WithOne(w => w.FromParticipantUser)
-                .HasForeignKey("FK_work_report_complaint_from_users");
+                .WithOne(w => w.FromUser)
+                .HasForeignKey(w => w.FromUsersId);
 
             builder.HasMany(u => u.WorkColleagueReportsFrom)
                 .WithOne(w => w.UserFromParticipant)
-                .HasForeignKey("FK_work_colleague_reports_from_participant_users");
+                .HasForeignKey(w => w.FromParticipantId);
 
             builder.HasMany(u => u.WorkColleagueReportsAbout)
                 .WithOne(w => w.UserAboutColleague)
-                .HasForeignKey("FK_work_colleague_reports_about_colleague_users");
+                .HasForeignKey(w => w.AboutColleagueId);
 
             builder.HasMany(u => u.NotificationsFrom)
                 .WithOne(n => n.FromUser)
-                .HasForeignKey("FK_notifications_from_user");
+                .HasForeignKey(n => n.FromUsersId);
 
             builder.HasMany(u => u.NotificationsTo)
                 .WithOne(n => n.ToUser)
-                .HasForeignKey("FK_notifications_to_user");
+                .HasForeignKey(n => n.ToUsersId);
 
             builder.HasMany(u => u.TrashcanPointReports)
                 .WithOne(u => u.User)
-                .HasForeignKey("FK_trashcan_point_reports_users");
+                .HasForeignKey(u => u.UsersId);
         }
     }
 }

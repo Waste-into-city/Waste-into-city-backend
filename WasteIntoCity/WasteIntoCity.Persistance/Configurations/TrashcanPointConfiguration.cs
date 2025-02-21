@@ -19,10 +19,12 @@ namespace WasteIntoCity.Persistance.Configurations
             builder.HasKey(t => t.Id);
 
             builder.HasMany(t => t.Trashcans)
-                .WithOne(tr => tr.TrashcanPoint).HasForeignKey("FK_trashcans_trashcan_point");
+                .WithOne(tr => tr.TrashcanPoint)
+                .HasForeignKey(tr => tr.TrashcanPointsId);
 
             builder.HasMany(t => t.TrashcanPointReports)
-                .WithOne(tp => tp.TrashcanPoint).HasForeignKey("FK_trashcan_point_reports_trashcan_points");
+                .WithOne(tp => tp.TrashcanPoint)
+                .HasForeignKey(tp => tp.TrashcanPointsId);
         }
     }
 }

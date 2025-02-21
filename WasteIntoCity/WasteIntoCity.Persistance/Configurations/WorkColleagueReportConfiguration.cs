@@ -23,20 +23,16 @@ namespace WasteIntoCity.Persistance.Configurations
             builder.HasKey(w => w.Id);
 
             builder.HasOne(w => w.UserFromParticipant)
-                .WithMany(u => u.WorkColleagueReportsFrom)
-                .HasForeignKey("FK_work_colleague_reports_from_participant_users");
+                .WithMany(u => u.WorkColleagueReportsFrom);
 
             builder.HasOne(w => w.UserAboutColleague)
-                .WithMany(u => u.WorkColleagueReportsAbout)
-                .HasForeignKey("FK_work_colleague_reports_about_colleague_users");
+                .WithMany(u => u.WorkColleagueReportsAbout);
 
             builder.HasOne(w => w.Work)
-                .WithMany(u => u.WorkColleagueReports)
-                .HasForeignKey("FK_work_colleague_reports_works");
+                .WithMany(u => u.WorkColleagueReports);
 
             builder.HasOne(w => w.WorkMarkType)
-                .WithMany(u => u.WorkColleagueReports)
-                .HasForeignKey("FK_work_colleague_reports_work_mark_types");
+                .WithMany(u => u.WorkColleagueReports);
         }
     }
 }

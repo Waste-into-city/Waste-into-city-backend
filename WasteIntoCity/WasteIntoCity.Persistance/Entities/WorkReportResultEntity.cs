@@ -8,9 +8,9 @@
 
         public string Description { get; set; } = string.Empty;
 
-        public Guid FromParticipantId { get; set; }
+        public Guid FromParticipantsId { get; set; }
 
-        public Guid WorkStatusesId { get; set; }
+        public Guid WorkStatusTypesId { get; set; }
 
         public UserEntity? FromParticipant { get; set; }
 

@@ -20,7 +20,7 @@ namespace WasteIntoCity.Persistance.Configurations
 
             builder.Property(w => w.FinishDatetime).IsRequired().HasColumnName("finish_datetime");
 
-            builder.Property(w => w.WorkComplexityId).IsRequired().HasColumnName("work_complexity_id");
+            builder.Property(w => w.WorkComplexityTypesId).IsRequired().HasColumnName("work_complexity_id");
 
             builder.Property(w => w.WorkStatusTypesId).IsRequired().HasColumnName("work_statuses_id");
 
@@ -34,17 +34,17 @@ namespace WasteIntoCity.Persistance.Configurations
 
             builder.HasMany(w => w.WorkReportComplaints)
                 .WithOne(wo => wo.Work)
-                .HasForeignKey("FK_work_report_complaints_works");
+                .HasForeignKey(wo => wo.WorksId);
 
             builder.HasMany(w => w.WorkColleagueReports)
                 .WithOne(wo => wo.Work)
-                .HasForeignKey("FK_work_colleague_reports_works");
+                .HasForeignKey(wo => wo.WorksId);
 
             builder.HasMany(w => w.Users)
                 .WithMany(u => u.Works)
                 .UsingEntity<WorkParticipantEntity>(
-                    w => w.HasOne<UserEntity>().WithMany().HasForeignKey("FK_workk_partcipants_users"),
-                    u => u.HasOne<WorkEntity>().WithMany().HasForeignKey("FK_work_participants_works")
+                    w => w.HasOne<UserEntity>().WithMany().HasForeignKey(e => e.ParticipantsId),
+                    u => u.HasOne<WorkEntity>().WithMany().HasForeignKey(e => e.WorksId)
                 );
         }
     }

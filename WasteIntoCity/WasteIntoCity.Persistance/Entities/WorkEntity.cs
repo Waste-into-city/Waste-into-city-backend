@@ -12,7 +12,7 @@
 
         public DateTime FinishDatetime { get; set; }
 
-        public Guid WorkComplexityId { get; set; }
+        public Guid WorkComplexityTypesId { get; set; }
 
         public Guid WorkStatusTypesId { get; set; }
 

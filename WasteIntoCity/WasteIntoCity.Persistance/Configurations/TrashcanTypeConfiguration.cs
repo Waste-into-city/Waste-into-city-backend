@@ -20,7 +20,7 @@ namespace WasteIntoCity.Persistance.Configurations
 
             builder.HasMany(t => t.Trashcans)
                 .WithOne(tr => tr.TrashcanType)
-                .HasForeignKey("FK_trashcans_trashcan_type");
+                .HasForeignKey(tr => tr.TrashcanTypesId);
         }
     }
 }

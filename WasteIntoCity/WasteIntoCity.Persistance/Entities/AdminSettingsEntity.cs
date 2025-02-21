@@ -2,6 +2,8 @@
 {
     public class AdminSettingsEntity
     {
+        public Guid Id { get; set; }
+
         public int TrueComplaintToAdditionRanking { get; set; }
 
         public int FalseComplaintFromAdditionRanking { get; set; }

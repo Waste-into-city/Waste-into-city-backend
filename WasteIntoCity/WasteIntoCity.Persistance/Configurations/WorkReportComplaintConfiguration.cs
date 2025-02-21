@@ -25,11 +25,11 @@ namespace WasteIntoCity.Persistance.Configurations
             builder.HasOne(w => w.Work)
                 .WithMany(w => w.WorkReportComplaints);
 
-            builder.HasMany(w => w.Images)
+            builder.HasMany(i => i.Images)
                 .WithOne(w => w.WorkReportComplaint)
-                .HasForeignKey("FK_images_work_report_complaints");
+                .HasForeignKey(w => w.WorkReportComplaintsId);
 
-            builder.HasOne(w => w.FromParticipantUser)
+            builder.HasOne(w => w.FromUser)
                 .WithMany(w => w.WorkReportComplaints);
         }
     }

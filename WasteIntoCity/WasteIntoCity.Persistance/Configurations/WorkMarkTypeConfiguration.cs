@@ -21,8 +21,8 @@ namespace WasteIntoCity.Persistance.Configurations
             builder.HasIndex(w => w.Name).IsUnique();
 
             builder.HasMany(w => w.WorkColleagueReports)
-                .WithOne(w => w.WorkMarkType)
-                .HasForeignKey("FK_work_colleague_reports_work_mark_types");
+                .WithOne(wo => wo.WorkMarkType)
+                .HasForeignKey(wo => wo.WorkMarkTypesId);
         }
     }
 }
