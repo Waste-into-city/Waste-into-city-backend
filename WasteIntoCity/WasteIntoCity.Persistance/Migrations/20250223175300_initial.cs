@@ -146,28 +146,26 @@ namespace WasteIntoCity.Persistance.Migrations
                     volume = table.Column<int>(type: "int", nullable: false),
                     trashcan_points_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     trashcan_types_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AverageTrashcanOccupancyTypeId = table.Column<Guid>(type: "average_trashcan_occupancy_type_id", nullable: true)
+                    average_trashcan_occupancy_type_id = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_trashcans", x => x.id);
                     table.ForeignKey(
-                        name: "FK_trashcans_trashcan_occupancy_types_AverageTrashcanOccupancyTypeId",
-                        column: x => x.AverageTrashcanOccupancyTypeId,
+                        name: "FK_trashcans_trashcan_occupancy_types_average_trashcan_occupancy_type_id",
+                        column: x => x.average_trashcan_occupancy_type_id,
                         principalTable: "trashcan_occupancy_types",
                         principalColumn: "id");
                     table.ForeignKey(
                         name: "FK_trashcans_trashcan_points_trashcan_points_id",
                         column: x => x.trashcan_points_id,
                         principalTable: "trashcan_points",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "id");
                     table.ForeignKey(
                         name: "FK_trashcans_trashcan_types_trashcan_types_id",
                         column: x => x.trashcan_types_id,
                         principalTable: "trashcan_types",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "id");
                 });
 
             migrationBuilder.CreateTable(
@@ -187,14 +185,12 @@ namespace WasteIntoCity.Persistance.Migrations
                         name: "FK_notifications_users_from_users_id",
                         column: x => x.from_users_id,
                         principalTable: "users",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "id");
                     table.ForeignKey(
                         name: "FK_notifications_users_to_users_id",
                         column: x => x.to_users_id,
                         principalTable: "users",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "id");
                 });
 
             migrationBuilder.CreateTable(
@@ -214,14 +210,12 @@ namespace WasteIntoCity.Persistance.Migrations
                         name: "FK_trashcan_point_reports_trashcan_points_trashcan_points_id",
                         column: x => x.trashcan_points_id,
                         principalTable: "trashcan_points",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "id");
                     table.ForeignKey(
                         name: "FK_trashcan_point_reports_users_users_id",
                         column: x => x.users_id,
                         principalTable: "users",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "id");
                 });
 
             migrationBuilder.CreateTable(
@@ -238,14 +232,12 @@ namespace WasteIntoCity.Persistance.Migrations
                         name: "FK_user_according_roles_roles_roles_id",
                         column: x => x.roles_id,
                         principalTable: "roles",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "id");
                     table.ForeignKey(
                         name: "FK_user_according_roles_users_users_id",
                         column: x => x.users_id,
                         principalTable: "users",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "id");
                 });
 
             migrationBuilder.CreateTable(
@@ -264,8 +256,7 @@ namespace WasteIntoCity.Persistance.Migrations
                         name: "FK_work_applications_work_complexity_types_work_complexities_id",
                         column: x => x.work_complexities_id,
                         principalTable: "work_complexity_types",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "id");
                 });
 
             migrationBuilder.CreateTable(
@@ -285,14 +276,12 @@ namespace WasteIntoCity.Persistance.Migrations
                         name: "FK_work_report_results_users_from_participant_id",
                         column: x => x.from_participant_id,
                         principalTable: "users",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "id");
                     table.ForeignKey(
                         name: "FK_work_report_results_work_status_types_work_statuses_id",
                         column: x => x.work_statuses_id,
                         principalTable: "work_status_types",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "id");
                 });
 
             migrationBuilder.CreateTable(
@@ -314,14 +303,12 @@ namespace WasteIntoCity.Persistance.Migrations
                         name: "FK_works_work_complexity_types_work_complexity_id",
                         column: x => x.work_complexity_id,
                         principalTable: "work_complexity_types",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "id");
                     table.ForeignKey(
                         name: "FK_works_work_status_types_work_statuses_id",
                         column: x => x.work_statuses_id,
                         principalTable: "work_status_types",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "id");
                 });
 
             migrationBuilder.CreateTable(
@@ -340,20 +327,17 @@ namespace WasteIntoCity.Persistance.Migrations
                         name: "FK_trashcan_point_report_each_mark_trashcan_occupancy_types_trashcan_occupancy_types_id",
                         column: x => x.trashcan_occupancy_types_id,
                         principalTable: "trashcan_occupancy_types",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "id");
                     table.ForeignKey(
                         name: "FK_trashcan_point_report_each_mark_trashcan_point_reports_trashcan_point_reports_id",
                         column: x => x.trashcan_point_reports_id,
                         principalTable: "trashcan_point_reports",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "id");
                     table.ForeignKey(
                         name: "FK_trashcan_point_report_each_mark_trashcans_trashcans_id",
                         column: x => x.trashcans_id,
                         principalTable: "trashcans",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "id");
                 });
 
             migrationBuilder.CreateTable(
@@ -373,26 +357,22 @@ namespace WasteIntoCity.Persistance.Migrations
                         name: "FK_work_colleague_reports_users_about_colleague_id",
                         column: x => x.about_colleague_id,
                         principalTable: "users",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "id");
                     table.ForeignKey(
                         name: "FK_work_colleague_reports_users_from_participant_id",
                         column: x => x.from_participant_id,
                         principalTable: "users",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "id");
                     table.ForeignKey(
                         name: "FK_work_colleague_reports_work_mark_types_work_mark_types_id",
                         column: x => x.work_mark_types_id,
                         principalTable: "work_mark_types",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "id");
                     table.ForeignKey(
                         name: "FK_work_colleague_reports_works_works_id",
                         column: x => x.works_id,
                         principalTable: "works",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "id");
                 });
 
             migrationBuilder.CreateTable(
@@ -409,14 +389,12 @@ namespace WasteIntoCity.Persistance.Migrations
                         name: "FK_work_participants_users_participants_id",
                         column: x => x.participants_id,
                         principalTable: "users",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "id");
                     table.ForeignKey(
                         name: "FK_work_participants_works_works",
                         column: x => x.works,
                         principalTable: "works",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "id");
                 });
 
             migrationBuilder.CreateTable(
@@ -436,14 +414,12 @@ namespace WasteIntoCity.Persistance.Migrations
                         name: "FK_work_report_complaints_users_from_users_id",
                         column: x => x.from_users_id,
                         principalTable: "users",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "id");
                     table.ForeignKey(
                         name: "FK_work_report_complaints_works_works_id",
                         column: x => x.works_id,
                         principalTable: "works",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "id");
                 });
 
             migrationBuilder.CreateTable(
@@ -556,9 +532,9 @@ namespace WasteIntoCity.Persistance.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_trashcans_AverageTrashcanOccupancyTypeId",
+                name: "IX_trashcans_average_trashcan_occupancy_type_id",
                 table: "trashcans",
-                column: "AverageTrashcanOccupancyTypeId");
+                column: "average_trashcan_occupancy_type_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_trashcans_trashcan_points_id",

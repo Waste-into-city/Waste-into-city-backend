@@ -12,9 +12,9 @@ namespace WasteIntoCity.Persistance.Configurations
 
             builder.Property(t => t.Id).HasColumnName("id");
 
-            builder.Property(t => t.Lat).IsRequired().HasColumnName("lat");
+            builder.Property(t => t.Lat).IsRequired().HasColumnName("lat").HasMaxLength(TrashcanPoint.LAT_LEGTH_MAX);
 
-            builder.Property(t => t.Lng).IsRequired().HasColumnName("lng");
+            builder.Property(t => t.Lng).IsRequired().HasColumnName("lng").HasMaxLength(TrashcanPoint.LNG_LEGTH_MAX);
 
             builder.HasKey(t => t.Id);
 

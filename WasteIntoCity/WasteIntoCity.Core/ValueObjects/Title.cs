@@ -4,9 +4,9 @@ namespace WasteIntoCity.Core.ValueObjects
 {
     public class Description : ValueObject
     {
-        private const int VALUE_LENGTH_MIN = 0;
+        public const int VALUE_LENGTH_MIN = 0;
 
-        private const int VALUE_LENGTH_MAX = 1000;
+        public const int VALUE_LENGTH_MAX = 1000;
 
         private Description(string value)
         {

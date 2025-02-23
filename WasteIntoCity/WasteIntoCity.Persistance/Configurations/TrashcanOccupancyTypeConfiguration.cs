@@ -12,7 +12,7 @@ namespace WasteIntoCity.Persistance.Configurations
 
             builder.Property(t => t.Id).HasColumnName("id");
 
-            builder.Property(t => t.Name).IsRequired().HasColumnName("name");
+            builder.Property(t => t.Name).IsRequired().HasColumnName("name").HasMaxLength(TrashcanOccupancyType.NAME_LENGTH_MAX);
 
             builder.Property(t => t.Value).IsRequired().HasColumnName("value");
 

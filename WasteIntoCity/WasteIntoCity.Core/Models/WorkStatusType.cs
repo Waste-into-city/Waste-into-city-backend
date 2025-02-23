@@ -5,9 +5,9 @@ namespace WasteIntoCity.Core.Models
 {
     public class WorkStatusType
     {
-        public const int RATING_CHANGING_MIN = -9999;
+        public const int MULTIPLIER_RANKING_MIN = -9999;
 
-        public const int RATING_CHANGING_MAX = 9999;
+        public const int MULTIPLIER_RANKING_MAX = 9999;
 
         public const int NAME_LENGTH_MIN = 1;
 
@@ -33,9 +33,9 @@ namespace WasteIntoCity.Core.Models
                 throw new InvalidLengthException(nameof(name), NAME_LENGTH_MIN, NAME_LENGTH_MAX);
             }
 
-            if (multiplierRanking is < RATING_CHANGING_MIN or > RATING_CHANGING_MAX)
+            if (multiplierRanking is < MULTIPLIER_RANKING_MIN or > MULTIPLIER_RANKING_MAX)
             {
-                throw new ValueOutOfRangeException<int>(nameof(multiplierRanking), RATING_CHANGING_MIN, RATING_CHANGING_MAX);
+                throw new ValueOutOfRangeException<int>(nameof(multiplierRanking), MULTIPLIER_RANKING_MIN, MULTIPLIER_RANKING_MAX);
             }
 
             return new WorkStatusType(id, name, multiplierRanking);

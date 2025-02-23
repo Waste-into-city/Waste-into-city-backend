@@ -5,13 +5,13 @@ namespace WasteIntoCity.Core.Models
 {
     public class Work
     {
-        public const int NAME_LENGTH_MIN = 1;
+        public const int TITLE_LENGTH_MIN = Title.VALUE_LENGTH_MIN;
 
-        public const int NAME_LENGTH_MAX = 100;
+        public const int TITLE_LENGTH_MAX = Title.VALUE_LENGTH_MAX;
 
-        public const int DESCRIPTION_LENGTH_MIN = 0;
+        public const int DESCRIPTION_LENGTH_MIN = Description.VALUE_LENGTH_MIN;
 
-        public const int DESCRIPTION_LENGTH_MAX = 1000;
+        public const int DESCRIPTION_LENGTH_MAX = Description.VALUE_LENGTH_MAX;
 
         private Work(Guid id, Title title, Description description, DateTime startedDatetime, DateTime finishDatetime, Guid workComplexityId, Guid workStatusesId)
         {
@@ -40,16 +40,6 @@ namespace WasteIntoCity.Core.Models
 
         public Work Create(Guid id, Title title, Description description, DateTime startedDatetime, DateTime finishDatetime, Guid workComplexityId, Guid workStatusesId)
         {
-            if (title.Value.Length is < NAME_LENGTH_MIN or > NAME_LENGTH_MAX)
-            {
-                throw new ValueOutOfRangeException<int>("name", NAME_LENGTH_MIN, NAME_LENGTH_MAX);
-            }
-
-            if (description.Value.Length is < DESCRIPTION_LENGTH_MIN or > DESCRIPTION_LENGTH_MAX)
-            {
-                throw new ValueOutOfRangeException<int>("description", DESCRIPTION_LENGTH_MIN, DESCRIPTION_LENGTH_MAX);
-            }
-
             if (StartedDatetime > FinishDatetime)
             {
                 throw new ValueOutOfRangeException<DateTime>("startDatetime", DateTime.MinValue, FinishDatetime);

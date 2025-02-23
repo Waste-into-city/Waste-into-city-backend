@@ -12,8 +12,8 @@ using WasteIntoCity.Persistance;
 namespace WasteIntoCity.Persistance.Migrations
 {
     [DbContext(typeof(MainDbContext))]
-    [Migration("20250221181851_initial")]
-    partial class initial
+    [Migration("20250223194838_fix_length")]
+    partial class fix_length
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -70,7 +70,8 @@ namespace WasteIntoCity.Persistance.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)")
                         .HasColumnName("description");
 
                     b.Property<Guid>("FromUsersId")
@@ -79,7 +80,8 @@ namespace WasteIntoCity.Persistance.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
                         .HasColumnName("title");
 
                     b.Property<Guid>("ToUsersId")
@@ -106,7 +108,8 @@ namespace WasteIntoCity.Persistance.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)")
+                        .HasMaxLength(45)
+                        .HasColumnType("nvarchar(45)")
                         .HasColumnName("name");
 
                     b.HasKey("Id");
@@ -142,7 +145,8 @@ namespace WasteIntoCity.Persistance.Migrations
                         .HasColumnName("id");
 
                     b.Property<Guid?>("AverageTrashcanOccupancyTypeId")
-                        .HasColumnType("average_trashcan_occupancy_type_id");
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("average_trashcan_occupancy_type_id");
 
                     b.Property<Guid>("TrashcanPointsId")
                         .HasColumnType("uniqueidentifier")
@@ -176,7 +180,8 @@ namespace WasteIntoCity.Persistance.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
                         .HasColumnName("name");
 
                     b.Property<int>("Value")
@@ -200,12 +205,14 @@ namespace WasteIntoCity.Persistance.Migrations
 
                     b.Property<string>("Lat")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)")
                         .HasColumnName("lat");
 
                     b.Property<string>("Lng")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)")
                         .HasColumnName("lng");
 
                     b.HasKey("Id");
@@ -285,7 +292,8 @@ namespace WasteIntoCity.Persistance.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
                         .HasColumnName("name");
 
                     b.HasKey("Id");
@@ -322,17 +330,20 @@ namespace WasteIntoCity.Persistance.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
                         .HasColumnName("email");
 
                     b.Property<string>("Nickname")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(45)
+                        .HasColumnType("nvarchar(45)")
                         .HasColumnName("nickname");
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)")
                         .HasColumnName("password");
 
                     b.Property<int>("Ranking")
@@ -356,12 +367,14 @@ namespace WasteIntoCity.Persistance.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)")
                         .HasColumnName("description");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
                         .HasColumnName("title");
 
                     b.Property<Guid>("WorkComplexitiesId")
@@ -428,7 +441,8 @@ namespace WasteIntoCity.Persistance.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
                         .HasColumnName("name");
 
                     b.Property<int>("ParticipantsMax")
@@ -460,7 +474,8 @@ namespace WasteIntoCity.Persistance.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)")
                         .HasColumnName("description");
 
                     b.Property<DateTime>("FinishDatetime")
@@ -473,7 +488,8 @@ namespace WasteIntoCity.Persistance.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
                         .HasColumnName("title");
 
                     b.Property<Guid>("WorkComplexityTypesId")
@@ -506,7 +522,8 @@ namespace WasteIntoCity.Persistance.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
                         .HasColumnName("name");
 
                     b.HasKey("Id");
@@ -521,7 +538,7 @@ namespace WasteIntoCity.Persistance.Migrations
                 {
                     b.Property<Guid>("WorksId")
                         .HasColumnType("uniqueidentifier")
-                        .HasColumnName("works");
+                        .HasColumnName("works_id");
 
                     b.Property<Guid>("ParticipantsId")
                         .HasColumnType("uniqueidentifier")
@@ -543,7 +560,8 @@ namespace WasteIntoCity.Persistance.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)")
                         .HasColumnName("description");
 
                     b.Property<Guid>("FromUsersId")
@@ -552,7 +570,8 @@ namespace WasteIntoCity.Persistance.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
                         .HasColumnName("title");
 
                     b.Property<Guid>("WorksId")
@@ -576,7 +595,8 @@ namespace WasteIntoCity.Persistance.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)")
                         .HasColumnName("description");
 
                     b.Property<Guid>("FromParticipantsId")
@@ -585,7 +605,8 @@ namespace WasteIntoCity.Persistance.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(1)
+                        .HasColumnType("nvarchar(1)")
                         .HasColumnName("title");
 
                     b.Property<Guid>("WorkStatusTypesId")
@@ -614,7 +635,8 @@ namespace WasteIntoCity.Persistance.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
                         .HasColumnName("name");
 
                     b.HasKey("Id");
@@ -683,13 +705,11 @@ namespace WasteIntoCity.Persistance.Migrations
                     b.HasOne("WasteIntoCity.Core.Models.UserEntity", "FromUser")
                         .WithMany("NotificationsFrom")
                         .HasForeignKey("FromUsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("WasteIntoCity.Core.Models.UserEntity", "ToUser")
                         .WithMany("NotificationsTo")
                         .HasForeignKey("ToUsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("FromUser");
@@ -706,13 +726,11 @@ namespace WasteIntoCity.Persistance.Migrations
                     b.HasOne("WasteIntoCity.Core.Models.TrashcanPointEntity", "TrashcanPoint")
                         .WithMany("Trashcans")
                         .HasForeignKey("TrashcanPointsId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("WasteIntoCity.Core.Models.TrashcanTypeEntity", "TrashcanType")
                         .WithMany("Trashcans")
                         .HasForeignKey("TrashcanTypesId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("AverageTrashcanOccupancyType");
@@ -727,19 +745,16 @@ namespace WasteIntoCity.Persistance.Migrations
                     b.HasOne("WasteIntoCity.Core.Models.TrashcanOccupancyTypeEntity", "TrashcanOccupancyType")
                         .WithMany("TrashcanPointReportEachMarkList")
                         .HasForeignKey("TrashcanOccupancyTypesId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("WasteIntoCity.Core.Models.TrashcanPointReportEntity", "TrashcanPointReport")
                         .WithMany("TrashcanPointReportEachMarkList")
                         .HasForeignKey("TrashcanPointReportsId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("WasteIntoCity.Core.Models.TrashcanEntity", "Trashcan")
                         .WithOne("TrashcanPointReportEachMark")
                         .HasForeignKey("WasteIntoCity.Core.Models.TrashcanPointReportEachMarkEntity", "TrashcansId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Trashcan");
@@ -754,13 +769,11 @@ namespace WasteIntoCity.Persistance.Migrations
                     b.HasOne("WasteIntoCity.Core.Models.TrashcanPointEntity", "TrashcanPoint")
                         .WithMany("TrashcanPointReports")
                         .HasForeignKey("TrashcanPointsId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("WasteIntoCity.Core.Models.UserEntity", "User")
                         .WithMany("TrashcanPointReports")
                         .HasForeignKey("UsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("TrashcanPoint");
@@ -773,13 +786,11 @@ namespace WasteIntoCity.Persistance.Migrations
                     b.HasOne("WasteIntoCity.Core.Models.RoleEntity", null)
                         .WithMany()
                         .HasForeignKey("RolesId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("WasteIntoCity.Core.Models.UserEntity", null)
                         .WithMany()
                         .HasForeignKey("UsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -788,7 +799,6 @@ namespace WasteIntoCity.Persistance.Migrations
                     b.HasOne("WasteIntoCity.Core.Models.WorkComplexityTypeEntity", "WorkComplexityType")
                         .WithMany("WorkApplications")
                         .HasForeignKey("WorkComplexitiesId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("WorkComplexityType");
@@ -799,25 +809,21 @@ namespace WasteIntoCity.Persistance.Migrations
                     b.HasOne("WasteIntoCity.Core.Models.UserEntity", "UserAboutColleague")
                         .WithMany("WorkColleagueReportsAbout")
                         .HasForeignKey("AboutColleagueId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("WasteIntoCity.Core.Models.UserEntity", "UserFromParticipant")
                         .WithMany("WorkColleagueReportsFrom")
                         .HasForeignKey("FromParticipantId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("WasteIntoCity.Core.Models.WorkMarkTypeEntity", "WorkMarkType")
                         .WithMany("WorkColleagueReports")
                         .HasForeignKey("WorkMarkTypesId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("WasteIntoCity.Core.Models.WorkEntity", "Work")
                         .WithMany("WorkColleagueReports")
                         .HasForeignKey("WorksId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("UserAboutColleague");
@@ -834,13 +840,11 @@ namespace WasteIntoCity.Persistance.Migrations
                     b.HasOne("WasteIntoCity.Core.Models.WorkComplexityTypeEntity", "WorkComplexityType")
                         .WithMany("Works")
                         .HasForeignKey("WorkComplexityTypesId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("WasteIntoCity.Core.Models.WorkStatusTypeEntity", "WorkStatusType")
                         .WithMany("Works")
                         .HasForeignKey("WorkStatusTypesId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("WorkComplexityType");
@@ -853,13 +857,11 @@ namespace WasteIntoCity.Persistance.Migrations
                     b.HasOne("WasteIntoCity.Core.Models.UserEntity", null)
                         .WithMany()
                         .HasForeignKey("ParticipantsId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("WasteIntoCity.Core.Models.WorkEntity", null)
                         .WithMany()
                         .HasForeignKey("WorksId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -868,13 +870,11 @@ namespace WasteIntoCity.Persistance.Migrations
                     b.HasOne("WasteIntoCity.Core.Models.UserEntity", "FromUser")
                         .WithMany("WorkReportComplaints")
                         .HasForeignKey("FromUsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("WasteIntoCity.Core.Models.WorkEntity", "Work")
                         .WithMany("WorkReportComplaints")
                         .HasForeignKey("WorksId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("FromUser");
@@ -887,13 +887,11 @@ namespace WasteIntoCity.Persistance.Migrations
                     b.HasOne("WasteIntoCity.Core.Models.UserEntity", "FromParticipant")
                         .WithMany("WorkReportResults")
                         .HasForeignKey("FromParticipantsId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("WasteIntoCity.Core.Models.WorkStatusTypeEntity", "WorkStatusType")
                         .WithMany("WorkReportResults")
                         .HasForeignKey("WorkStatusTypesId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("FromParticipant");

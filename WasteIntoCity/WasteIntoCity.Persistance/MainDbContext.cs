@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using WasteIntoCity.Core.Models;
 using WasteIntoCity.Persistance.Entities;
 
@@ -51,6 +52,12 @@ namespace WasteIntoCity.Persistance
         public DbSet<WorkReportResultEntity> WorkReportResults { get; set; }
 
         public DbSet<WorkStatusTypeEntity> WorkStatuses { get; set; }
+
+        protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
+        {
+            configurationBuilder.Conventions.Remove(typeof(CascadeDeleteConvention));
+            configurationBuilder.Conventions.Remove(typeof(SqlServerOnDeleteConvention));
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

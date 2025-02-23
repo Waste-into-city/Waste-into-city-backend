@@ -18,7 +18,7 @@ namespace WasteIntoCity.Persistance.Configurations
 
             builder.Property(t => t.TrashcanPointsId).IsRequired().HasColumnName("trashcan_points_id");
 
-            builder.Property(t => t.AverageTrashcanOccupancyTypeId).HasColumnType("average_trashcan_occupancy_type_id");
+            builder.Property(t => t.AverageTrashcanOccupancyTypeId).HasColumnName("average_trashcan_occupancy_type_id");
 
             builder.HasKey(t => t.Id);
 

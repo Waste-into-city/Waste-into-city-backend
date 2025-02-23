@@ -12,7 +12,7 @@ namespace WasteIntoCity.Persistance.Configurations
 
             builder.Property(w => w.Id).HasColumnName("id");
 
-            builder.Property(w => w.Name).IsRequired().HasColumnName("name");
+            builder.Property(w => w.Name).IsRequired().HasColumnName("name").HasMaxLength(WorkComplexityType.NAME_LENGTH_MAX);
 
             builder.Property(w => w.ParticipantsMin).IsRequired().HasColumnName("participants_min");
 

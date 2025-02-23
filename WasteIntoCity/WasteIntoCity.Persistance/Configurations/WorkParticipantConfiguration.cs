@@ -10,7 +10,7 @@ namespace WasteIntoCity.Persistance.Configurations
         {
             builder.ToTable("work_participants");
 
-            builder.Property(w => w.WorksId).HasColumnName("works");
+            builder.Property(w => w.WorksId).HasColumnName("works_id");
 
             builder.Property(w => w.ParticipantsId).HasColumnName("participants_id");
 

@@ -12,11 +12,11 @@ namespace WasteIntoCity.Persistance.Configurations
 
             builder.Property(u => u.Id).HasColumnName("id");
 
-            builder.Property(u => u.Nickname).IsRequired().HasColumnName("nickname");
+            builder.Property(u => u.Nickname).IsRequired().HasColumnName("nickname").HasMaxLength(User.NICKNAME_LENGTH_MAX);
 
-            builder.Property(u => u.Email).IsRequired().HasColumnName("email");
+            builder.Property(u => u.Email).IsRequired().HasColumnName("email").HasMaxLength(User.EMAIL_LENGTH_MAX);
 
-            builder.Property(u => u.Password).IsRequired().HasColumnName("password");
+            builder.Property(u => u.Password).IsRequired().HasColumnName("password").HasMaxLength(User.PASSWORD_LENGTH_MAX);
 
             builder.Property(u => u.Ranking).IsRequired().HasColumnName("ranking");
 

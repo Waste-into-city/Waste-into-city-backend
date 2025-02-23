@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WasteIntoCity.Persistance;
 
@@ -11,9 +12,11 @@ using WasteIntoCity.Persistance;
 namespace WasteIntoCity.Persistance.Migrations
 {
     [DbContext(typeof(MainDbContext))]
-    partial class MainDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250223175300_initial")]
+    partial class initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -67,8 +70,7 @@ namespace WasteIntoCity.Persistance.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)")
+                        .HasColumnType("nvarchar(max)")
                         .HasColumnName("description");
 
                     b.Property<Guid>("FromUsersId")
@@ -77,8 +79,7 @@ namespace WasteIntoCity.Persistance.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
+                        .HasColumnType("nvarchar(max)")
                         .HasColumnName("title");
 
                     b.Property<Guid>("ToUsersId")
@@ -105,8 +106,7 @@ namespace WasteIntoCity.Persistance.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(45)
-                        .HasColumnType("nvarchar(45)")
+                        .HasColumnType("nvarchar(450)")
                         .HasColumnName("name");
 
                     b.HasKey("Id");
@@ -177,8 +177,7 @@ namespace WasteIntoCity.Persistance.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
+                        .HasColumnType("nvarchar(450)")
                         .HasColumnName("name");
 
                     b.Property<int>("Value")
@@ -202,14 +201,12 @@ namespace WasteIntoCity.Persistance.Migrations
 
                     b.Property<string>("Lat")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)")
+                        .HasColumnType("nvarchar(max)")
                         .HasColumnName("lat");
 
                     b.Property<string>("Lng")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)")
+                        .HasColumnType("nvarchar(max)")
                         .HasColumnName("lng");
 
                     b.HasKey("Id");
@@ -289,8 +286,7 @@ namespace WasteIntoCity.Persistance.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
+                        .HasColumnType("nvarchar(450)")
                         .HasColumnName("name");
 
                     b.HasKey("Id");
@@ -327,20 +323,17 @@ namespace WasteIntoCity.Persistance.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
+                        .HasColumnType("nvarchar(450)")
                         .HasColumnName("email");
 
                     b.Property<string>("Nickname")
                         .IsRequired()
-                        .HasMaxLength(45)
-                        .HasColumnType("nvarchar(45)")
+                        .HasColumnType("nvarchar(max)")
                         .HasColumnName("nickname");
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)")
+                        .HasColumnType("nvarchar(max)")
                         .HasColumnName("password");
 
                     b.Property<int>("Ranking")
@@ -364,14 +357,12 @@ namespace WasteIntoCity.Persistance.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)")
+                        .HasColumnType("nvarchar(max)")
                         .HasColumnName("description");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
+                        .HasColumnType("nvarchar(max)")
                         .HasColumnName("title");
 
                     b.Property<Guid>("WorkComplexitiesId")
@@ -438,8 +429,7 @@ namespace WasteIntoCity.Persistance.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
+                        .HasColumnType("nvarchar(450)")
                         .HasColumnName("name");
 
                     b.Property<int>("ParticipantsMax")
@@ -471,8 +461,7 @@ namespace WasteIntoCity.Persistance.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)")
+                        .HasColumnType("nvarchar(max)")
                         .HasColumnName("description");
 
                     b.Property<DateTime>("FinishDatetime")
@@ -485,8 +474,7 @@ namespace WasteIntoCity.Persistance.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
+                        .HasColumnType("nvarchar(max)")
                         .HasColumnName("title");
 
                     b.Property<Guid>("WorkComplexityTypesId")
@@ -519,8 +507,7 @@ namespace WasteIntoCity.Persistance.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
+                        .HasColumnType("nvarchar(450)")
                         .HasColumnName("name");
 
                     b.HasKey("Id");
@@ -535,7 +522,7 @@ namespace WasteIntoCity.Persistance.Migrations
                 {
                     b.Property<Guid>("WorksId")
                         .HasColumnType("uniqueidentifier")
-                        .HasColumnName("works_id");
+                        .HasColumnName("works");
 
                     b.Property<Guid>("ParticipantsId")
                         .HasColumnType("uniqueidentifier")
@@ -557,8 +544,7 @@ namespace WasteIntoCity.Persistance.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)")
+                        .HasColumnType("nvarchar(max)")
                         .HasColumnName("description");
 
                     b.Property<Guid>("FromUsersId")
@@ -567,8 +553,7 @@ namespace WasteIntoCity.Persistance.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
+                        .HasColumnType("nvarchar(max)")
                         .HasColumnName("title");
 
                     b.Property<Guid>("WorksId")
@@ -592,8 +577,7 @@ namespace WasteIntoCity.Persistance.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)")
+                        .HasColumnType("nvarchar(max)")
                         .HasColumnName("description");
 
                     b.Property<Guid>("FromParticipantsId")
@@ -602,8 +586,7 @@ namespace WasteIntoCity.Persistance.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(1)
-                        .HasColumnType("nvarchar(1)")
+                        .HasColumnType("nvarchar(max)")
                         .HasColumnName("title");
 
                     b.Property<Guid>("WorkStatusTypesId")
@@ -632,8 +615,7 @@ namespace WasteIntoCity.Persistance.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
+                        .HasColumnType("nvarchar(450)")
                         .HasColumnName("name");
 
                     b.HasKey("Id");

@@ -7,9 +7,9 @@ namespace WasteIntoCity.Core.ValueObjects
     {
         private const string VALUE_PATTERN = @"^[\w]+\z";
 
-        private const int VALUE_LENGTH_MIN = 1;
+        public const int VALUE_LENGTH_MIN = 1;
 
-        private const int VALUE_LENGTH_MAX = 45;
+        public const int VALUE_LENGTH_MAX = 45;
 
 
         private Nickname(string value)

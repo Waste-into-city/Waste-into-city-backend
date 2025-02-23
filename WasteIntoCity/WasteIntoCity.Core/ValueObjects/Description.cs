@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WasteIntoCity.Core.Errors;
+﻿using WasteIntoCity.Core.Errors;
 
 namespace WasteIntoCity.Core.ValueObjects
 {
     public class Title : ValueObject
     {
-        private const int VALUE_LENGTH_MIN = 1;
+        public const int VALUE_LENGTH_MIN = 1;
 
-        private const int VALUE_LENGTH_MAX = 100;
+        public const int VALUE_LENGTH_MAX = 100;
 
         private Title(string value)
         {

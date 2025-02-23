@@ -7,13 +7,15 @@ namespace WasteIntoCity.Persistance.Configurations
 {
     public partial class RoleConfiguration : IEntityTypeConfiguration<RoleEntity>
     {
+        private const int NAME_PROPERTY_MAX_LENGTH = 45;
+
         public void Configure(EntityTypeBuilder<RoleEntity> builder)
         {
             builder.ToTable("roles");
 
             builder.Property(r => r.Id).HasColumnName("id");
 
-            builder.Property(r => r.Name).IsRequired().HasColumnName("name");
+            builder.Property(r => r.Name).IsRequired().HasColumnName("name").HasMaxLength(NAME_PROPERTY_MAX_LENGTH);
 
             builder.HasKey(r => r.Id);
 
