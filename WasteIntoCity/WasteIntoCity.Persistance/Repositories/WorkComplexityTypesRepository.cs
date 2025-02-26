@@ -2,13 +2,13 @@
 
 namespace WasteIntoCity.Persistance.Repositories
 {
-    public class WorkComplexityTypeRepository
+    public class WorkComplexityTypesRepository
     {
         private readonly MainDbContext _mainDbContext;
 
         private readonly IMapper _mapper;
 
-        public WorkComplexityTypeRepository(MainDbContext mainDbContext, IMapper mapper)
+        public WorkComplexityTypesRepository(MainDbContext mainDbContext, IMapper mapper)
         {
             _mainDbContext = mainDbContext;
             _mapper = mapper;

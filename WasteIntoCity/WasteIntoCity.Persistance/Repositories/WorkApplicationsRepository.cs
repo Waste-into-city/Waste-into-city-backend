@@ -2,13 +2,13 @@
 
 namespace WasteIntoCity.Persistance.Repositories
 {
-    public class TrashcanPointReportRepository
+    public class WorkApplicationsRepository
     {
         private readonly MainDbContext _mainDbContext;
 
         private readonly IMapper _mapper;
 
-        public TrashcanPointReportRepository(MainDbContext mainDbContext, IMapper mapper)
+        public WorkApplicationsRepository(MainDbContext mainDbContext, IMapper mapper)
         {
             _mainDbContext = mainDbContext;
             _mapper = mapper;
