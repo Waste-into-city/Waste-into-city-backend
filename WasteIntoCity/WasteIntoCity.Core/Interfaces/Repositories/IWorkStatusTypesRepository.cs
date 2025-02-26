@@ -2,7 +2,7 @@
 
 namespace WasteIntoCity.Core.Interfaces.Repositories
 {
-    public interface IWorkStatusTypeRepository
+    public interface IWorkStatusTypesRepository
     {
         Task Create(WorkStatusType workStatusType);
 

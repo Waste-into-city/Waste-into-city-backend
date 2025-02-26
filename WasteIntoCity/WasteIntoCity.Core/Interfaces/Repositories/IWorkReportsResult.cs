@@ -2,7 +2,7 @@
 
 namespace WasteIntoCity.Core.Interfaces.Repositories
 {
-    public interface IWorkReportResult
+    public interface IWorkReportsResult
     {
         Task Create(WorkReportResult workReportResult);
 

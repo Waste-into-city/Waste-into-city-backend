@@ -2,7 +2,7 @@
 
 namespace WasteIntoCity.Core.Interfaces.Repositories
 {
-    public interface IWorkComplexityTypeRepository
+    public interface IWorkComplexityTypesRepository
     {
         Task Create(WorkComplexityType workComplexityType);
 

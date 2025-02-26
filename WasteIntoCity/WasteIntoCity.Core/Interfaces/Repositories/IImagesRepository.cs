@@ -2,7 +2,7 @@
 
 namespace WasteIntoCity.Core.Interfaces.Repositories
 {
-    public interface IImageRepository
+    public interface IImagesRepository
     {
         Task Create(Image image);
 

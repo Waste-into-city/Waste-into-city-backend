@@ -2,7 +2,7 @@
 
 namespace WasteIntoCity.Core.Interfaces.Repositories
 {
-    public interface IUserRepository
+    public interface IUsersRepository
     {
         Task Create(User user);
 

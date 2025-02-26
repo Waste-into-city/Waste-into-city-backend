@@ -2,7 +2,7 @@
 
 namespace WasteIntoCity.Core.Interfaces.Repositories
 {
-    public interface IWorkApplicationRepository
+    public interface IWorkApplicationsRepository
     {
         Task Create(WorkApplication workApplication);
 

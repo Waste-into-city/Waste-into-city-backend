@@ -2,7 +2,7 @@
 
 namespace WasteIntoCity.Core.Interfaces.Repositories
 {
-    public interface IWorkMarkTypeRepository
+    public interface IWorkMarkTypesRepository
     {
         Task Create(WorkMarkType workMarkType);
 

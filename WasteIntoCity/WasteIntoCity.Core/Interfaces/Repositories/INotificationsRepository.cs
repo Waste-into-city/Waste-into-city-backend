@@ -2,7 +2,7 @@
 
 namespace WasteIntoCity.Core.Interfaces.Repositories
 {
-    public interface INotificationRepository
+    public interface INotificationsRepository
     {
         Task Create(Notification notification);
 

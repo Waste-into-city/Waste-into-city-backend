@@ -2,7 +2,7 @@
 
 namespace WasteIntoCity.Core.Interfaces.Repositories
 {
-    public interface ITrashcanTypeRepository
+    public interface ITrashcanTypesRepository
     {
         Task Create(TrashcanType trashcanType);
 
