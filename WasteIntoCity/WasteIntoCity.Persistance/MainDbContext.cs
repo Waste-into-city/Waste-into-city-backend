@@ -11,7 +11,11 @@ namespace WasteIntoCity.Persistance
         {
         }
 
-        public AdminSettingsEntity? AdminSettings { get; set; }
+        public DbSet<AccessTokenEntity> AccessTokens { get; set; }
+
+        public DbSet<RefreshTokenEntity> RefreshTokens { get; set; }
+
+        public DbSet<AdminSettingsEntity> AdminSettings { get; set; }
 
         public DbSet<ImageEntity> Images { get; set; }
 
