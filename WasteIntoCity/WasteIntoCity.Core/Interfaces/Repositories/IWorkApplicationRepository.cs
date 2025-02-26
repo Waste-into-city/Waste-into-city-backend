@@ -1,0 +1,17 @@
+﻿using WasteIntoCity.Core.Models;
+
+namespace WasteIntoCity.Core.Interfaces.Repositories
+{
+    public interface IWorkApplicationRepository
+    {
+        Task Create(WorkApplication workApplication);
+
+        Task Delete(Guid id);
+
+        Task<List<WorkApplication>> Get();
+
+        Task<WorkApplication> GetById(Guid id);
+
+        Task Update(WorkApplication workApplication);
+    }
+}
