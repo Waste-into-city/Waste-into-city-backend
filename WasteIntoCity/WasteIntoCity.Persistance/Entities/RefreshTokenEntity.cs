@@ -7,5 +7,7 @@
         public string Value { get; set; } = string.Empty;
 
         public DateTime ExpirationTimestamp { get; set; }
+
+        public UserEntity? User { get; set; }
     }
 }

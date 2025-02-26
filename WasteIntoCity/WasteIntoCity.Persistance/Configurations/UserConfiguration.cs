@@ -51,6 +51,9 @@ namespace WasteIntoCity.Persistance.Configurations
             builder.HasMany(u => u.TrashcanPointReports)
                 .WithOne(u => u.User)
                 .HasForeignKey(u => u.UsersId);
+
+            builder.HasOne(u => u.AccessToken)
+                .WithOne(a => a.User);
         }
     }
 }

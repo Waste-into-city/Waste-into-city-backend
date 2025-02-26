@@ -6,6 +6,8 @@
 
         public string Value { get; set; } = string.Empty;
 
-        public DateTime ExpiratonTimestamp { get; set; }
+        public DateTime ExpirationTimestamp { get; set; }
+
+        public UserEntity? User { get; set; }
     }
 }

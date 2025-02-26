@@ -29,5 +29,9 @@
         public List<NotificationEntity> NotificationsTo { get; set; } = [];
 
         public List<TrashcanPointReportEntity> TrashcanPointReports { get; set; } = [];
+
+        public AccessTokenEntity? AccessToken { get; set; }
+
+        public RefreshTokenEntity? RefreshToken { get; set; }
     }
 }
