@@ -4,14 +4,8 @@ namespace WasteIntoCity.Core.Interfaces.Repositories
 {
     public interface IUsersRepository
     {
-        Task Create(User user);
+        Task Add(User user);
 
-        Task Delete(Guid id);
-
-        Task<List<User>> Get();
-
-        Task<User> GetById(Guid id);
-
-        Task Update(User User);
+        Task<User> GetByEmail(string email);
     }
 }

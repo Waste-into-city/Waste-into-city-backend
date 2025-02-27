@@ -1,22 +1,26 @@
-using WasteIntoCity.Persistance;
+using WasteIntoCity.Api.BuilderExtensions;
+using WasteIntoCity.Api.ServiceInstallers;
 
 var builder = WebApplication.CreateBuilder(args);
 
-IServiceCollection services = builder.Services;
 IConfiguration configuration = builder.Configuration;
+IServiceCollection services = builder.Services;
+
+
+services.AddCustomMainDbContext(configuration);
 
 services.AddControllers();
+
+services.AddCustomSwagger(configuration);
+
 services.AddEndpointsApiExplorer();
-services.AddSwaggerGen();
 
-services.AddPersistence(configuration);
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+
 }
 
 app.UseHttpsRedirection();
@@ -24,5 +28,7 @@ app.UseHttpsRedirection();
 //app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseCustomSwagger(configuration);
 
 app.Run();
