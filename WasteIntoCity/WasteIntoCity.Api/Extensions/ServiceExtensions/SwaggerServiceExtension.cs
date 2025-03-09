@@ -1,7 +1,8 @@
 ﻿using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using WasteIntoCity.Application;
 
-namespace WasteIntoCity.Application.ServiceInstallers
+namespace WasteIntoCity.Api.Extensions.ServiceExtensions
 {
     public static class SwaggerServiceExtension
     {

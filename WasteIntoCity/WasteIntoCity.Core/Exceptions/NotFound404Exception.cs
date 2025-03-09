@@ -6,6 +6,8 @@ namespace WasteIntoCity.Core.Errors
     {
         public const int STATUS_CODE = StatusCodes.Status404NotFound;
 
+        public const string NAME = "Not found";
+
         protected NotFound404Exception(string message) : base(message)
         {
         }

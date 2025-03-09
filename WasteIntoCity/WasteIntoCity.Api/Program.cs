@@ -1,5 +1,6 @@
-using WasteIntoCity.Application.BuilderExtensions;
-using WasteIntoCity.Application.ServiceInstallers;
+using WasteIntoCity.Api.Extensions.BuilderExtensions;
+using WasteIntoCity.Api.Extensions.ServiceExtensions;
+using WasteIntoCity.Api.Middleware;
 using WasteIntoCity.Application.Services;
 using WasteIntoCity.Core.Interfaces.Services;
 
@@ -32,6 +33,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseAuthentication();
 

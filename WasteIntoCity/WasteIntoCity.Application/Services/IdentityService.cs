@@ -35,7 +35,7 @@ namespace WasteIntoCity.Application.Services
 
             if (isExistUser)
             {
-                throw new DbIsFoundException(nameof(User), "User with this email is exists");
+                throw new DbIsFoundException(nameof(User), "User with this email exists");
             }
 
             User newUser = User.Create(Guid.NewGuid(), Nickname.Create(nickname), Email.Create(email), Password.Create(password), USER_RANKING);

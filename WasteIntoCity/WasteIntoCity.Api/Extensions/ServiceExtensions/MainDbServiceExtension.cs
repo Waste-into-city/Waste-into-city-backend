@@ -3,7 +3,7 @@ using WasteIntoCity.Core.Interfaces.Repositories;
 using WasteIntoCity.Persistance;
 using WasteIntoCity.Persistance.Repositories;
 
-namespace WasteIntoCity.Application.ServiceInstallers
+namespace WasteIntoCity.Api.Extensions.ServiceExtensions
 {
     public static class MainDbServiceExtension
     {

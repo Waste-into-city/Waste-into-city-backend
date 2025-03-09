@@ -6,6 +6,8 @@ namespace WasteIntoCity.Core.Errors
     {
         public const int STATUS_CODE = StatusCodes.Status500InternalServerError;
 
+        public const string NAME = "Internal server error";
+
         protected InternalServer500Exception(string message) : base(message)
         {
         }

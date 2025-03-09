@@ -3,7 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using WasteIntoCity.Application.Options;
 
-namespace WasteIntoCity.Application.ServiceInstallers
+namespace WasteIntoCity.Api.Extensions.ServiceExtensions
 {
     public static class AuthenticationServiceExtension
     {
