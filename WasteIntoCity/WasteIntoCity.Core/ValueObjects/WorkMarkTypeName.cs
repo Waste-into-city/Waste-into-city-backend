@@ -21,25 +21,25 @@ namespace WasteIntoCity.Core.ValueObjects
             Value = value;
         }
 
-        private string ToStringAllValidValuesThrowComma()
+        private static string ToStringAllValidValuesThrowComma()
         {
             return string.Join(", ", _allValidValues.Select(v => v.Value));
         }
 
         public string Value { get; }
 
-        public WorkMarkTypeName Create(string value)
+        public static WorkMarkTypeName Create(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
             {
-                throw new NullOrWhiteSpaceException(nameof(value), null);
+                throw new NullOrWhiteSpaceException(nameof(WorkMarkTypeName).ToLower(), null);
             }
 
             string convertedValue = value.Trim().ToLower();
 
             if (!_allValidValues.Any(t => t.Value.ToLower() == convertedValue))
             {
-                throw new InvalidValueFormatException(nameof(value), $"The value should be enum ({ToStringAllValidValuesThrowComma()})");
+                throw new InvalidValueFormatException(nameof(WorkMarkTypeName).ToLower(), $"The value should be enum ({ToStringAllValidValuesThrowComma()})");
             }
 
             return new WorkMarkTypeName(value);

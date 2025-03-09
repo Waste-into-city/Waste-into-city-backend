@@ -28,7 +28,7 @@ namespace WasteIntoCity.Core.Models
 
         public Guid WorkComplexitiesId { get; }
 
-        public WorkApplication Create(Guid id, Title title, Description description, Guid workComplexitiesId)
+        public static WorkApplication Create(Guid id, Title title, Description description, Guid workComplexitiesId)
         {
             return new WorkApplication(id, title, description, workComplexitiesId);
         }

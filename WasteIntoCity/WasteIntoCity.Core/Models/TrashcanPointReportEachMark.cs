@@ -18,7 +18,7 @@
 
         public Guid TrashcanOccupancyTypesId { get; }
 
-        public TrashcanPointReportEachMark Create(Guid id, Guid trashcanPointReportsId, Guid trashcansId, Guid trashcanOccupancyTypesId)
+        public static TrashcanPointReportEachMark Create(Guid id, Guid trashcanPointReportsId, Guid trashcansId, Guid trashcanOccupancyTypesId)
         {
             return new TrashcanPointReportEachMark(id, trashcanPointReportsId, trashcansId, trashcanOccupancyTypesId);
         }

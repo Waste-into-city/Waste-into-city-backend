@@ -27,7 +27,7 @@ namespace WasteIntoCity.Core.Models
 
         public Guid? AverageTrashcanOccupancyTypesId { get; }
 
-        public Trashcan Create(Guid id, int volume, Guid trashcanPointsId, Guid trashcanTypesId, Guid? averageTrashcanOccupancyTypesId)
+        public static Trashcan Create(Guid id, int volume, Guid trashcanPointsId, Guid trashcanTypesId, Guid? averageTrashcanOccupancyTypesId)
         {
             if (volume is < VOLUME_MIN or > VOLUME_MAX)
             {

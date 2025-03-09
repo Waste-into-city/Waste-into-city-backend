@@ -31,7 +31,7 @@ namespace WasteIntoCity.Core.Models
 
         public Guid FromUsersId { get; }
 
-        public WorkReportComplaint Create(Guid id, Title title, Description description, Guid worksId, Guid fromUsersId)
+        public static WorkReportComplaint Create(Guid id, Title title, Description description, Guid worksId, Guid fromUsersId)
         {
             return new WorkReportComplaint(id, title, description, worksId, fromUsersId);
         }

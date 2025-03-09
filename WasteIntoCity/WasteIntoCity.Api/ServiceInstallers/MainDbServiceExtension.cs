@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using WasteIntoCity.Core.Interfaces.Repositories;
 using WasteIntoCity.Persistance;
+using WasteIntoCity.Persistance.Repositories;
 
-namespace WasteIntoCity.Api.ServiceInstallers
+namespace WasteIntoCity.Application.ServiceInstallers
 {
     public static class MainDbServiceExtension
     {
@@ -11,6 +13,8 @@ namespace WasteIntoCity.Api.ServiceInstallers
             {
                 options.UseSqlServer(configuration.GetConnectionString(nameof(MainDbContext)));
             });
+
+            services.AddScoped<IUsersRepository, UsersRepository>();
 
             return services;
         }
@@ -32,7 +36,5 @@ namespace WasteIntoCity.Api.ServiceInstallers
         //        EndPoints = { options.Configuration }
         //    };
         //});
-
-        //services.AddScoped<IImageRepository, ImageRepository>();
     }
 }

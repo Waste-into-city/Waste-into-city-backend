@@ -1,7 +1,7 @@
 ﻿
-using WasteIntoCity.Api.Options;
+using WasteIntoCity.Application.Options;
 
-namespace WasteIntoCity.Api.BuilderExtensions
+namespace WasteIntoCity.Application.BuilderExtensions
 {
     public static class SwaggerBuilderExtension
     {

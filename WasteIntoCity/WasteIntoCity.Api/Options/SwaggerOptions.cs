@@ -1,4 +1,4 @@
-﻿namespace WasteIntoCity.Api.Options
+﻿namespace WasteIntoCity.Application.Options
 {
     public class SwaggerOptions
     {

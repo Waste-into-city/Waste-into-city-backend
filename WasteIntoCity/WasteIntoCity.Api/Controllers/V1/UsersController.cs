@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using WasteIntoCity.Api.Contracts.V1;
 
-namespace WasteIntoCity.Api.Controllers.V1
+namespace WasteIntoCity.Application.Controllers.V1
 {
     //[Route("api/[controller]")]
     //[ApiController]

@@ -26,7 +26,7 @@ namespace WasteIntoCity.Core.Models
 
         public int MultiplierRanking { get; }
 
-        public WorkStatusType Create(Guid id, MeanText name, int multiplierRanking)
+        public static WorkStatusType Create(Guid id, MeanText name, int multiplierRanking)
         {
             if (name.Value.Length is < NAME_LENGTH_MIN or > NAME_LENGTH_MAX)
             {

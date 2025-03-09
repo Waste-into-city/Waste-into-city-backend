@@ -4,8 +4,8 @@ namespace WasteIntoCity.Core.Interfaces.Repositories
 {
     public interface IUsersRepository
     {
-        Task Add(User user);
+        Task AddAsync(User user);
 
-        Task<User> GetByEmail(string email);
+        Task<User> FindByEmailAsync(string email);
     }
 }

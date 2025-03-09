@@ -26,7 +26,7 @@ namespace WasteIntoCity.Core.Models
 
         public int AdditionRanking { get; }
 
-        public WorkMarkType Create(Guid id, MeanText name, int additionRanking)
+        public static WorkMarkType Create(Guid id, MeanText name, int additionRanking)
         {
             if (name.Value.Length is < NAME_LENGTH_MIN or > NAME_LENGTH_MAX)
             {

@@ -1,4 +1,4 @@
-﻿namespace WasteIntoCity.Api.Contracts.V1.Users
+﻿namespace WasteIntoCity.Application.Contracts.V1.Users
 {
     public record RegisterRequest
     {

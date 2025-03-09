@@ -1,6 +1,8 @@
-﻿using AutoMapper;
+﻿using Microsoft.EntityFrameworkCore;
+using WasteIntoCity.Core.Errors;
 using WasteIntoCity.Core.Interfaces.Repositories;
 using WasteIntoCity.Core.Models;
+using WasteIntoCity.Core.ValueObjects;
 
 namespace WasteIntoCity.Persistance.Repositories
 {
@@ -8,15 +10,15 @@ namespace WasteIntoCity.Persistance.Repositories
     {
         private readonly MainDbContext _mainDbContext;
 
-        private readonly IMapper _mapper;
+        //private readonly IMapper _mapper;
 
-        public UsersRepository(MainDbContext mainDbContext, IMapper mapper)
+        public UsersRepository(MainDbContext mainDbContext)
         {
             _mainDbContext = mainDbContext;
-            _mapper = mapper;
+            //_mapper = mapper;
         }
 
-        public async Task Add(User user)
+        public async Task AddAsync(User user)
         {
             UserEntity userEntity = new UserEntity()
             {
@@ -29,12 +31,15 @@ namespace WasteIntoCity.Persistance.Repositories
 
             await _mainDbContext.Users.AddAsync(userEntity);
             await _mainDbContext.SaveChangesAsync();
-
         }
 
-        public Task<User> GetByEmail(string email)
+        public async Task<User> FindByEmailAsync(string email)
         {
-            throw new NotImplementedException();
+            UserEntity userEntity = await _mainDbContext.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Email == email)
+                ?? throw new DbIsNotFoundException(nameof(User), null);
+
+            return User.Create(userEntity.Id, Nickname.Create(userEntity.Nickname), Email.Create(userEntity.Email), Password.Create(userEntity.Password),
+                userEntity.Ranking);
         }
 
         //public async Task<User> GetByEmail(string email)

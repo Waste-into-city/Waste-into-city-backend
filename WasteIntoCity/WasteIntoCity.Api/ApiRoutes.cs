@@ -1,4 +1,4 @@
-﻿namespace WasteIntoCity.Api.Contracts.V1
+﻿namespace WasteIntoCity.Application
 {
     public static class ApiRoutes
     {
@@ -15,6 +15,13 @@
             public const string CONTROLLER_NAME = "users";
 
             public const string GET = $$"""{{BASE}}/{{CONTROLLER_NAME}}/{userId}""";
+        }
+
+        public static class Identity
+        {
+            public const string LOGIN = $"{BASE}/identity/login";
+
+            public const string REGISTER = $"{BASE}/identity/register";
         }
     }
 }

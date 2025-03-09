@@ -26,7 +26,7 @@ namespace WasteIntoCity.Core.Models
 
         public int Value { get; }
 
-        public TrashcanOccupancyType Create(Guid id, MeanText name, int value)
+        public static TrashcanOccupancyType Create(Guid id, MeanText name, int value)
         {
             if (name.Value.Length is < NAME_LENGTH_MIN or > NAME_LENGTH_MAX)
             {

@@ -10,7 +10,7 @@
         {
         }
 
-        public WhiteSpacesOrInvalidLengthException(string argName, int valueLengthMin, int valueLengthMax) : base($"{argName}: Value cannot be only with white spaces and length should be in range [{valueLengthMin}, {valueLengthMax}].")
+        public WhiteSpacesOrInvalidLengthException(string argName, int valueLengthMin, int valueLengthMax) : base($"Error: {argName} => Value cannot be only with white spaces and length should be in range [{valueLengthMin}, {valueLengthMax}].")
         {
         }
     }

@@ -1,5 +1,7 @@
-using WasteIntoCity.Api.BuilderExtensions;
-using WasteIntoCity.Api.ServiceInstallers;
+using WasteIntoCity.Application.BuilderExtensions;
+using WasteIntoCity.Application.ServiceInstallers;
+using WasteIntoCity.Application.Services;
+using WasteIntoCity.Core.Interfaces.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +11,13 @@ IServiceCollection services = builder.Services;
 
 services.AddCustomMainDbContext(configuration);
 
+services.AddScoped<IIdentityService, IdentityService>();
+
+//services.AddAutoMapper();
+
 services.AddControllers();
+
+services.AddCustomAuthentication(configuration);
 
 services.AddCustomSwagger(configuration);
 
@@ -24,6 +32,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 //app.UseAuthorization();
 

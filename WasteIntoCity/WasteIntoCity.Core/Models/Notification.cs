@@ -31,7 +31,7 @@ namespace WasteIntoCity.Core.Models
 
         public Guid ToUsersId { get; }
 
-        public Notification Create(Guid id, Title title, Description description, Guid? fromUsersId, Guid toUsersId)
+        public static Notification Create(Guid id, Title title, Description description, Guid? fromUsersId, Guid toUsersId)
         {
             return new Notification(id, title, description, fromUsersId, toUsersId);
         }

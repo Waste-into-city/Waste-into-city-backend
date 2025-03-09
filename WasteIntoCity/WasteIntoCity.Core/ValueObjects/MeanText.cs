@@ -11,11 +11,11 @@ namespace WasteIntoCity.Core.ValueObjects
 
         public string Value { get; }
 
-        public MeanText Create(string value)
+        public static MeanText Create(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
             {
-                throw new NullOrWhiteSpaceException("value", null);
+                throw new NullOrWhiteSpaceException(nameof(MeanText).ToLower(), null);
             }
 
             return new MeanText(value);
