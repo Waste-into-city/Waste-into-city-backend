@@ -1,4 +1,8 @@
-﻿using WasteIntoCity.Application.Options;
+﻿using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using WasteIntoCity.Application.Options;
 using WasteIntoCity.Core.Errors;
 using WasteIntoCity.Core.Interfaces.Repositories;
 using WasteIntoCity.Core.Interfaces.Services;
@@ -38,7 +42,9 @@ namespace WasteIntoCity.Application.Services
                 throw new DbIsFoundException(nameof(User), "User with this email exists");
             }
 
-            User newUser = User.Create(Guid.NewGuid(), Nickname.Create(nickname), Email.Create(email), Password.Create(password), USER_RANKING);
+            string hashedPassword = BCrypt.Net.BCrypt.EnhancedHashPassword(password);
+
+            User newUser = User.Create(Guid.NewGuid(), Nickname.Create(nickname), Email.Create(email), Password.Create(hashedPassword), USER_RANKING);
             try
             {
                 await _userRepository.AddAsync(newUser);
@@ -49,12 +55,37 @@ namespace WasteIntoCity.Application.Services
             }
         }
 
-        public Task<(string loginTokenValue, string registrationTokenValue)> LoginAsync(string email, string password)
+        public async Task<(string accessTokenValue, string refreshTokenValue)> LoginAsync(string email, string password)
         {
-            throw new NotImplementedException();
+            User user = await _userRepository.FindByEmailAsync(email);
+
+            JwtSecurityTokenHandler jwtSecurityAccessTokenHandler = new JwtSecurityTokenHandler();
+            byte[] keyBytes = Encoding.ASCII.GetBytes(_jwtOptions.Secret);
+
+            SecurityTokenDescriptor securityAccessTokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new[]
+                {
+                    new Claim(JwtRegisteredClaimNames.Sub, user.Email.Value),
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim(JwtRegisteredClaimNames.Email, user.Email.Value),
+                    new Claim("id", user.Id.ToString()),
+                }),
+                Expires = DateTime.UtcNow.AddHours(2), //TODO: change lifetime
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(keyBytes), SecurityAlgorithms.HmacSha256Signature)
+            };
+
+            if (!BCrypt.Net.BCrypt.EnhancedVerify(password, user.Password.Value))
+            {
+                throw new LoginException();
+            }
+
+            SecurityToken securityAccessToken = jwtSecurityAccessTokenHandler.CreateToken(securityAccessTokenDescriptor);
+
+            return (jwtSecurityAccessTokenHandler.WriteToken(securityAccessToken), ""); //TODO: add resfresh token
         }
 
-        public Task<(string loginTokenValue, string registrationTokenValue)> RefreshAsync(string refreshTokenValue, string accessTokenValue)
+        public Task<(string accessTokenValue, string refreshTokenValue)> RefreshAsync(string refreshTokenValue, string accessTokenValue)
         {
             throw new NotImplementedException();
         }

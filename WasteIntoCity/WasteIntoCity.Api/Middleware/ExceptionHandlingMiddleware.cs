@@ -38,6 +38,17 @@ namespace WasteIntoCity.Api.Middleware
                     Message = ex.Message
                 };
             }
+            catch (Unauthorized401Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+
+                context.Response.StatusCode = Unauthorized401Exception.STATUS_CODE;
+
+                errorResponse = new ErrorResponse
+                {
+                    Message = ex.Message
+                };
+            }
             catch (NotFound404Exception ex)
             {
                 _logger.LogError(ex, ex.Message);

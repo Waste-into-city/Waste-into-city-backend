@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using WasteIntoCity.Api.Contracts.V1.Requests;
+using WasteIntoCity.Api.Contracts.V1.Responses;
 using WasteIntoCity.Application.Contracts.V1.Requests;
 using WasteIntoCity.Core.Interfaces.Services;
 
@@ -22,6 +24,22 @@ namespace WasteIntoCity.Application.Controllers.V1
 
             return Ok();
         }
+
+        [HttpPost(ApiRoutes.Identity.LOGIN)]
+        public async Task<IActionResult> Login([FromBody] UserLoginRequest request)
+        {
+            (string accessTokenValue, string refreshTokenValue) = await _identityService.LoginAsync(request.Email, request.Password);
+
+            UserLoginResponse userLoginResponse = new UserLoginResponse
+            {
+                AccessTokenValue = accessTokenValue,
+                RefreshTokenValue = refreshTokenValue
+            };
+
+            return Ok(userLoginResponse);
+        }
+
+
 
 
         //// GET api/<AuthController>/5

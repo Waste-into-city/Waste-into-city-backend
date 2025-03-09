@@ -5,8 +5,8 @@ namespace WasteIntoCity.Core.Interfaces.Services
     {
         Task RegisterAsync(string nickname, string email, string password);
 
-        Task<(string loginTokenValue, string registrationTokenValue)> LoginAsync(string email, string password);
+        Task<(string accessTokenValue, string refreshTokenValue)> LoginAsync(string email, string password);
 
-        Task<(string loginTokenValue, string registrationTokenValue)> RefreshAsync(string refreshTokenValue, string accessTokenValue);
+        Task<(string accessTokenValue, string refreshTokenValue)> RefreshAsync(string refreshTokenValue, string accessTokenValue);
     }
 }
