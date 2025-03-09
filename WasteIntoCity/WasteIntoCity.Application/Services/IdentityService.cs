@@ -17,11 +17,13 @@ namespace WasteIntoCity.Application.Services
 
         private readonly IUsersRepository _userRepository;
         private readonly JwtOptions _jwtOptions;
+        private readonly TokenValidationParameters _tokenValidationParameters;
 
-        public IdentityService(IUsersRepository usersRepository, JwtOptions jwtOptions)
+        public IdentityService(IUsersRepository usersRepository, JwtOptions jwtOptions, TokenValidationParameters tokenValidationParameters)
         {
             _userRepository = usersRepository;
             _jwtOptions = jwtOptions;
+            _tokenValidationParameters = tokenValidationParameters;
         }
 
         public async Task RegisterAsync(string nickname, string email, string password)
@@ -71,7 +73,7 @@ namespace WasteIntoCity.Application.Services
                     new Claim(JwtRegisteredClaimNames.Email, user.Email.Value),
                     new Claim("id", user.Id.ToString()),
                 }),
-                Expires = DateTime.UtcNow.AddHours(2), //TODO: change lifetime
+                Expires = DateTime.UtcNow.Add(_jwtOptions.TokenLifetime),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(keyBytes), SecurityAlgorithms.HmacSha256Signature)
             };
 
@@ -82,12 +84,42 @@ namespace WasteIntoCity.Application.Services
 
             SecurityToken securityAccessToken = jwtSecurityAccessTokenHandler.CreateToken(securityAccessTokenDescriptor);
 
-            return (jwtSecurityAccessTokenHandler.WriteToken(securityAccessToken), ""); //TODO: add resfresh token
+            return (jwtSecurityAccessTokenHandler.WriteToken(securityAccessToken), "");
         }
 
         public Task<(string accessTokenValue, string refreshTokenValue)> RefreshAsync(string refreshTokenValue, string accessTokenValue)
         {
-            throw new NotImplementedException();
+            ClaimsPrincipal? validatedAccessToken = GetPrincipalFromAccessToken(accessTokenValue);
+
+            if (validatedAccessToken)
+        }
+
+        private ClaimsPrincipal? GetPrincipalFromAccessToken(string accessTokenValue)
+        {
+            JwtSecurityTokenHandler jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
+
+            try
+            {
+                ClaimsPrincipal principal = jwtSecurityTokenHandler.ValidateToken(accessTokenValue, _tokenValidationParameters, out var validatedToken);
+
+                if (!IsJwtWithValidSecurityAlgorithm(validatedToken))
+                {
+                    throw new InvalidTokenException();
+                }
+
+                return principal;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        private bool IsJwtWithValidSecurityAlgorithm(SecurityToken validatedAccessToken)
+        {
+            return (validatedAccessToken is JwtSecurityToken jwtSecurityToken) &&
+                jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256,
+                    StringComparison.InvariantCultureIgnoreCase);
         }
     }
 }

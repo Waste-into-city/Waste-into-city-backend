@@ -39,6 +39,14 @@ namespace WasteIntoCity.Application.Controllers.V1
             return Ok(userLoginResponse);
         }
 
+        [HttpPost(ApiRoutes.Identity.REFRESH)]
+        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest request)
+        {
+
+
+            return Ok();
+        }
+
 
 
 

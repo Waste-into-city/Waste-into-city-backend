@@ -22,6 +22,8 @@
             public const string LOGIN = $"{BASE}/identity/login";
 
             public const string REGISTER = $"{BASE}/identity/register";
+
+            public const string REFRESH = $"{BASE}/identity/refresh";
         }
     }
 }
