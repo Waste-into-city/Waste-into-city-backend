@@ -4,6 +4,10 @@
     {
         public string Secret { get; set; } = string.Empty;
 
-        public TimeSpan TokenLifetime { get; set; }
+        public TimeSpan RefreshTokenLifetime { get; set; }
+
+        public TimeSpan AccessTokenLifetime { get; set; }
+
+        public TimeSpan AdditionalAccessTokenCookieLifetime { get; set; }
     }
 }

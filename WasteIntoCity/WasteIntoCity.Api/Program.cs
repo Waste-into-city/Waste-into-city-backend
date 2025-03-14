@@ -9,6 +9,16 @@ var builder = WebApplication.CreateBuilder(args);
 IConfiguration configuration = builder.Configuration;
 IServiceCollection services = builder.Services;
 
+services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy", builder =>
+    {
+        builder.WithOrigins("https://localhost:7079")
+               .AllowCredentials()
+               .AllowAnyHeader()
+               .AllowAnyMethod();
+    });
+});
 
 services.AddCustomMainDbContext(configuration);
 
@@ -27,21 +37,33 @@ services.AddEndpointsApiExplorer();
 
 WebApplication app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
+app.UseCors("CorsPolicy");
 
-}
+app.UseStaticFiles();
 
 app.UseHttpsRedirection();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
+app.UseRouting();
+
 app.UseAuthentication();
 
-//app.UseAuthorization();
+app.UseAuthorization();
 
 app.MapControllers();
 
 app.UseCustomSwagger(configuration);
+
+if (app.Environment.IsDevelopment())
+{
+    //app.UseSwagger();
+    //app.UseSwaggerUI(c =>
+    //{
+    //    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Your API V1");
+    //    c.RoutePrefix = string.Empty;
+    //    c.InjectJavascript("/custom-swagger.js");
+    //});
+}
 
 app.Run();

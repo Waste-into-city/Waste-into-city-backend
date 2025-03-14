@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WasteIntoCity.Core.Models;
+using WasteIntoCity.Persistance.Entities;
 
 namespace WasteIntoCity.Persistance.Configurations
 {
@@ -52,8 +53,12 @@ namespace WasteIntoCity.Persistance.Configurations
                 .WithOne(u => u.User)
                 .HasForeignKey(u => u.UsersId);
 
-            builder.HasOne(u => u.AccessToken)
-                .WithOne(a => a.User);
+            builder.HasMany(u => u.RefreshTokens)
+                .WithOne(u => u.User)
+                .HasForeignKey(u => u.UserId);
+
+            //builder.HasOne(u => u.AccessToken)
+            //    .WithOne(a => a.User);
         }
     }
 }

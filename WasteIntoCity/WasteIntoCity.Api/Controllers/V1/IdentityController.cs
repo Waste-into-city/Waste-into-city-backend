@@ -1,8 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using WasteIntoCity.Api.Contracts.V1.Requests;
-using WasteIntoCity.Api.Contracts.V1.Responses;
 using WasteIntoCity.Application.Contracts.V1.Requests;
+using WasteIntoCity.Application.Extensions;
+using WasteIntoCity.Application.Options;
+using WasteIntoCity.Application.Types;
 using WasteIntoCity.Core.Interfaces.Services;
+using WasteIntoCity.Core.Structs;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -11,12 +16,15 @@ namespace WasteIntoCity.Application.Controllers.V1
     public class IdentityController : ControllerBase
     {
         private readonly IIdentityService _identityService;
+        private readonly JwtOptions _jwtOptions;
 
-        public IdentityController(IIdentityService identityService)
+        public IdentityController(IIdentityService identityService, JwtOptions jwtOptions)
         {
             _identityService = identityService;
+            _jwtOptions = jwtOptions;
         }
 
+        [AllowAnonymous]
         [HttpPost(ApiRoutes.Identity.REGISTER)]
         public async Task<IActionResult> Register([FromBody] UserRegistrationRequest request)
         {
@@ -25,54 +33,43 @@ namespace WasteIntoCity.Application.Controllers.V1
             return Ok();
         }
 
+        [AllowAnonymous]
         [HttpPost(ApiRoutes.Identity.LOGIN)]
-        public async Task<IActionResult> Login([FromBody] UserLoginRequest request)
+        public async Task<IActionResult> LoginAsync([FromBody] UserLoginRequest request)
         {
-            (string accessTokenValue, string refreshTokenValue) = await _identityService.LoginAsync(request.Email, request.Password);
+            UserPrepareTokensContextResponse userPrepareTokensContextResponse = await _identityService.LoginAsync(request.Email, request.Password);
 
-            UserLoginResponse userLoginResponse = new UserLoginResponse
-            {
-                AccessTokenValue = accessTokenValue,
-                RefreshTokenValue = refreshTokenValue
-            };
-
-            return Ok(userLoginResponse);
-        }
-
-        [HttpPost(ApiRoutes.Identity.REFRESH)]
-        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest request)
-        {
-
+            HttpContext.AppendTokensContextResponse(userPrepareTokensContextResponse, _jwtOptions);
 
             return Ok();
         }
 
+        [AllowAnonymous]
+        [HttpPost(ApiRoutes.Identity.REFRESH)]
+        public async Task<IActionResult> RefreshToken()
+        {
+            string accessTokenValue = HttpContext.TakeTokenValueByTokenType(TokenType.ACCESS);
 
+            string refreshTokenValue = HttpContext.TakeTokenValueByTokenType(TokenType.REFRESH);
 
+            UserPrepareTokensContextResponse userPrepareTokensContextResponse = await _identityService.RefreshAsync(accessTokenValue, refreshTokenValue);
 
-        //// GET api/<AuthController>/5
-        //[HttpGet("{id}")]
-        //public string Get(int id)
-        //{
-        //    return "value";
-        //}
+            HttpContext.AppendTokensContextResponse(userPrepareTokensContextResponse, _jwtOptions);
 
-        //// POST api/<AuthController>
-        //[HttpPost]
-        //public void Post([FromBody] string value)
-        //{
-        //}
+            return Ok();
+        }
 
-        //// PUT api/<AuthController>/5
-        //[HttpPut("{id}")]
-        //public void Put(int id, [FromBody] string value)
-        //{
-        //}
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpPost(ApiRoutes.Identity.LOGOUT)]
+        public async Task<IActionResult> Logout()
+        {
+            string userId = HttpContext.TakeUserIdFromAccessToken();
 
-        //// DELETE api/<AuthController>/5
-        //[HttpDelete("{id}")]
-        //public void Delete(int id)
-        //{
-        //}
+            await _identityService.LogoutAsync(userId);
+
+            HttpContext.DeleteTokensContextResponse();
+
+            return Ok();
+        }
     }
 }

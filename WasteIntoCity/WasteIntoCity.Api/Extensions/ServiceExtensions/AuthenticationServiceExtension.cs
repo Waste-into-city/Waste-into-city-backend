@@ -1,7 +1,15 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using WasteIntoCity.Application.Extensions;
 using WasteIntoCity.Application.Options;
+using WasteIntoCity.Application.Types;
+using WasteIntoCity.Core.Errors;
+using WasteIntoCity.Persistance.Entities;
+using WasteIntoCity.Persistance.Repositories;
+using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
 
 namespace WasteIntoCity.Api.Extensions.ServiceExtensions
 {
@@ -20,8 +28,9 @@ namespace WasteIntoCity.Api.Extensions.ServiceExtensions
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtOptions.Secret)),
                 ValidateIssuer = false,
                 ValidateAudience = false,
-                RequireExpirationTime = false,
-                ValidateLifetime = false
+                RequireExpirationTime = true,
+                ValidateLifetime = true,
+                ClockSkew = TimeSpan.Zero
             };
 
             services.AddSingleton(tokenValidationParameters);
@@ -37,6 +46,84 @@ namespace WasteIntoCity.Api.Extensions.ServiceExtensions
                 {
                     j.SaveToken = true;
                     j.TokenValidationParameters = tokenValidationParameters;
+
+                    j.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            if (context.HttpContext.GetEndpoint()?.Metadata.GetMetadata<AllowAnonymousAttribute>() != null)
+                            {
+                                return Task.CompletedTask;
+                            }
+
+                            TokenType accessTokenType = TokenType.ACCESS;
+                            string? accessTokenValue = null;
+
+                            try
+                            {
+                                accessTokenValue = context.HttpContext.TakeTokenValueByTokenType(accessTokenType);
+                            }
+                            catch
+                            {
+                                context.Fail(NullOrEmptyTokenException.TakeDefaultMessage(
+                                    HttpContextExtension.TokenContextKeys.GetValueOrDefault(accessTokenType)!, null));
+
+                                return Task.CompletedTask;
+                            }
+
+                            context.Token = accessTokenValue;
+
+                            return Task.CompletedTask;
+                        },
+                        OnTokenValidated = async context =>
+                        {
+                            if (context.HttpContext.GetEndpoint()?.Metadata.GetMetadata<AllowAnonymousAttribute>() != null)
+                            {
+                                return;
+                            }
+
+                            if (context.SecurityToken is JsonWebToken accesstoken)
+                            {
+                                RefreshTokensRepository refreshTokensRepository = context.HttpContext.RequestServices
+                                    .GetRequiredService<RefreshTokensRepository>();
+
+                                RefreshTokenEntity? refreshTokenEntity = null;
+
+                                try
+                                {
+                                    string jti = accesstoken.Claims.Single(x => x.Type == JwtRegisteredClaimNames.Jti).Value;
+                                    refreshTokenEntity = await refreshTokensRepository.FindByJwtIdAsync(jti);
+                                }
+                                catch
+                                {
+                                    context.Fail(InvalidTokenException.MESSAGE_DEFAULT);
+                                    return;
+                                }
+
+                                if (refreshTokenEntity?.Used == true)
+                                {
+                                    context.Fail(InvalidTokenException.MESSAGE_DEFAULT);
+                                    return;
+                                }
+                            }
+                            else
+                            {
+                                context.Fail(InvalidTokenException.MESSAGE_DEFAULT);
+                                return;
+                            }
+                        },
+                        OnAuthenticationFailed = context =>
+                        {
+                            if (context.Exception is not null)
+                            {
+                                throw new InvalidTokenException(context.Exception?.Message);
+                            }
+                            else
+                            {
+                                throw new Exception();
+                            }
+                        }
+                    };
                 }
             );
 

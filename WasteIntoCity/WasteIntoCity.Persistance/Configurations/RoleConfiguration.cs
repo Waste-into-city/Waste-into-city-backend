@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WasteIntoCity.Core.Enums;
-using WasteIntoCity.Core.Models;
+using WasteIntoCity.Persistance.Entities;
 
 namespace WasteIntoCity.Persistance.Configurations
 {

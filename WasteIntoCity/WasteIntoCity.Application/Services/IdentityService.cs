@@ -7,7 +7,10 @@ using WasteIntoCity.Core.Errors;
 using WasteIntoCity.Core.Interfaces.Repositories;
 using WasteIntoCity.Core.Interfaces.Services;
 using WasteIntoCity.Core.Models;
+using WasteIntoCity.Core.Structs;
 using WasteIntoCity.Core.ValueObjects;
+using WasteIntoCity.Persistance.Entities;
+using WasteIntoCity.Persistance.Repositories;
 
 namespace WasteIntoCity.Application.Services
 {
@@ -16,14 +19,61 @@ namespace WasteIntoCity.Application.Services
         private const int USER_RANKING = 0;
 
         private readonly IUsersRepository _userRepository;
+        private readonly RefreshTokensRepository _refreshTokensRepository;
         private readonly JwtOptions _jwtOptions;
         private readonly TokenValidationParameters _tokenValidationParameters;
 
-        public IdentityService(IUsersRepository usersRepository, JwtOptions jwtOptions, TokenValidationParameters tokenValidationParameters)
+        public IdentityService(IUsersRepository usersRepository, JwtOptions jwtOptions, TokenValidationParameters tokenValidationParameters,
+            RefreshTokensRepository refreshTokensRepository)
         {
             _userRepository = usersRepository;
             _jwtOptions = jwtOptions;
             _tokenValidationParameters = tokenValidationParameters;
+            _refreshTokensRepository = refreshTokensRepository;
+        }
+
+        private async Task<UserPrepareTokensContextResponse> CreateTokens(User user)
+        {
+            JwtSecurityTokenHandler jwtSecurityAccessTokenHandler = new JwtSecurityTokenHandler();
+            byte[] keyBytes = Encoding.ASCII.GetBytes(_jwtOptions.Secret);
+
+            DateTime accessTokenExpiredTimestamp = DateTime.UtcNow.Add(_jwtOptions.AccessTokenLifetime);
+
+            SecurityTokenDescriptor securityAccessTokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new[]
+                {
+                    new Claim(JwtRegisteredClaimNames.Sub, user.Email.Value),
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim(JwtRegisteredClaimNames.Email, user.Email.Value),
+                    new Claim("id", user.Id.ToString()),
+                }),
+                Expires = accessTokenExpiredTimestamp,
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(keyBytes), SecurityAlgorithms.HmacSha256Signature)
+            };
+
+            SecurityToken accessToken = jwtSecurityAccessTokenHandler.CreateToken(securityAccessTokenDescriptor);
+
+            DateTime refreshTokenExpiredTimestamp = DateTime.UtcNow.Add(_jwtOptions.RefreshTokenLifetime);
+
+            RefreshTokenEntity refreshToken = new RefreshTokenEntity
+            {
+                Value = Guid.NewGuid(),
+                JwtId = accessToken.Id,
+                UserId = user.Id,
+                CreationTimestamp = DateTime.UtcNow,
+                ExpirationTimestamp = refreshTokenExpiredTimestamp,
+            };
+
+            await _refreshTokensRepository.Add(refreshToken);
+
+            return new UserPrepareTokensContextResponse
+            {
+                AccessTokenValue = jwtSecurityAccessTokenHandler.WriteToken(accessToken),
+                RefreshTokenValue = refreshToken.Value.ToString(),
+                AccessTokenExpiredTimestamp = accessTokenExpiredTimestamp,
+                RefreshTokenExpiredTimestamp = refreshTokenExpiredTimestamp,
+            };
         }
 
         public async Task RegisterAsync(string nickname, string email, string password)
@@ -57,50 +107,64 @@ namespace WasteIntoCity.Application.Services
             }
         }
 
-        public async Task<(string accessTokenValue, string refreshTokenValue)> LoginAsync(string email, string password)
+        public async Task<UserPrepareTokensContextResponse> LoginAsync(string email, string password)
         {
             User user = await _userRepository.FindByEmailAsync(email);
-
-            JwtSecurityTokenHandler jwtSecurityAccessTokenHandler = new JwtSecurityTokenHandler();
-            byte[] keyBytes = Encoding.ASCII.GetBytes(_jwtOptions.Secret);
-
-            SecurityTokenDescriptor securityAccessTokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new[]
-                {
-                    new Claim(JwtRegisteredClaimNames.Sub, user.Email.Value),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                    new Claim(JwtRegisteredClaimNames.Email, user.Email.Value),
-                    new Claim("id", user.Id.ToString()),
-                }),
-                Expires = DateTime.UtcNow.Add(_jwtOptions.TokenLifetime),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(keyBytes), SecurityAlgorithms.HmacSha256Signature)
-            };
 
             if (!BCrypt.Net.BCrypt.EnhancedVerify(password, user.Password.Value))
             {
                 throw new LoginException();
             }
 
-            SecurityToken securityAccessToken = jwtSecurityAccessTokenHandler.CreateToken(securityAccessTokenDescriptor);
-
-            return (jwtSecurityAccessTokenHandler.WriteToken(securityAccessToken), "");
+            return await CreateTokens(user);
         }
 
-        public Task<(string accessTokenValue, string refreshTokenValue)> RefreshAsync(string refreshTokenValue, string accessTokenValue)
+        public async Task<UserPrepareTokensContextResponse> RefreshAsync(string accessTokenValue, string refreshTokenValue)
         {
-            ClaimsPrincipal? validatedAccessToken = GetPrincipalFromAccessToken(accessTokenValue);
+            TokenValidationParameters tokenValidationParameters = _tokenValidationParameters.Clone();
+            tokenValidationParameters.ValidateLifetime = false;
 
-            if (validatedAccessToken)
+            ClaimsPrincipal accessTokenClaimsPrincipal = GetPrincipalFromAccessToken(accessTokenValue, tokenValidationParameters);
+
+            long expiryDateUnix = long.Parse(accessTokenClaimsPrincipal.Claims.Single(x => x.Type == JwtRegisteredClaimNames.Exp).Value);
+
+            DateTime expiryDateTimeUtc = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+                .AddSeconds(expiryDateUnix);
+
+            if (expiryDateTimeUtc > DateTime.UtcNow)
+            {
+                throw new NotExpiredAccessTokenException();
+            }
+
+            string jti = accessTokenClaimsPrincipal.Claims.Single(x => x.Type == JwtRegisteredClaimNames.Jti).Value;
+
+            RefreshTokenEntity refreshToken = await _refreshTokensRepository.FindByValueAsync(refreshTokenValue);
+
+            if (DateTime.UtcNow > refreshToken.ExpirationTimestamp || refreshToken.Invalidated || refreshToken.Used || refreshToken.JwtId != jti)
+            {
+                throw new InvalidTokenException();
+            }
+
+            refreshToken.Used = true;
+            await _refreshTokensRepository.Update(refreshToken);
+
+            User user = await _userRepository.FindByIdAsync(accessTokenClaimsPrincipal.Claims.Single(x => x.Type == "id").Value);
+
+            return await CreateTokens(user);
         }
 
-        private ClaimsPrincipal? GetPrincipalFromAccessToken(string accessTokenValue)
+        public async Task LogoutAsync(string userId)
+        {
+            await _refreshTokensRepository.UpdateUsedByUserIdTokens(true, userId);
+        }
+
+        private static ClaimsPrincipal GetPrincipalFromAccessToken(string accessTokenValue, TokenValidationParameters tokenValidationParameters)
         {
             JwtSecurityTokenHandler jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
 
             try
             {
-                ClaimsPrincipal principal = jwtSecurityTokenHandler.ValidateToken(accessTokenValue, _tokenValidationParameters, out var validatedToken);
+                ClaimsPrincipal principal = jwtSecurityTokenHandler.ValidateToken(accessTokenValue, tokenValidationParameters, out var validatedToken);
 
                 if (!IsJwtWithValidSecurityAlgorithm(validatedToken))
                 {
@@ -111,11 +175,11 @@ namespace WasteIntoCity.Application.Services
             }
             catch
             {
-                return null;
+                throw new InvalidTokenException();
             }
         }
 
-        private bool IsJwtWithValidSecurityAlgorithm(SecurityToken validatedAccessToken)
+        private static bool IsJwtWithValidSecurityAlgorithm(SecurityToken validatedAccessToken)
         {
             return (validatedAccessToken is JwtSecurityToken jwtSecurityToken) &&
                 jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256,

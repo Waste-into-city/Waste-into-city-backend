@@ -35,7 +35,7 @@ namespace WasteIntoCity.Persistance.Migrations
                 {
                     id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    name = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    name = table.Column<string>(type: "nvarchar(45)", maxLength: 45, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -47,7 +47,7 @@ namespace WasteIntoCity.Persistance.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    name = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     value = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -60,8 +60,8 @@ namespace WasteIntoCity.Persistance.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    lat = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    lng = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    lat = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    lng = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -73,7 +73,7 @@ namespace WasteIntoCity.Persistance.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    name = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -85,9 +85,9 @@ namespace WasteIntoCity.Persistance.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    nickname = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    email = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    nickname = table.Column<string>(type: "nvarchar(45)", maxLength: 45, nullable: false),
+                    email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    password = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     ranking = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -100,7 +100,7 @@ namespace WasteIntoCity.Persistance.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    name = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     participants_min = table.Column<int>(type: "int", nullable: false),
                     participants_max = table.Column<int>(type: "int", nullable: false),
                     duration_hours = table.Column<int>(type: "int", nullable: false),
@@ -117,7 +117,7 @@ namespace WasteIntoCity.Persistance.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    name = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     addition_ranking = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -130,7 +130,7 @@ namespace WasteIntoCity.Persistance.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    name = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     multiplier_ranking = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -173,8 +173,8 @@ namespace WasteIntoCity.Persistance.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
                     from_users_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     to_users_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
@@ -189,6 +189,28 @@ namespace WasteIntoCity.Persistance.Migrations
                     table.ForeignKey(
                         name: "FK_notifications_users_to_users_id",
                         column: x => x.to_users_id,
+                        principalTable: "users",
+                        principalColumn: "id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "refresh_tokens",
+                columns: table => new
+                {
+                    value = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    jwt_id = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    creation_timestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    expiration_timestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    used = table.Column<bool>(type: "bit", nullable: false),
+                    invalidated = table.Column<bool>(type: "bit", nullable: false),
+                    user_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_refresh_tokens", x => x.value);
+                    table.ForeignKey(
+                        name: "FK_refresh_tokens_users_user_id",
+                        column: x => x.user_id,
                         principalTable: "users",
                         principalColumn: "id");
                 });
@@ -245,8 +267,8 @@ namespace WasteIntoCity.Persistance.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
                     work_complexities_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
@@ -264,8 +286,8 @@ namespace WasteIntoCity.Persistance.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    title = table.Column<string>(type: "nvarchar(1)", maxLength: 1, nullable: false),
+                    description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
                     from_participant_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     work_statuses_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
@@ -289,8 +311,8 @@ namespace WasteIntoCity.Persistance.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
                     start_datetime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     finish_datetime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     work_complexity_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -379,20 +401,20 @@ namespace WasteIntoCity.Persistance.Migrations
                 name: "work_participants",
                 columns: table => new
                 {
-                    works = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    works_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     participants_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_work_participants", x => new { x.works, x.participants_id });
+                    table.PrimaryKey("PK_work_participants", x => new { x.works_id, x.participants_id });
                     table.ForeignKey(
                         name: "FK_work_participants_users_participants_id",
                         column: x => x.participants_id,
                         principalTable: "users",
                         principalColumn: "id");
                     table.ForeignKey(
-                        name: "FK_work_participants_works_works",
-                        column: x => x.works,
+                        name: "FK_work_participants_works_works_id",
+                        column: x => x.works_id,
                         principalTable: "works",
                         principalColumn: "id");
                 });
@@ -402,8 +424,8 @@ namespace WasteIntoCity.Persistance.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
                     works_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     from_users_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
@@ -486,6 +508,11 @@ namespace WasteIntoCity.Persistance.Migrations
                 name: "IX_notifications_to_users_id",
                 table: "notifications",
                 column: "to_users_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_refresh_tokens_user_id",
+                table: "refresh_tokens",
+                column: "user_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_roles_name",
@@ -647,6 +674,9 @@ namespace WasteIntoCity.Persistance.Migrations
 
             migrationBuilder.DropTable(
                 name: "notifications");
+
+            migrationBuilder.DropTable(
+                name: "refresh_tokens");
 
             migrationBuilder.DropTable(
                 name: "trashcan_point_report_each_mark");

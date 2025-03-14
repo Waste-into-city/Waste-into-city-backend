@@ -1,15 +1,10 @@
-﻿using WasteIntoCity.Core.Errors;
+﻿using WasteIntoCity.Api.Contracts.V1.Responses;
+using WasteIntoCity.Core.Errors;
 
 namespace WasteIntoCity.Api.Middleware
 {
     public class ExceptionHandlingMiddleware
     {
-        private record ErrorResponse
-        {
-            public string Message { get; init; } = string.Empty;
-        }
-
-
         private readonly RequestDelegate _next;
         private readonly ILogger<ExceptionHandlingMiddleware> _logger;
 

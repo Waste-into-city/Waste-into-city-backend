@@ -15,6 +15,7 @@ namespace WasteIntoCity.Api.Extensions.ServiceExtensions
             });
 
             services.AddScoped<IUsersRepository, UsersRepository>();
+            services.AddScoped<RefreshTokensRepository>();
 
             return services;
         }

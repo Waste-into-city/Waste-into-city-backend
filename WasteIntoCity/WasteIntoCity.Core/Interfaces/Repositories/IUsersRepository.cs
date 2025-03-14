@@ -7,5 +7,7 @@ namespace WasteIntoCity.Core.Interfaces.Repositories
         Task AddAsync(User user);
 
         Task<User> FindByEmailAsync(string email);
+
+        Task<User> FindByIdAsync(string id);
     }
 }

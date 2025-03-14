@@ -1,6 +1,6 @@
 ﻿namespace WasteIntoCity.Api.Contracts.V1.Requests
 {
-    public record RefreshTokenRequest
+    public record UserRefreshTokenRequest
     {
         required public string AccessTokenValue { get; init; }
 

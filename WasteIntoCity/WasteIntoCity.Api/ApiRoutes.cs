@@ -24,6 +24,13 @@
             public const string REGISTER = $"{BASE}/identity/register";
 
             public const string REFRESH = $"{BASE}/identity/refresh";
+
+            public const string LOGOUT = $"{BASE}/identity/logout";
+        }
+
+        public static class Swagger
+        {
+            public const string SWAGGER_ENDPOINT = $"swagger/v1/swagger.json";
         }
     }
 }

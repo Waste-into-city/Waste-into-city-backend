@@ -1,12 +1,16 @@
 ﻿
+using WasteIntoCity.Core.Structs;
+
 namespace WasteIntoCity.Core.Interfaces.Services
 {
     public interface IIdentityService
     {
         Task RegisterAsync(string nickname, string email, string password);
 
-        Task<(string accessTokenValue, string refreshTokenValue)> LoginAsync(string email, string password);
+        Task<UserPrepareTokensContextResponse> LoginAsync(string email, string password);
 
-        Task<(string accessTokenValue, string refreshTokenValue)> RefreshAsync(string refreshTokenValue, string accessTokenValue);
+        Task<UserPrepareTokensContextResponse> RefreshAsync(string accessTokenValue, string refreshTokenValue);
+
+        Task LogoutAsync(string accessTokenValue);
     }
 }

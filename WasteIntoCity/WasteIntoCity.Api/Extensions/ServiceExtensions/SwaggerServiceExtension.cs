@@ -13,7 +13,7 @@ namespace WasteIntoCity.Api.Extensions.ServiceExtensions
                 Name = "Authorization",
                 Description = "JWT Authorization header using the bearer scheme",
                 In = ParameterLocation.Header,
-                Type = SecuritySchemeType.ApiKey,
+                Type = SecuritySchemeType.Http,
                 Scheme = "Bearer",
                 BearerFormat = "JWT",
                 Reference = new OpenApiReference
@@ -26,7 +26,7 @@ namespace WasteIntoCity.Api.Extensions.ServiceExtensions
             OpenApiSecurityRequirement securityRequirement = new OpenApiSecurityRequirement
                 {
                     {
-                        securityScheme, new List<string>()
+                        securityScheme, Array.Empty<string>()
                     }
                 };
 
@@ -37,15 +37,16 @@ namespace WasteIntoCity.Api.Extensions.ServiceExtensions
 
         public static IServiceCollection AddCustomSwagger(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddSwaggerGen(s =>
+            services.AddSwaggerGen(options =>
             {
-                s.SwaggerDoc(ApiRoutes.VERSION, new OpenApiInfo
+                options.SwaggerDoc(ApiRoutes.VERSION, new OpenApiInfo
                 {
                     Title = "WasteIntoCity API",
                     Version = ApiRoutes.VERSION
                 });
 
-                s.AddCustomSecuritySwaggerGenOptions();
+                //services.AddSwaggerGenNewtonsoftSupport();
+                options.AddCustomSecuritySwaggerGenOptions();
             });
 
             return services;

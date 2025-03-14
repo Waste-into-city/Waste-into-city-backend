@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
-using WasteIntoCity.Core.Models;
 using WasteIntoCity.Persistance.Entities;
 
 namespace WasteIntoCity.Persistance
@@ -11,7 +10,7 @@ namespace WasteIntoCity.Persistance
         {
         }
 
-        public DbSet<AccessTokenEntity> AccessTokens { get; set; }
+        //public DbSet<AccessTokenEntity> AccessTokens { get; set; }
 
         public DbSet<RefreshTokenEntity> RefreshTokens { get; set; }
 
