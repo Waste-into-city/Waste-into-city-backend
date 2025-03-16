@@ -21,7 +21,7 @@
 
         public Guid WorkMarkTypesId { get; }
 
-        public WorkColleagueReport Create(Guid id, Guid fromParticipantId, Guid aboutColleagueId, Guid worksId, Guid workMarkTypesId)
+        public static WorkColleagueReport Create(Guid id, Guid fromParticipantId, Guid aboutColleagueId, Guid worksId, Guid workMarkTypesId)
         {
             return new WorkColleagueReport(id, fromParticipantId, aboutColleagueId, worksId, workMarkTypesId);
         }

@@ -20,16 +20,16 @@ namespace WasteIntoCity.Core.ValueObjects
 
         public string Value { get; }
 
-        public Email Create(string value)
+        public static Email Create(string value)
         {
-            if (Regex.IsMatch(value, VALUE_PATTERN))
+            if (!Regex.IsMatch(value, VALUE_PATTERN))
             {
-                throw new InvalidValueFormatException("value", null);
+                throw new InvalidValueFormatException(nameof(Email).ToLower(), null);
             }
 
             if (value.Length is < VALUE_LENGTH_MIN or > VALUE_LENGTH_MAX)
             {
-                throw new InvalidLengthException("value", VALUE_LENGTH_MIN, VALUE_LENGTH_MAX);
+                throw new InvalidLengthException(nameof(Email).ToLower(), VALUE_LENGTH_MIN, VALUE_LENGTH_MAX);
             }
 
             return new Email(value);

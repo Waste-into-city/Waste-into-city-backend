@@ -1,4 +1,4 @@
-﻿namespace WasteIntoCity.Core.Models
+﻿namespace WasteIntoCity.Persistance.Entities
 {
     public class TrashcanPointReportEachMarkEntity
     {

@@ -1,28 +1,69 @@
-using WasteIntoCity.Persistance;
+using WasteIntoCity.Api.Extensions.BuilderExtensions;
+using WasteIntoCity.Api.Extensions.ServiceExtensions;
+using WasteIntoCity.Api.Middleware;
+using WasteIntoCity.Application.Services;
+using WasteIntoCity.Core.Interfaces.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-IServiceCollection services = builder.Services;
 IConfiguration configuration = builder.Configuration;
+IServiceCollection services = builder.Services;
+
+services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy", builder =>
+    {
+        builder.WithOrigins("https://localhost:7079")
+               .AllowCredentials()
+               .AllowAnyHeader()
+               .AllowAnyMethod();
+    });
+});
+
+services.AddCustomMainDbContext(configuration);
+
+services.AddScoped<IIdentityService, IdentityService>();
+
+//services.AddAutoMapper();
 
 services.AddControllers();
+
+services.AddCustomAuthentication(configuration);
+
+services.AddCustomSwagger(configuration);
+
 services.AddEndpointsApiExplorer();
-services.AddSwaggerGen();
 
-services.AddPersistence(configuration);
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseCors("CorsPolicy");
+
+app.UseStaticFiles();
 
 app.UseHttpsRedirection();
 
-//app.UseAuthorization();
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+
+app.UseRouting();
+
+app.UseAuthentication();
+
+app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseCustomSwagger(configuration);
+
+if (app.Environment.IsDevelopment())
+{
+    //app.UseSwagger();
+    //app.UseSwaggerUI(c =>
+    //{
+    //    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Your API V1");
+    //    c.RoutePrefix = string.Empty;
+    //    c.InjectJavascript("/custom-swagger.js");
+    //});
+}
 
 app.Run();

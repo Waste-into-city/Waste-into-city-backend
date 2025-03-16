@@ -15,11 +15,11 @@ namespace WasteIntoCity.Core.ValueObjects
 
         public string Value { get; }
 
-        public Password Create(string value)
+        public static Password Create(string value)
         {
             if (value.Length is < VALUE_LENGTH_MIN or > VALUE_LENGTH_MAX)
             {
-                throw new InvalidLengthException(nameof(value), VALUE_LENGTH_MIN, VALUE_LENGTH_MAX);
+                throw new InvalidLengthException(nameof(Password).ToLower(), VALUE_LENGTH_MIN, VALUE_LENGTH_MAX);
             }
 
             return new Password(value);

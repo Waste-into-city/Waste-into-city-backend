@@ -51,7 +51,7 @@ namespace WasteIntoCity.Core.Models
 
         public int RadiusOnMap { get; }
 
-        public WorkComplexityType Create(Guid id, MeanText name, int participantsMin, int participantsMax, int durationHours, int multiplierRanking, int radiusOnMap)
+        public static WorkComplexityType Create(Guid id, MeanText name, int participantsMin, int participantsMax, int durationHours, int multiplierRanking, int radiusOnMap)
         {
             if (name.Value.Length is < NAME_LENGTH_MIN or > NAME_LENGTH_MAX)
             {

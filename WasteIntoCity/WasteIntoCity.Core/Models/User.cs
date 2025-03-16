@@ -22,33 +22,36 @@ namespace WasteIntoCity.Core.Models
         public const int PASSWORD_LENGTH_MAX = Password.VALUE_LENGTH_MAX;
 
 
-        private User(Guid id, Nickname nickname, Title email, Password password, int ranking)
+        private User(Guid id, Nickname nickname, Email email, Password password, int ranking, List<Role> roles)
         {
             Id = id;
             Nickname = nickname;
             Email = email;
             Password = password;
             Ranking = ranking;
+            Roles = roles;
         }
 
         public Guid Id { get; }
 
         public Nickname Nickname { get; }
 
-        public Title Email { get; }
+        public Email Email { get; }
 
         public Password Password { get; }
 
         public int Ranking { get; }
 
-        public User Create(Guid id, Nickname nickname, Title email, Password password, int ranking)
+        public List<Role> Roles { get; }
+
+        public static User Create(Guid id, Nickname nickname, Email email, Password password, int ranking, List<Role> roles)
         {
-            if (Ranking is < RANKING_MIN or > RANKING_MAX)
+            if (ranking is < RANKING_MIN or > RANKING_MAX)
             {
                 throw new ValueOutOfRangeException<int>(nameof(ranking), RANKING_MIN, RANKING_MAX);
             }
 
-            return new User(id, nickname, email, password, ranking);
+            return new User(id, nickname, email, password, ranking, roles);
         }
     }
 }

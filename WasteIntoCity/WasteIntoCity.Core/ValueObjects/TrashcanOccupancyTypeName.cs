@@ -19,25 +19,25 @@ namespace WasteIntoCity.Core.ValueObjects
             Value = value;
         }
 
-        private string ToStringAllValidValuesThrowComma()
+        private static string ToStringAllValidValuesThrowComma()
         {
             return string.Join(", ", _allValidValues.Select(v => v.Value));
         }
 
         public string Value { get; }
 
-        public TrashcanOccupancyTypeName Create(string value)
+        public static TrashcanOccupancyTypeName Create(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
             {
-                throw new NullOrWhiteSpaceException(nameof(value), null);
+                throw new NullOrWhiteSpaceException(nameof(TrashcanOccupancyTypeName).ToLower(), null);
             }
 
             string convertedValue = value.Trim().ToLower();
 
             if (!_allValidValues.Any(t => t.Value.ToLower() == convertedValue))
             {
-                throw new InvalidValueFormatException(nameof(value), $"The value should be enum ({ToStringAllValidValuesThrowComma()})");
+                throw new InvalidValueFormatException(nameof(TrashcanOccupancyTypeName).ToLower(), $"The value should be enum ({ToStringAllValidValuesThrowComma()})");
             }
 
             return new TrashcanOccupancyTypeName(value);

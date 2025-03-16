@@ -21,7 +21,7 @@
 
         public DateTime SubmissionTime { get; }
 
-        public TrashcanPointReport Create(Guid id, bool isReviewed, Guid usersId, Guid trashcanPointsId, DateTime submissionTime)
+        public static TrashcanPointReport Create(Guid id, bool isReviewed, Guid usersId, Guid trashcanPointsId, DateTime submissionTime)
         {
             return new TrashcanPointReport(id, isReviewed, usersId, trashcanPointsId, submissionTime);
         }

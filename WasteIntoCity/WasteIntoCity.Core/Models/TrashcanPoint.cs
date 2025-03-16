@@ -25,7 +25,7 @@ namespace WasteIntoCity.Core.Models
 
         public string Lng { get; }
 
-        public TrashcanPoint Create(Guid id, string lat, string lng)
+        public static TrashcanPoint Create(Guid id, string lat, string lng)
         {
             if (lat.Length is < LAT_LEGTH_MIN or > LAT_LEGTH_MAX)
             {

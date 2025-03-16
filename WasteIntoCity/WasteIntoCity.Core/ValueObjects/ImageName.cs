@@ -18,16 +18,16 @@ namespace WasteIntoCity.Core.ValueObjects
 
         public string Value { get; }
 
-        public ImageName Create(string value)
+        public static ImageName Create(string value)
         {
             if (Regex.IsMatch(value, VALUE_PATTERN))
             {
-                throw new InvalidValueFormatException("value", null);
+                throw new InvalidValueFormatException(nameof(ImageName).ToLower(), null);
             }
 
             if (value.Length is < VALUE_LENGTH_MIN or > VALUE_LENGTH_MAX)
             {
-                throw new InvalidLengthException("value", VALUE_LENGTH_MIN, VALUE_LENGTH_MAX);
+                throw new InvalidLengthException(nameof(ImageName).ToLower(), VALUE_LENGTH_MIN, VALUE_LENGTH_MAX);
             }
 
             return new ImageName(value);

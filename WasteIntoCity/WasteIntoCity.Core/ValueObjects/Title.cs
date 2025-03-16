@@ -2,27 +2,27 @@
 
 namespace WasteIntoCity.Core.ValueObjects
 {
-    public class Description : ValueObject
+    public class Title : ValueObject
     {
-        public const int VALUE_LENGTH_MIN = 0;
+        public const int VALUE_LENGTH_MIN = 1;
 
-        public const int VALUE_LENGTH_MAX = 1000;
+        public const int VALUE_LENGTH_MAX = 100;
 
-        private Description(string value)
+        private Title(string value)
         {
             Value = value;
         }
 
         public string Value { get; }
 
-        public Description Create(string value)
+        public static Title Create(string value)
         {
             if (value.Length is < VALUE_LENGTH_MIN or > VALUE_LENGTH_MAX)
             {
-                throw new InvalidLengthException("value", VALUE_LENGTH_MIN, VALUE_LENGTH_MAX);
+                throw new InvalidLengthException(nameof(Title).ToLower(), VALUE_LENGTH_MIN, VALUE_LENGTH_MAX);
             }
 
-            return new Description(value);
+            return new Title(value);
         }
 
         protected override IEnumerable<object> GetEqualityComponents()

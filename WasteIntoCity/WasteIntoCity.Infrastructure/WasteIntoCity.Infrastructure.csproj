@@ -10,4 +10,8 @@
     <ProjectReference Include="..\WasteIntoCity.Application\WasteIntoCity.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Extensions\" />
+  </ItemGroup>
+
 </Project>

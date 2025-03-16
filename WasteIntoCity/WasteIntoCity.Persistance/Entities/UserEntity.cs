@@ -1,4 +1,4 @@
-﻿namespace WasteIntoCity.Core.Models
+﻿namespace WasteIntoCity.Persistance.Entities
 {
     public class UserEntity
     {
@@ -30,8 +30,8 @@
 
         public List<TrashcanPointReportEntity> TrashcanPointReports { get; set; } = [];
 
-        public AccessTokenEntity? AccessToken { get; set; }
+        //public AccessTokenEntity? AccessToken { get; set; }
 
-        public RefreshTokenEntity? RefreshToken { get; set; }
+        public List<RefreshTokenEntity> RefreshTokens { get; set; } = [];
     }
 }

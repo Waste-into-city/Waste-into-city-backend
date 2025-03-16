@@ -38,11 +38,11 @@ namespace WasteIntoCity.Core.Models
 
         public Guid WorkStatusesId { get; }
 
-        public Work Create(Guid id, Title title, Description description, DateTime startedDatetime, DateTime finishDatetime, Guid workComplexityId, Guid workStatusesId)
+        public static Work Create(Guid id, Title title, Description description, DateTime startedDatetime, DateTime finishDatetime, Guid workComplexityId, Guid workStatusesId)
         {
-            if (StartedDatetime > FinishDatetime)
+            if (startedDatetime > finishDatetime)
             {
-                throw new ValueOutOfRangeException<DateTime>("startDatetime", DateTime.MinValue, FinishDatetime);
+                throw new ValueOutOfRangeException<DateTime>("startDatetime", DateTime.MinValue, finishDatetime);
             }
 
             return new Work(id, title, description, startedDatetime, finishDatetime, workComplexityId, workStatusesId);

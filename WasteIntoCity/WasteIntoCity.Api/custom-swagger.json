@@ -1,0 +1,18 @@
+window.onload = function() {
+    const ui = SwaggerUIBundle({
+        url: "/swagger/v1/swagger.json",
+        dom_id: "#swagger-ui",
+        deepLinking: true,
+        presets: [
+            SwaggerUIBundle.presets.apis,
+            SwaggerUIStandalonePreset
+        ],
+        plugins: [
+            SwaggerUIBundle.plugins.DownloadUrl
+        ],
+        requestInterceptor: (req) => {
+            req.credentials = "include"; // Включает передачу куки
+            return req;
+        }
+    });
+}
