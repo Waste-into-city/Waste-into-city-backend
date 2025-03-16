@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WasteIntoCity.Api.Contracts.V1.Requests;
 using WasteIntoCity.Application.Contracts.V1.Requests;
 using WasteIntoCity.Application.Extensions;
 using WasteIntoCity.Application.Options;
 using WasteIntoCity.Application.Types;
+using WasteIntoCity.Core.Enums;
 using WasteIntoCity.Core.Interfaces.Services;
 using WasteIntoCity.Core.Structs;
 
@@ -59,7 +59,7 @@ namespace WasteIntoCity.Application.Controllers.V1
             return Ok();
         }
 
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize(Roles = $"{nameof(RoleType.Admin)},{nameof(RoleType.User)},{nameof(RoleType.Moderator)}")]
         [HttpPost(ApiRoutes.Identity.LOGOUT)]
         public async Task<IActionResult> Logout()
         {

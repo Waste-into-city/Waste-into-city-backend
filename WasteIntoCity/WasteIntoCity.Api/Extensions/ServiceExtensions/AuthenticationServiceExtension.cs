@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 using System.Text;
 using WasteIntoCity.Application.Extensions;
 using WasteIntoCity.Application.Options;
@@ -30,7 +31,8 @@ namespace WasteIntoCity.Api.Extensions.ServiceExtensions
                 ValidateAudience = false,
                 RequireExpirationTime = true,
                 ValidateLifetime = true,
-                ClockSkew = TimeSpan.Zero
+                ClockSkew = TimeSpan.Zero,
+                RoleClaimType = ClaimTypes.Role
             };
 
             services.AddSingleton(tokenValidationParameters);
@@ -126,6 +128,8 @@ namespace WasteIntoCity.Api.Extensions.ServiceExtensions
                     };
                 }
             );
+
+            services.AddAuthorization();
 
             return services;
         }

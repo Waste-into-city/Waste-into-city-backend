@@ -28,7 +28,7 @@ namespace WasteIntoCity.Persistance.Configurations
                     r => r.HasOne<RoleEntity>().WithMany().HasForeignKey(e => e.RolesId)
                 );
 
-            IEnumerable<RoleEntity> roles = Enum.GetValues<RoleEnum>().Select(r => new RoleEntity
+            IEnumerable<RoleEntity> roles = Enum.GetValues<RoleType>().Select(r => new RoleEntity
             {
                 Id = (int)r,
                 Name = r.ToString()

@@ -6,8 +6,10 @@ namespace WasteIntoCity.Core.Interfaces.Repositories
     {
         Task AddAsync(User user);
 
-        Task<User> FindByEmailAsync(string email);
+        Task<bool> IsExistByEmailAsync(string email);
 
-        Task<User> FindByIdAsync(string id);
+        Task<User> FindByIdWithRolesAsync(string id);
+
+        Task<User> FindByEmailWithRolesAsync(string email);
     }
 }

@@ -3,6 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using WasteIntoCity.Application.Options;
+using WasteIntoCity.Core.Enums;
 using WasteIntoCity.Core.Errors;
 using WasteIntoCity.Core.Interfaces.Repositories;
 using WasteIntoCity.Core.Interfaces.Services;
@@ -20,16 +21,18 @@ namespace WasteIntoCity.Application.Services
 
         private readonly IUsersRepository _userRepository;
         private readonly RefreshTokensRepository _refreshTokensRepository;
+        private readonly RolesRepository _rolesRepository;
         private readonly JwtOptions _jwtOptions;
         private readonly TokenValidationParameters _tokenValidationParameters;
 
         public IdentityService(IUsersRepository usersRepository, JwtOptions jwtOptions, TokenValidationParameters tokenValidationParameters,
-            RefreshTokensRepository refreshTokensRepository)
+            RefreshTokensRepository refreshTokensRepository, RolesRepository rolesRepository)
         {
             _userRepository = usersRepository;
             _jwtOptions = jwtOptions;
             _tokenValidationParameters = tokenValidationParameters;
             _refreshTokensRepository = refreshTokensRepository;
+            _rolesRepository = rolesRepository;
         }
 
         private async Task<UserPrepareTokensContextResponse> CreateTokens(User user)
@@ -39,15 +42,19 @@ namespace WasteIntoCity.Application.Services
 
             DateTime accessTokenExpiredTimestamp = DateTime.UtcNow.Add(_jwtOptions.AccessTokenLifetime);
 
+            List<Claim> claims = new List<Claim>
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, user.Email.Value),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email.Value),
+                new Claim("id", user.Id.ToString()),
+            };
+
+            claims.AddRange(user.Roles.Select(role => new Claim(ClaimTypes.Role, role.Name)));
+
             SecurityTokenDescriptor securityAccessTokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new[]
-                {
-                    new Claim(JwtRegisteredClaimNames.Sub, user.Email.Value),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                    new Claim(JwtRegisteredClaimNames.Email, user.Email.Value),
-                    new Claim("id", user.Id.ToString()),
-                }),
+                Subject = new ClaimsIdentity(claims),
                 Expires = accessTokenExpiredTimestamp,
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(keyBytes), SecurityAlgorithms.HmacSha256Signature)
             };
@@ -65,7 +72,7 @@ namespace WasteIntoCity.Application.Services
                 ExpirationTimestamp = refreshTokenExpiredTimestamp,
             };
 
-            await _refreshTokensRepository.Add(refreshToken);
+            await _refreshTokensRepository.AddAsync(refreshToken);
 
             return new UserPrepareTokensContextResponse
             {
@@ -78,25 +85,18 @@ namespace WasteIntoCity.Application.Services
 
         public async Task RegisterAsync(string nickname, string email, string password)
         {
-            bool isExistUser = true;
-
-            try
-            {
-                User existingUser = await _userRepository.FindByEmailAsync(email);
-            }
-            catch
-            {
-                isExistUser = false;
-            }
-
-            if (isExistUser)
+            if (await _userRepository.IsExistByEmailAsync(email))
             {
                 throw new DbIsFoundException(nameof(User), "User with this email exists");
             }
 
             string hashedPassword = BCrypt.Net.BCrypt.EnhancedHashPassword(password);
 
-            User newUser = User.Create(Guid.NewGuid(), Nickname.Create(nickname), Email.Create(email), Password.Create(hashedPassword), USER_RANKING);
+            Role role = await _rolesRepository.FindById((int)RoleType.User);
+
+            User newUser = User.Create(Guid.NewGuid(), Nickname.Create(nickname), Email.Create(email),
+                Password.Create(hashedPassword), USER_RANKING, [role]);
+
             try
             {
                 await _userRepository.AddAsync(newUser);
@@ -109,7 +109,7 @@ namespace WasteIntoCity.Application.Services
 
         public async Task<UserPrepareTokensContextResponse> LoginAsync(string email, string password)
         {
-            User user = await _userRepository.FindByEmailAsync(email);
+            User user = await _userRepository.FindByEmailWithRolesAsync(email);
 
             if (!BCrypt.Net.BCrypt.EnhancedVerify(password, user.Password.Value))
             {
@@ -146,16 +146,16 @@ namespace WasteIntoCity.Application.Services
             }
 
             refreshToken.Used = true;
-            await _refreshTokensRepository.Update(refreshToken);
+            await _refreshTokensRepository.UpdateAsync(refreshToken);
 
-            User user = await _userRepository.FindByIdAsync(accessTokenClaimsPrincipal.Claims.Single(x => x.Type == "id").Value);
+            User user = await _userRepository.FindByIdWithRolesAsync(accessTokenClaimsPrincipal.Claims.Single(x => x.Type == "id").Value);
 
             return await CreateTokens(user);
         }
 
         public async Task LogoutAsync(string userId)
         {
-            await _refreshTokensRepository.UpdateUsedByUserIdTokens(true, userId);
+            await _refreshTokensRepository.UpdateUsedByUserIdTokensAsync(true, userId);
         }
 
         private static ClaimsPrincipal GetPrincipalFromAccessToken(string accessTokenValue, TokenValidationParameters tokenValidationParameters)

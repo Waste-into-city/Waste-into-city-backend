@@ -29,7 +29,7 @@ namespace WasteIntoCity.Persistance.Repositories
             return refreshTokenEntity;
         }
 
-        public async Task Add(RefreshTokenEntity refreshTokenEntity)
+        public async Task AddAsync(RefreshTokenEntity refreshTokenEntity)
         {
             await _mainDbContext.RefreshTokens.AddAsync(refreshTokenEntity);
             int addedRows = await _mainDbContext.SaveChangesAsync();
@@ -40,7 +40,7 @@ namespace WasteIntoCity.Persistance.Repositories
             }
         }
 
-        public async Task Update(RefreshTokenEntity refreshTokenEntity)
+        public async Task UpdateAsync(RefreshTokenEntity refreshTokenEntity)
         {
             int updatedRows = await _mainDbContext.RefreshTokens
                 .Where(r => r.Value == refreshTokenEntity.Value)
@@ -59,7 +59,7 @@ namespace WasteIntoCity.Persistance.Repositories
             }
         }
 
-        public async Task UpdateUsedByUserIdTokens(bool used, string userId)
+        public async Task UpdateUsedByUserIdTokensAsync(bool used, string userId)
         {
             int updatedRows = await _mainDbContext.RefreshTokens
                 .Where(r => r.UserId.ToString() == userId)

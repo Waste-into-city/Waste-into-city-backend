@@ -1,6 +1,6 @@
 ﻿namespace WasteIntoCity.Core.Enums
 {
-    public enum RoleEnum
+    public enum RoleType
     {
         User = 1,
 

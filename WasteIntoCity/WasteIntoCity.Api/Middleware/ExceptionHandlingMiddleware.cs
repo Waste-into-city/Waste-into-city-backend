@@ -1,5 +1,6 @@
 ﻿using WasteIntoCity.Api.Contracts.V1.Responses;
 using WasteIntoCity.Core.Errors;
+using WasteIntoCity.Core.Exceptions;
 
 namespace WasteIntoCity.Api.Middleware
 {
@@ -38,6 +39,17 @@ namespace WasteIntoCity.Api.Middleware
                 _logger.LogError(ex, ex.Message);
 
                 context.Response.StatusCode = Unauthorized401Exception.STATUS_CODE;
+
+                errorResponse = new ErrorResponse
+                {
+                    Message = ex.Message
+                };
+            }
+            catch (ForbiddenAccessResource403Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+
+                context.Response.StatusCode = ForbiddenAccessResource403Exception.STATUS_CODE;
 
                 errorResponse = new ErrorResponse
                 {
