@@ -23,6 +23,7 @@ services.AddCors(options =>
 services.AddCustomMainDbContext(configuration);
 
 services.AddScoped<IIdentityService, IdentityService>();
+services.AddScoped<IWorksService, WorksService>();
 
 //services.AddAutoMapper();
 

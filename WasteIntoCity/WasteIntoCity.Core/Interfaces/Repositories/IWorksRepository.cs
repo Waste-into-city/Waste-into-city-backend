@@ -4,14 +4,16 @@ namespace WasteIntoCity.Core.Interfaces.Repositories
 {
     public interface IWorksRepository
     {
-        Task Create(Work work);
+        Task AddAsync(Work work);
 
-        Task Delete(Guid id);
+        Task<List<Work>> FindAllAsync();
 
-        Task<List<Work>> Get();
+        Task<Work> FindByIdAsync(Guid id);
 
-        Task<Work> GetById(Guid id);
+        Task<List<Work>> FindAllByParticipantIdAsync(Guid participantId);
 
-        Task Update(Work work);
+        Task UpdateAsync(Work work);
+
+        Task UpdateStatusesIdByIdAsync(Guid id, Guid statusGuid);
     }
 }

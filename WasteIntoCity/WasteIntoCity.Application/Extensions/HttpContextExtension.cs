@@ -37,14 +37,17 @@ namespace WasteIntoCity.Application.Extensions
             return accessTokenValue;
         }
 
-        public static string TakeUserIdFromAccessToken(this HttpContext httpContext)
+        //TODO: Add exceptions
+        public static Guid TakeUserIdFromAccessToken(this HttpContext httpContext)
         {
             if (httpContext.User is null)
             {
-                return string.Empty;
+                throw new Exception();
             }
 
-            return httpContext.User.Claims.Single(x => x.Type == "id").Value;
+            Guid userId = Guid.Parse(httpContext.User.Claims.Single(x => x.Type == "id").Value)
+
+            return userId;
         }
 
         public static void AppendTokensContextResponse(this HttpContext httpContext, UserPrepareTokensContextResponse userPrepareTokensContextResponse,
