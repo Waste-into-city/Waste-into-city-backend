@@ -16,6 +16,8 @@
 
         public Guid WorkStatusTypesId { get; set; }
 
+        public int CoordinatesId { get; set; }
+
         public WorkComplexityTypeEntity? WorkComplexityType { get; set; }
 
         public WorkStatusTypeEntity? WorkStatusType { get; set; }
@@ -23,6 +25,8 @@
         public List<WorkReportComplaintEntity> WorkReportComplaints { get; set; } = [];
 
         public List<WorkColleagueReportEntity> WorkColleagueReports { get; set; } = [];
+
+        public CoordinatesEntity? Coordinates { get; set; }
 
         public ICollection<UserEntity> Users { get; set; } = [];
     }

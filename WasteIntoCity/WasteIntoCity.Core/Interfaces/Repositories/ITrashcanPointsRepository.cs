@@ -4,14 +4,14 @@ namespace WasteIntoCity.Core.Interfaces.Repositories
 {
     public interface ITrashcanPointsRepository
     {
-        Task Create(TrashcanPoint trashcan);
+        Task Create(Coordinates trashcan);
 
         Task Delete(Guid id);
 
-        Task<List<TrashcanPoint>> Get();
+        Task<List<Coordinates>> Get();
 
-        Task<TrashcanPoint> GetById(Guid id);
+        Task<Coordinates> GetById(Guid id);
 
-        Task Update(TrashcanPoint trashcan);
+        Task Update(Coordinates trashcan);
     }
 }

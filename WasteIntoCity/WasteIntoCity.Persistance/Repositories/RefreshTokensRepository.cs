@@ -59,10 +59,10 @@ namespace WasteIntoCity.Persistance.Repositories
             }
         }
 
-        public async Task UpdateUsedByUserIdTokensAsync(bool used, string userId)
+        public async Task UpdateUsedByUserIdTokensAsync(bool used, Guid userId)
         {
             int updatedRows = await _mainDbContext.RefreshTokens
-                .Where(r => r.UserId.ToString() == userId)
+                .Where(r => r.UserId == userId)
                 .ExecuteUpdateAsync(t => t
                     .SetProperty(r => r.Used, used)
                 );

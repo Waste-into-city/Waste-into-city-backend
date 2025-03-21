@@ -45,7 +45,7 @@ namespace WasteIntoCity.Application.Extensions
                 throw new Exception();
             }
 
-            Guid userId = Guid.Parse(httpContext.User.Claims.Single(x => x.Type == "id").Value)
+            Guid userId = Guid.Parse(httpContext.User.Claims.Single(x => x.Type == "id").Value);
 
             return userId;
         }

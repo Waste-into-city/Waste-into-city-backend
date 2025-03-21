@@ -4,9 +4,9 @@ using WasteIntoCity.Api.Contracts.V1.Responses;
 using WasteIntoCity.Application;
 using WasteIntoCity.Application.Contracts.V1.Requests;
 using WasteIntoCity.Application.Extensions;
-using WasteIntoCity.Core.Enums;
 using WasteIntoCity.Core.Interfaces.Services;
 using WasteIntoCity.Core.Models;
+using WasteIntoCity.Core.Types;
 
 namespace WasteIntoCity.Api.Controllers.V1
 {
@@ -24,7 +24,7 @@ namespace WasteIntoCity.Api.Controllers.V1
         public async Task<IActionResult> CreateAsync([FromBody] WorkCreateRequest workCreateRequest)
         {
             await _workService.CreateAsync(workCreateRequest.Title, workCreateRequest.Description, workCreateRequest.StartedDateTime,
-                workCreateRequest.FinishDatetime, workCreateRequest.WorkComplexityId, workCreateRequest.WorkStatusesId);
+                workCreateRequest.FinishDatetime, workCreateRequest.WorkComplexityId, workCreateRequest.WorkStatusesId, workCreateRequest.CoordinatesId);
 
             return Created();
         }
@@ -78,7 +78,7 @@ namespace WasteIntoCity.Api.Controllers.V1
         public async Task<IActionResult> UpdateAsync([FromRoute] Guid id, [FromBody] WorkUpdateRequest workUpdateRequest)
         {
             await _workService.UpdateAsync(id, workUpdateRequest.Title, workUpdateRequest.Description, workUpdateRequest.StartedDateTime,
-                workUpdateRequest.FinishDatetime, workUpdateRequest.WorkComplexityId, workUpdateRequest.WorkStatusesId);
+                workUpdateRequest.FinishDatetime, workUpdateRequest.WorkComplexityId, workUpdateRequest.WorkStatusesId, workUpdateRequest.CoordinatesId);
 
             return Ok();
         }

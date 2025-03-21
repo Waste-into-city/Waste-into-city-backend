@@ -13,7 +13,7 @@ namespace WasteIntoCity.Core.Models
 
         public const int DESCRIPTION_LENGTH_MAX = Description.VALUE_LENGTH_MAX;
 
-        private Work(Guid id, Title title, Description description, DateTime startedDatetime, DateTime finishDatetime, Guid workComplexityId, Guid workStatusesId)
+        private Work(Guid id, Title title, Description description, DateTime startedDatetime, DateTime finishDatetime, Guid workComplexityId, Guid workStatusesId, int coordinatesId)
         {
             Id = id;
             Title = title;
@@ -22,6 +22,7 @@ namespace WasteIntoCity.Core.Models
             FinishDatetime = finishDatetime;
             WorkComplexityId = workComplexityId;
             WorkStatusesId = workStatusesId;
+            CoordinatesId = coordinatesId;
         }
 
         public Guid Id { get; }
@@ -38,14 +39,16 @@ namespace WasteIntoCity.Core.Models
 
         public Guid WorkStatusesId { get; }
 
-        public static Work Create(Guid id, Title title, Description description, DateTime startedDatetime, DateTime finishDatetime, Guid workComplexityId, Guid workStatusesId)
+        public int CoordinatesId { get; }
+
+        public static Work Create(Guid id, Title title, Description description, DateTime startedDatetime, DateTime finishDatetime, Guid workComplexityId, Guid workStatusesId, int coordinatesId)
         {
             if (startedDatetime > finishDatetime)
             {
                 throw new ValueOutOfRangeException<DateTime>("startDatetime", DateTime.MinValue, finishDatetime);
             }
 
-            return new Work(id, title, description, startedDatetime, finishDatetime, workComplexityId, workStatusesId);
+            return new Work(id, title, description, startedDatetime, finishDatetime, workComplexityId, workStatusesId, coordinatesId);
         }
     }
 }

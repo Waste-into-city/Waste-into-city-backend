@@ -15,10 +15,10 @@ namespace WasteIntoCity.Application.Services
         }
 
         public async Task CreateAsync(string title, string description, DateTime startedDatetime, DateTime finishDatetime, Guid workComplexityId,
-            Guid workStatusesId)
+            Guid workStatusesId, int coordinatesId)
         {
             Work work = Work.Create(Guid.NewGuid(), Title.Create(title), Description.Create(description), startedDatetime, finishDatetime,
-                workComplexityId, workStatusesId);
+                workComplexityId, workStatusesId, coordinatesId);
 
             await _worksRepository.AddAsync(work);
         }
@@ -39,10 +39,10 @@ namespace WasteIntoCity.Application.Services
         }
 
         public async Task UpdateAsync(Guid id, string title, string description, DateTime startedDatetime, DateTime finishDatetime, Guid workComplexityId,
-            Guid workStatusesId)
+            Guid workStatusesId, int coordinatesId)
         {
             Work work = Work.Create(id, Title.Create(title), Description.Create(description), startedDatetime, finishDatetime,
-                workComplexityId, workStatusesId);
+                workComplexityId, workStatusesId, coordinatesId);
 
             await _worksRepository.UpdateAsync(work);
         }

@@ -68,3 +68,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.Run();
+
+
+// TODO: remove naming for roles in database, change token claim role to int, we don't need in types, 

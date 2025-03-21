@@ -13,5 +13,7 @@
         required public Guid WorkComplexityId { get; init; }
 
         required public Guid WorkStatusesId { get; init; }
+
+        required public int CoordinatesId { get; init; }
     }
 }

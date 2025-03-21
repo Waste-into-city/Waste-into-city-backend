@@ -41,6 +41,9 @@ namespace WasteIntoCity.Persistance.Configurations
                 .WithOne(wo => wo.Work)
                 .HasForeignKey(wo => wo.WorksId);
 
+            builder.HasOne(w => w.Coordinates)
+                .WithMany(c => c.Works);
+
             builder.HasMany(w => w.Users)
                 .WithMany(u => u.Works)
                 .UsingEntity<WorkParticipantEntity>(

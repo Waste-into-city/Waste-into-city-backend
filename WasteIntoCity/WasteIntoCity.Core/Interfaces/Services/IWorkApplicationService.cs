@@ -2,10 +2,9 @@
 
 namespace WasteIntoCity.Core.Interfaces.Services
 {
-    public interface IWorksService
+    public interface IWorkApplicationService
     {
-        Task CreateAsync(string title, string description, DateTime startedDatetime, DateTime finishDatetime, Guid workComplexityId,
-            Guid workStatusesId, int coordinatesId);
+        Task CreateAsync(string title, string description, DateTime startedDatetime, DateTime finishDatetime, Guid workComplexityId, Guid workStatusesId);
 
         Task<List<Work>> GetAll();
 
@@ -14,7 +13,7 @@ namespace WasteIntoCity.Core.Interfaces.Services
         Task<List<Work>> GetAllOwnTakePartIn(Guid userId);
 
         Task UpdateAsync(Guid id, string title, string description, DateTime startedDatetime, DateTime finishDatetime, Guid workComplexityId,
-            Guid workStatusesId, int coordinatesId);
+            Guid workStatusesId);
 
         Task UpdateWorkStatusAsync(Guid id, Guid workStatusesId);
     }

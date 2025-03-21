@@ -1,5 +1,5 @@
-﻿using WasteIntoCity.Core.Enums;
-using WasteIntoCity.Core.Errors;
+﻿using WasteIntoCity.Core.Errors;
+using WasteIntoCity.Core.Types;
 
 namespace WasteIntoCity.Core.Models
 {

@@ -1,0 +1,11 @@
+﻿namespace WasteIntoCity.Persistance.Entities
+{
+    public class WorkReportComplaintTypeEntity
+    {
+        public int Id { get; set; }
+
+        public string Name { get; set; } = string.Empty;
+
+        public List<WorkReportComplaintEntity> WorkReportComplaints { get; set; } = [];
+    }
+}

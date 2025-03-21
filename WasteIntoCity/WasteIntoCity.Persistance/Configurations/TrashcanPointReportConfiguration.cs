@@ -16,7 +16,7 @@ namespace WasteIntoCity.Persistance.Configurations
 
             builder.Property(t => t.UsersId).IsRequired().HasColumnName("users_id");
 
-            builder.Property(t => t.TrashcanPointsId).IsRequired().HasColumnName("trashcan_points_id");
+            builder.Property(t => t.CoordinatesId).IsRequired().HasColumnName("coordinates_id");
 
             builder.Property(t => t.SubmissionTime).IsRequired().HasColumnName("submission_time");
 
@@ -25,7 +25,7 @@ namespace WasteIntoCity.Persistance.Configurations
             builder.HasOne(t => t.User)
                 .WithMany(u => u.TrashcanPointReports);
 
-            builder.HasOne(t => t.TrashcanPoint)
+            builder.HasOne(t => t.Coordinates)
                 .WithMany(tr => tr.TrashcanPointReports);
 
             builder.HasMany(t => t.TrashcanPointReportEachMarkList)

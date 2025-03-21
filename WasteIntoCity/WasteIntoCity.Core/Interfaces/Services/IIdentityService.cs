@@ -11,6 +11,6 @@ namespace WasteIntoCity.Core.Interfaces.Services
 
         Task<UserPrepareTokensContextResponse> RefreshAsync(string accessTokenValue, string refreshTokenValue);
 
-        Task LogoutAsync(string accessTokenValue);
+        Task LogoutAsync(Guid userId);
     }
 }

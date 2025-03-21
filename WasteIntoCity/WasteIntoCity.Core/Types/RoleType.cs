@@ -1,4 +1,4 @@
-﻿namespace WasteIntoCity.Core.Enums
+﻿namespace WasteIntoCity.Core.Types
 {
     public enum RoleType
     {

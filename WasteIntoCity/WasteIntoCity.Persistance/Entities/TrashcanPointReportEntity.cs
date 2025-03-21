@@ -8,13 +8,13 @@
 
         public Guid UsersId { get; set; }
 
-        public Guid TrashcanPointsId { get; set; }
+        public int CoordinatesId { get; set; }
 
         public DateTime SubmissionTime { get; set; }
 
         public UserEntity? User { get; set; }
 
-        public TrashcanPointEntity? TrashcanPoint { get; set; }
+        public CoordinatesEntity? Coordinates { get; set; }
 
         public List<TrashcanPointReportEachMarkEntity> TrashcanPointReportEachMarkList { get; set; } = [];
     }

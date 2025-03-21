@@ -16,8 +16,8 @@ namespace WasteIntoCity.Api.Extensions.ServiceExtensions
 
             services.AddScoped<IUsersRepository, UsersRepository>();
             services.AddScoped<RefreshTokensRepository>();
-            services.AddScoped<RolesRepository>();
-            services.AddScoped<WorksRepository>();
+            services.AddScoped<IRolesRepository, RolesRepository>();
+            services.AddScoped<IWorksRepository, WorksRepository>();
 
             return services;
         }

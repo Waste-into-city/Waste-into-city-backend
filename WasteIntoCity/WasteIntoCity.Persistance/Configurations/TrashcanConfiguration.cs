@@ -16,13 +16,13 @@ namespace WasteIntoCity.Persistance.Configurations
 
             builder.Property(t => t.TrashcanTypesId).IsRequired().HasColumnName("trashcan_types_id");
 
-            builder.Property(t => t.TrashcanPointsId).IsRequired().HasColumnName("trashcan_points_id");
+            builder.Property(t => t.CoordinatesId).IsRequired().HasColumnName("coordinates_id");
 
             builder.Property(t => t.AverageTrashcanOccupancyTypeId).HasColumnName("average_trashcan_occupancy_type_id");
 
             builder.HasKey(t => t.Id);
 
-            builder.HasOne(t => t.TrashcanPoint)
+            builder.HasOne(t => t.Coordinates)
                 .WithMany(tp => tp.Trashcans);
 
             builder.HasOne(t => t.TrashcanType)

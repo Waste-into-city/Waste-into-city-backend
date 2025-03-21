@@ -12,12 +12,14 @@ namespace WasteIntoCity.Core.Models
 
         public const int DESCRIPTION_LENGTH_MAX = Description.VALUE_LENGTH_MAX;
 
-        private WorkApplication(Guid id, Title title, Description description, Guid workComplexitiesId)
+        private WorkApplication(Guid id, Title title, Description description, Guid workComplexitiesId, int coordinatesId, DateTime startedDatetime)
         {
             Id = id;
             Title = title;
             Description = description;
             WorkComplexitiesId = workComplexitiesId;
+            CoordinatesId = coordinatesId;
+            StartedDatetime = startedDatetime;
         }
 
         public Guid Id { get; }
@@ -26,11 +28,15 @@ namespace WasteIntoCity.Core.Models
 
         public Description Description { get; }
 
+        public DateTime StartedDatetime { get; }
+
         public Guid WorkComplexitiesId { get; }
 
-        public static WorkApplication Create(Guid id, Title title, Description description, Guid workComplexitiesId)
+        public int CoordinatesId { get; }
+
+        public static WorkApplication Create(Guid id, Title title, Description description, Guid workComplexitiesId, int coordinatesId, DateTime startedDatetime)
         {
-            return new WorkApplication(id, title, description, workComplexitiesId);
+            return new WorkApplication(id, title, description, workComplexitiesId, coordinatesId, startedDatetime);
         }
     }
 }

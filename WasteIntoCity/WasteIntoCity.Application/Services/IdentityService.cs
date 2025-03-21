@@ -3,12 +3,12 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using WasteIntoCity.Application.Options;
-using WasteIntoCity.Core.Enums;
 using WasteIntoCity.Core.Errors;
 using WasteIntoCity.Core.Interfaces.Repositories;
 using WasteIntoCity.Core.Interfaces.Services;
 using WasteIntoCity.Core.Models;
 using WasteIntoCity.Core.Structs;
+using WasteIntoCity.Core.Types;
 using WasteIntoCity.Core.ValueObjects;
 using WasteIntoCity.Persistance.Entities;
 using WasteIntoCity.Persistance.Repositories;
@@ -21,12 +21,12 @@ namespace WasteIntoCity.Application.Services
 
         private readonly IUsersRepository _userRepository;
         private readonly RefreshTokensRepository _refreshTokensRepository;
-        private readonly RolesRepository _rolesRepository;
+        private readonly IRolesRepository _rolesRepository;
         private readonly JwtOptions _jwtOptions;
         private readonly TokenValidationParameters _tokenValidationParameters;
 
         public IdentityService(IUsersRepository usersRepository, JwtOptions jwtOptions, TokenValidationParameters tokenValidationParameters,
-            RefreshTokensRepository refreshTokensRepository, RolesRepository rolesRepository)
+            RefreshTokensRepository refreshTokensRepository, IRolesRepository rolesRepository)
         {
             _userRepository = usersRepository;
             _jwtOptions = jwtOptions;
@@ -153,7 +153,7 @@ namespace WasteIntoCity.Application.Services
             return await CreateTokens(user);
         }
 
-        public async Task LogoutAsync(string userId)
+        public async Task LogoutAsync(Guid userId)
         {
             await _refreshTokensRepository.UpdateUsedByUserIdTokensAsync(true, userId);
         }

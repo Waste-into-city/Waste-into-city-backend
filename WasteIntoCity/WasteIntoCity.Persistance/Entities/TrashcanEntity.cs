@@ -6,13 +6,13 @@
 
         public int Volume { get; set; }
 
-        public Guid TrashcanPointsId { get; set; }
+        public int CoordinatesId { get; set; }
 
         public Guid TrashcanTypesId { get; set; }
 
         public Guid? AverageTrashcanOccupancyTypeId { get; set; }
 
-        public TrashcanPointEntity? TrashcanPoint { get; set; }
+        public CoordinatesEntity? Coordinates { get; set; }
 
         public TrashcanTypeEntity? TrashcanType { get; set; }
 

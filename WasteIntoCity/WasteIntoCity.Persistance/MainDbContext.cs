@@ -26,7 +26,7 @@ namespace WasteIntoCity.Persistance
 
         public DbSet<TrashcanOccupancyTypeEntity> TrashcanOccupancyTypes { get; set; }
 
-        public DbSet<TrashcanPointEntity> TrashcanPoints { get; set; }
+        public DbSet<CoordinatesEntity> TrashcanPoints { get; set; }
 
         public DbSet<TrashcanPointReportEachMarkEntity> TrashcanPointReportEachMarkSet { get; set; }
 
@@ -51,6 +51,8 @@ namespace WasteIntoCity.Persistance
         public DbSet<WorkParticipantEntity> WorkParticipants { get; set; }
 
         public DbSet<WorkReportComplaintEntity> WorkReportComplaints { get; set; }
+
+        public DbSet<WorkReportComplaintTypeEntity> WorkReportComplaintTypes { get; set; }
 
         public DbSet<WorkReportResultEntity> WorkReportResults { get; set; }
 

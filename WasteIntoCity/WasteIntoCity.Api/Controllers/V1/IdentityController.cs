@@ -5,9 +5,9 @@ using WasteIntoCity.Application.Contracts.V1.Requests;
 using WasteIntoCity.Application.Extensions;
 using WasteIntoCity.Application.Options;
 using WasteIntoCity.Application.Types;
-using WasteIntoCity.Core.Enums;
 using WasteIntoCity.Core.Interfaces.Services;
 using WasteIntoCity.Core.Structs;
+using WasteIntoCity.Core.Types;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -26,7 +26,7 @@ namespace WasteIntoCity.Application.Controllers.V1
 
         [AllowAnonymous]
         [HttpPost(ApiRoutes.Identity.REGISTER)]
-        public async Task<IActionResult> Register([FromBody] UserRegistrationRequest request)
+        public async Task<IActionResult> RegisterAsync([FromBody] UserRegistrationRequest request)
         {
             await _identityService.RegisterAsync(request.Nickname, request.Email, request.Password);
 
@@ -46,7 +46,7 @@ namespace WasteIntoCity.Application.Controllers.V1
 
         [AllowAnonymous]
         [HttpPost(ApiRoutes.Identity.REFRESH)]
-        public async Task<IActionResult> RefreshToken()
+        public async Task<IActionResult> RefreshTokenAsync()
         {
             string accessTokenValue = HttpContext.TakeTokenValueByTokenType(TokenType.ACCESS);
 
@@ -63,7 +63,7 @@ namespace WasteIntoCity.Application.Controllers.V1
         [HttpPost(ApiRoutes.Identity.LOGOUT)]
         public async Task<IActionResult> Logout()
         {
-            string userId = HttpContext.TakeUserIdFromAccessToken();
+            Guid userId = HttpContext.TakeUserIdFromAccessToken();
 
             await _identityService.LogoutAsync(userId);
 
