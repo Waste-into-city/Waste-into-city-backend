@@ -19,7 +19,7 @@ namespace WasteIntoCity.Api.Controllers.V1
             _workService = workService;
         }
 
-        [Authorize(Roles = $"{nameof(RoleType.Admin)},{nameof(RoleType.Moderator)}")]
+        [Authorize(Roles = $"{nameof(RoleType.SuperAdmin)},{nameof(RoleType.Moderator)}")]
         [HttpPost(ApiRoutes.Works.CREATE)]
         public async Task<IActionResult> CreateAsync([FromBody] WorkCreateRequest workCreateRequest)
         {
@@ -57,7 +57,7 @@ namespace WasteIntoCity.Api.Controllers.V1
             return Ok(workGetByIdResponse);
         }
 
-        [Authorize(Roles = $"{nameof(RoleType.Admin)},{nameof(RoleType.Moderator)},{nameof(RoleType.User)}")]
+        [Authorize(Roles = $"{nameof(RoleType.SuperAdmin)},{nameof(RoleType.Moderator)},{nameof(RoleType.User)}")]
         [HttpGet(ApiRoutes.Works.GET_ALL_OWN_TAKE_PART_IN)]
         public async Task<IActionResult> GetAllOwnTakePartInAsync()
         {
@@ -73,7 +73,7 @@ namespace WasteIntoCity.Api.Controllers.V1
             return Ok(workGetAllOwnTakePartInResponse);
         }
 
-        [Authorize(Roles = $"{nameof(RoleType.Admin)},{nameof(RoleType.Moderator)}")]
+        [Authorize(Roles = $"{nameof(RoleType.SuperAdmin)},{nameof(RoleType.Moderator)}")]
         [HttpPut(ApiRoutes.Works.UPDATE)]
         public async Task<IActionResult> UpdateAsync([FromRoute] Guid id, [FromBody] WorkUpdateRequest workUpdateRequest)
         {
@@ -83,7 +83,7 @@ namespace WasteIntoCity.Api.Controllers.V1
             return Ok();
         }
 
-        [Authorize(Roles = $"{nameof(RoleType.Admin)},{nameof(RoleType.Moderator)},{nameof(RoleType.User)}")]
+        [Authorize(Roles = $"{nameof(RoleType.SuperAdmin)},{nameof(RoleType.Moderator)},{nameof(RoleType.User)}")]
         [HttpPut(ApiRoutes.Works.UPDATE_WORK_STATUS)]
         public async Task<IActionResult> UpdateWorkStatusAsync([FromRoute] Guid id, [FromBody] WorkUpdateStatusRequest workUpdateStatusRequest)
         {

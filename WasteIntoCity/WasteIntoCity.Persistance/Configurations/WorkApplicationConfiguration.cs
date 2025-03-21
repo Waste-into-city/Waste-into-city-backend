@@ -7,9 +7,11 @@ namespace WasteIntoCity.Persistance.Configurations
 {
     public partial class WorkApplicationConfiguration : IEntityTypeConfiguration<WorkApplicationEntity>
     {
+        public const string TABLE_NAME = "work_applications";
+
         public void Configure(EntityTypeBuilder<WorkApplicationEntity> builder)
         {
-            builder.ToTable("work_applications");
+            builder.ToTable(TABLE_NAME);
 
             builder.Property(w => w.Id).HasColumnName("id");
 

@@ -7,9 +7,11 @@ namespace WasteIntoCity.Persistance.Configurations
 {
     public partial class WorkComplexityTypeConfiguration : IEntityTypeConfiguration<WorkComplexityTypeEntity>
     {
+        public const string TABLE_NAME = "work_complexity_types";
+
         public void Configure(EntityTypeBuilder<WorkComplexityTypeEntity> builder)
         {
-            builder.ToTable("work_complexity_types");
+            builder.ToTable(TABLE_NAME);
 
             builder.Property(w => w.Id).HasColumnName("id");
 

@@ -6,9 +6,11 @@ namespace WasteIntoCity.Persistance.Configurations
 {
     public partial class AdminSettingsConfiguration : IEntityTypeConfiguration<AdminSettingsEntity>
     {
+        public const string TABLE_NAME = "admin_settings";
+
         public void Configure(EntityTypeBuilder<AdminSettingsEntity> builder)
         {
-            builder.ToTable("admin_settings");
+            builder.ToTable(TABLE_NAME);
 
             builder.Property(a => a.Id).HasColumnName("id");
 

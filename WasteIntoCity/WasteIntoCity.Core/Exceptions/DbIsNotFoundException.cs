@@ -1,4 +1,4 @@
-﻿namespace WasteIntoCity.Core.Errors
+﻿namespace WasteIntoCity.Core.Exceptions
 {
     public class DbIsNotFoundException : NotFound404Exception
     {

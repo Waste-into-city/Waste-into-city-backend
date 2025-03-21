@@ -6,9 +6,11 @@ namespace WasteIntoCity.Persistance.Configurations
 {
     public partial class TrashcanConfiguration : IEntityTypeConfiguration<TrashcanEntity>
     {
+        public const string TABLE_NAME = "trashcans";
+
         public void Configure(EntityTypeBuilder<TrashcanEntity> builder)
         {
-            builder.ToTable("trashcans");
+            builder.ToTable(TABLE_NAME);
 
             builder.Property(t => t.Id).HasColumnName("id");
 

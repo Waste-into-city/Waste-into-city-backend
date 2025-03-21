@@ -1,6 +1,4 @@
-﻿using WasteIntoCity.Core.Errors;
-
-namespace WasteIntoCity.Core.Exceptions
+﻿namespace WasteIntoCity.Core.Exceptions
 {
     public class UnknownRoleException : InternalServer500Exception
     {

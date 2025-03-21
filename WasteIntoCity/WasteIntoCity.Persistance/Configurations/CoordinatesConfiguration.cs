@@ -7,9 +7,11 @@ namespace WasteIntoCity.Persistance.Configurations
 {
     public partial class CoordinatesConfiguration : IEntityTypeConfiguration<CoordinatesEntity>
     {
+        public const string TABLE_NAME = "coordinates";
+
         public void Configure(EntityTypeBuilder<CoordinatesEntity> builder)
         {
-            builder.ToTable("coordinates");
+            builder.ToTable(TABLE_NAME);
 
             builder.Property(c => c.Id).HasColumnName("id");
 

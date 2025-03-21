@@ -1,4 +1,4 @@
-﻿namespace WasteIntoCity.Core.Errors
+﻿namespace WasteIntoCity.Core.Exceptions
 {
     public class ValueOutOfRangeException<T> : BadRequest400Exception where T : notnull
     {

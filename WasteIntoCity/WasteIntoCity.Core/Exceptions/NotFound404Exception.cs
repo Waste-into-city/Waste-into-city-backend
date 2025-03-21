@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace WasteIntoCity.Core.Errors
+namespace WasteIntoCity.Core.Exceptions
 {
     public class NotFound404Exception : Exception
     {

@@ -7,9 +7,11 @@ namespace WasteIntoCity.Persistance.Configurations
 {
     public partial class ImageConfiguration : IEntityTypeConfiguration<ImageEntity>
     {
+        public const string TABLE_NAME = "images";
+
         public void Configure(EntityTypeBuilder<ImageEntity> builder)
         {
-            builder.ToTable("images");
+            builder.ToTable(TABLE_NAME);
 
             builder.Property(i => i.Id).HasColumnName("id");
 

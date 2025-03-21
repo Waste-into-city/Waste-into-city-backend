@@ -3,7 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using WasteIntoCity.Application.Options;
-using WasteIntoCity.Core.Errors;
+using WasteIntoCity.Core.Exceptions;
 using WasteIntoCity.Core.Interfaces.Repositories;
 using WasteIntoCity.Core.Interfaces.Services;
 using WasteIntoCity.Core.Models;

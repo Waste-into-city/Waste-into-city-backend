@@ -12,8 +12,8 @@ using WasteIntoCity.Persistance;
 namespace WasteIntoCity.Persistance.Migrations
 {
     [DbContext(typeof(MainDbContext))]
-    [Migration("20250320231724_add_coordinates_report_complexity_type_start_datetime")]
-    partial class add_coordinates_report_complexity_type_start_datetime
+    [Migration("20250321133110_Refactor_configurations")]
+    partial class Refactor_configurations
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -216,23 +216,6 @@ namespace WasteIntoCity.Persistance.Migrations
                         .IsUnique();
 
                     b.ToTable("roles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "User"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Moderator"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "Admin"
-                        });
                 });
 
             modelBuilder.Entity("WasteIntoCity.Persistance.Entities.TrashcanEntity", b =>
@@ -667,9 +650,9 @@ namespace WasteIntoCity.Persistance.Migrations
                         .HasColumnType("nvarchar(100)")
                         .HasColumnName("title");
 
-                    b.Property<int>("WorkReportComplaintTypesId")
+                    b.Property<int>("WorkReportComplaintStatusTypesId")
                         .HasColumnType("int")
-                        .HasColumnName("work_report_complaint_types_id");
+                        .HasColumnName("work_report_complaint_status_types_id");
 
                     b.Property<Guid>("WorksId")
                         .HasColumnType("uniqueidentifier")
@@ -679,14 +662,14 @@ namespace WasteIntoCity.Persistance.Migrations
 
                     b.HasIndex("FromUsersId");
 
-                    b.HasIndex("WorkReportComplaintTypesId");
+                    b.HasIndex("WorkReportComplaintStatusTypesId");
 
                     b.HasIndex("WorksId");
 
                     b.ToTable("work_report_complaints", (string)null);
                 });
 
-            modelBuilder.Entity("WasteIntoCity.Persistance.Entities.WorkReportComplaintTypeEntity", b =>
+            modelBuilder.Entity("WasteIntoCity.Persistance.Entities.WorkReportComplaintStatusTypeEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -703,7 +686,7 @@ namespace WasteIntoCity.Persistance.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("work_report_complaint_types", (string)null);
+                    b.ToTable("work_report_complaint_status_types", (string)null);
                 });
 
             modelBuilder.Entity("WasteIntoCity.Persistance.Entities.WorkReportResultEntity", b =>
@@ -983,9 +966,9 @@ namespace WasteIntoCity.Persistance.Migrations
                         .HasForeignKey("FromUsersId")
                         .IsRequired();
 
-                    b.HasOne("WasteIntoCity.Persistance.Entities.WorkReportComplaintTypeEntity", "WorkReportComplaintType")
+                    b.HasOne("WasteIntoCity.Persistance.Entities.WorkReportComplaintStatusTypeEntity", "WorkReportComplaintType")
                         .WithMany("WorkReportComplaints")
-                        .HasForeignKey("WorkReportComplaintTypesId")
+                        .HasForeignKey("WorkReportComplaintStatusTypesId")
                         .IsRequired();
 
                     b.HasOne("WasteIntoCity.Persistance.Entities.WorkEntity", "Work")
@@ -1098,7 +1081,7 @@ namespace WasteIntoCity.Persistance.Migrations
                     b.Navigation("Images");
                 });
 
-            modelBuilder.Entity("WasteIntoCity.Persistance.Entities.WorkReportComplaintTypeEntity", b =>
+            modelBuilder.Entity("WasteIntoCity.Persistance.Entities.WorkReportComplaintStatusTypeEntity", b =>
                 {
                     b.Navigation("WorkReportComplaints");
                 });

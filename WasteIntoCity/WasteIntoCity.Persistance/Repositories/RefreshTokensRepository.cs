@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using WasteIntoCity.Core.Errors;
+using WasteIntoCity.Core.Exceptions;
 using WasteIntoCity.Persistance.Entities;
 
 namespace WasteIntoCity.Persistance.Repositories

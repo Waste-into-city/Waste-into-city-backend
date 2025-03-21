@@ -1,10 +1,14 @@
-﻿using WasteIntoCity.Core.Errors;
+﻿using WasteIntoCity.Core.Exceptions;
 using WasteIntoCity.Core.Types;
 
 namespace WasteIntoCity.Core.Models
 {
     public class Role
     {
+        public const int NAME_LENGTH_MIN = 1;
+
+        public const int NAME_LENGTH_MAX = 45;
+
         private Role(int id, string name)
         {
             Id = id;

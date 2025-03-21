@@ -1,6 +1,6 @@
 ﻿namespace WasteIntoCity.Persistance.Entities
 {
-    public class WorkReportComplaintTypeEntity
+    public class WorkReportComplaintStatusTypeEntity
     {
         public int Id { get; set; }
 

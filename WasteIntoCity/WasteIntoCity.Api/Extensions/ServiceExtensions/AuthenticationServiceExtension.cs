@@ -7,7 +7,7 @@ using System.Text;
 using WasteIntoCity.Application.Extensions;
 using WasteIntoCity.Application.Options;
 using WasteIntoCity.Application.Types;
-using WasteIntoCity.Core.Errors;
+using WasteIntoCity.Core.Exceptions;
 using WasteIntoCity.Persistance.Entities;
 using WasteIntoCity.Persistance.Repositories;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
@@ -128,8 +128,6 @@ namespace WasteIntoCity.Api.Extensions.ServiceExtensions
                     };
                 }
             );
-
-            services.AddAuthorization();
 
             return services;
         }

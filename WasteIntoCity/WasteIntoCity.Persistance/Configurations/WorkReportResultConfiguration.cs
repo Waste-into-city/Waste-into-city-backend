@@ -7,9 +7,11 @@ namespace WasteIntoCity.Persistance.Configurations
 {
     public partial class WorkReportResultConfiguration : IEntityTypeConfiguration<WorkReportResultEntity>
     {
+        public const string TABLE_NAME = "work_report_results";
+
         public void Configure(EntityTypeBuilder<WorkReportResultEntity> builder)
         {
-            builder.ToTable("work_report_results");
+            builder.ToTable(TABLE_NAME);
 
             builder.Property(w => w.Id);
 

@@ -31,6 +31,8 @@ services.AddControllers();
 
 services.AddCustomAuthentication(configuration);
 
+services.AddCustomAuthorization(configuration);
+
 services.AddCustomSwagger(configuration);
 
 services.AddEndpointsApiExplorer();
@@ -41,6 +43,8 @@ WebApplication app = builder.Build();
 app.UseCors("CorsPolicy");
 
 app.UseStaticFiles();
+
+app.UseCustomMainDbContext(configuration);
 
 app.UseHttpsRedirection();
 

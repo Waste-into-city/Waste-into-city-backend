@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using WasteIntoCity.Application.Options;
 using WasteIntoCity.Application.Types;
-using WasteIntoCity.Core.Errors;
+using WasteIntoCity.Core.Exceptions;
 using WasteIntoCity.Core.Structs;
 
 namespace WasteIntoCity.Application.Extensions

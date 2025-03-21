@@ -6,9 +6,11 @@ namespace WasteIntoCity.Persistance.Configurations
 {
     public partial class UserAccordingRoleConfiguration : IEntityTypeConfiguration<UserAccordingRoleEntity>
     {
+        public const string TABLE_NAME = "user_according_roles";
+
         public void Configure(EntityTypeBuilder<UserAccordingRoleEntity> builder)
         {
-            builder.ToTable("user_according_roles");
+            builder.ToTable(TABLE_NAME);
 
             builder.Property(t => t.RolesId).HasColumnName("roles_id");
 

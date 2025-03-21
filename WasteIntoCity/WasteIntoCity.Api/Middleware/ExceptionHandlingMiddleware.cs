@@ -1,5 +1,4 @@
 ﻿using WasteIntoCity.Api.Contracts.V1.Responses;
-using WasteIntoCity.Core.Errors;
 using WasteIntoCity.Core.Exceptions;
 
 namespace WasteIntoCity.Api.Middleware

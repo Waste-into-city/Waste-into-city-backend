@@ -14,7 +14,7 @@
 
         public Guid FromUsersId { get; set; }
 
-        public int WorkReportComplaintTypesId { get; set; }
+        public int WorkReportComplaintStatusTypesId { get; set; }
 
         public WorkEntity? Work { get; set; }
 
@@ -22,6 +22,6 @@
 
         public UserEntity? FromUser { get; set; }
 
-        public WorkReportComplaintTypeEntity? WorkReportComplaintType { get; set; }
+        public WorkReportComplaintStatusTypeEntity? WorkReportComplaintType { get; set; }
     }
 }
