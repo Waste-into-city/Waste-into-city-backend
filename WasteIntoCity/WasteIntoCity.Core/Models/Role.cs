@@ -1,5 +1,6 @@
 ﻿using WasteIntoCity.Core.Enums;
 using WasteIntoCity.Core.Exceptions;
+using WasteIntoCity.Core.Extensions;
 
 namespace WasteIntoCity.Core.Models
 {
@@ -24,17 +25,12 @@ namespace WasteIntoCity.Core.Models
             if (!Enum.IsDefined(typeof(RoleEnum), id))
             {
                 throw new InvalidValueFormatException(nameof(Role),
-                    $"The value should be an enum ({ToStringAllValidValuesThroughComma()})");
+                    $"The value should be an enum ({EnumOperationsExtension.ToStringAllValidValuesThroughComma<RoleEnum>()})");
             }
 
             return new Role(id, name);
         }
 
-        private static string ToStringAllValidValuesThroughComma()
-        {
-            var roleTypes = Enum.GetValues<RoleEnum>();
 
-            return string.Join(", ", roleTypes.Select(v => $"{(int)v} = {v}"));
-        }
     }
 }

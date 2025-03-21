@@ -6,7 +6,7 @@
 
         public int Volume { get; set; }
 
-        public int CoordinatesId { get; set; }
+        public Guid CoordinatesId { get; set; }
 
         public Guid TrashcanTypesId { get; set; }
 

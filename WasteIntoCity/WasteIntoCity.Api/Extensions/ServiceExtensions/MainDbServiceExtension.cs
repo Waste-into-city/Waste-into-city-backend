@@ -18,6 +18,8 @@ namespace WasteIntoCity.Api.Extensions.ServiceExtensions
             services.AddScoped<RefreshTokensRepository>();
             services.AddScoped<IRolesRepository, RolesRepository>();
             services.AddScoped<IWorksRepository, WorksRepository>();
+            services.AddScoped<IWorkApplicationsRepository, WorkApplicationsRepository>();
+            services.AddScoped<ICoordinatesRepository, CoordinatesRepository>();
 
             return services;
         }

@@ -33,5 +33,7 @@
         //public AccessTokenEntity? AccessToken { get; set; }
 
         public List<RefreshTokenEntity> RefreshTokens { get; set; } = [];
+
+        public List<WorkApplicationEntity> WorkApplications { get; set; } = [];
     }
 }

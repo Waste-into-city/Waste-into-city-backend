@@ -2,7 +2,7 @@
 {
     public class CoordinatesEntity
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public string Lat { get; set; } = string.Empty;
 

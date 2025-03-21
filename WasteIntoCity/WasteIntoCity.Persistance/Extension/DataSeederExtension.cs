@@ -73,6 +73,15 @@ namespace WasteIntoCity.Persistance.Extension
             );
         }
 
+        public static void SeedWorkComplexityTypes(this MainDbContext context)
+        {
+            context.SeedEntityBasedEntities(
+                context.WorkComplexityTypes,
+                DefaultInitTypes.workComplexityTypeEntities,
+                WorkComplexityTypeConfiguration.TABLE_NAME
+            );
+        }
+
     }
 
 

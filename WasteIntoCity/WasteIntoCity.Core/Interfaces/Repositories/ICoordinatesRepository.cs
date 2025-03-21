@@ -2,8 +2,8 @@
 
 namespace WasteIntoCity.Core.Interfaces.Repositories
 {
-    public interface IWorkApplicationsRepository
+    public interface ICoordinatesRepository
     {
-        Task AddAsync(WorkApplication workApplication);
+        Task AddAsync(Coordinates coordinates);
     }
 }

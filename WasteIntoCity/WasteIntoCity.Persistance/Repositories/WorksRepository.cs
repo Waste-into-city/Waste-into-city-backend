@@ -25,7 +25,7 @@ namespace WasteIntoCity.Persistance.Repositories
                 Description = work.Description.Value,
                 StartedDatetime = work.StartedDatetime,
                 FinishDatetime = work.FinishDatetime,
-                WorkComplexityTypesId = work.WorkComplexityId,
+                WorkComplexityTypesId = work.WorkComplexityTypesId,
                 WorkStatusTypesId = work.WorkStatusesId
             };
 
@@ -79,7 +79,7 @@ namespace WasteIntoCity.Persistance.Repositories
                     .SetProperty(w => w.Description, work.Description.Value)
                     .SetProperty(w => w.StartedDatetime, work.StartedDatetime)
                     .SetProperty(w => w.FinishDatetime, work.FinishDatetime)
-                    .SetProperty(w => w.WorkComplexityTypesId, work.WorkComplexityId)
+                    .SetProperty(w => w.WorkComplexityTypesId, work.WorkComplexityTypesId)
                     .SetProperty(w => w.WorkStatusTypesId, work.WorkStatusesId)
                 );
 

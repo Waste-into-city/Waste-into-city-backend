@@ -19,5 +19,39 @@ namespace WasteIntoCity.Persistance
             new WorkReportComplaintStatusTypeEntity{Id = (int) WorkReportComplaintStatusEnum.Accepted, Name = nameof(WorkReportComplaintStatusEnum.Accepted) },
             new WorkReportComplaintStatusTypeEntity{Id = (int) WorkReportComplaintStatusEnum.Denied, Name = nameof(WorkReportComplaintStatusEnum.Denied) },
         };
+
+        public static readonly WorkComplexityTypeEntity[] workComplexityTypeEntities = new WorkComplexityTypeEntity[]
+        {
+            new WorkComplexityTypeEntity
+            {
+                Id = (int) WorkComplexityEnum.Easy,
+                Name = nameof(WorkComplexityEnum.Easy),
+                DurationHours = 2,
+                MultiplierRanking = 1,
+                RadiusOnMap = 1,
+                ParticipantsMin = 1,
+                ParticipantsMax = 3
+            },
+            new WorkComplexityTypeEntity
+            {
+                Id = (int) WorkComplexityEnum.Medium,
+                Name = nameof(WorkComplexityEnum.Medium),
+                DurationHours = 8,
+                MultiplierRanking = 2,
+                RadiusOnMap = 2,
+                ParticipantsMin = 5,
+                ParticipantsMax = 8
+            },
+            new WorkComplexityTypeEntity
+            {
+                Id = (int) WorkComplexityEnum.Hard,
+                Name = nameof(WorkComplexityEnum.Hard),
+                DurationHours = 24,
+                MultiplierRanking = 3,
+                RadiusOnMap = 3,
+                ParticipantsMin = 10,
+                ParticipantsMax = 12
+            },
+        };
     }
 }

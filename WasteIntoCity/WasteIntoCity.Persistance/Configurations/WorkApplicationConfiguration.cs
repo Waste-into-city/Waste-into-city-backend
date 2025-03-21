@@ -21,7 +21,7 @@ namespace WasteIntoCity.Persistance.Configurations
 
             builder.Property(w => w.StartedDatetime).IsRequired().HasColumnName("started_datetime");
 
-            builder.Property(w => w.WorkComplexitiesId).IsRequired().HasColumnName("work_complexities_id");
+            builder.Property(w => w.WorkComplexityTypesId).IsRequired().HasColumnName("work_complexity_types_id");
 
             builder.Property(w => w.CoordinatesId).IsRequired().HasColumnName("coordinates_id");
 
@@ -36,6 +36,9 @@ namespace WasteIntoCity.Persistance.Configurations
 
             builder.HasOne(w => w.Coordinates)
                 .WithMany(c => c.WorkApplications);
+
+            builder.HasOne(w => w.FromUser)
+                .WithMany(u => u.WorkApplications);
         }
     }
 }

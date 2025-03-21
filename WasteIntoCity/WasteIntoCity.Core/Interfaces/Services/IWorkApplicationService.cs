@@ -2,6 +2,6 @@
 {
     public interface IWorkApplicationService
     {
-        Task CreateAsync(Guid id, string title, string description, DateTime startedDatetime, int workComplexityId, string lat, string lng);
+        Task CreateOwnAsync(string title, string description, int workComplexityId, string lat, string lng, Guid userId);
     }
 }

@@ -1,12 +1,32 @@
-﻿using WasteIntoCity.Core.Interfaces.Services;
+﻿using WasteIntoCity.Core.Interfaces.Repositories;
+using WasteIntoCity.Core.Interfaces.Services;
+using WasteIntoCity.Core.Models;
+using WasteIntoCity.Core.ValueObjects;
 
 namespace WasteIntoCity.Application.Services
 {
     public class WorkApplicationService : IWorkApplicationService
     {
-        public Task CreateAsync(Guid id, string title, string description, DateTime startedDatetime, int workComplexityId, string lat, string lng)
+        private readonly IWorkApplicationsRepository _workApplicationsRepository;
+        private readonly ICoordinatesRepository _coordinatesRepository;
+
+        public WorkApplicationService(IWorkApplicationsRepository workApplicationsRepository, ICoordinatesRepository coordinatesRepository)
         {
-            throw new NotImplementedException();
+            _workApplicationsRepository = workApplicationsRepository;
+            _coordinatesRepository = coordinatesRepository;
+        }
+
+        public async Task CreateOwnAsync(string title, string description, int workComplexityId, string lat, string lng,
+            Guid userId)
+        {
+            Coordinates coordinates = Coordinates.Create(Guid.NewGuid(), lat, lng);
+
+            await _coordinatesRepository.AddAsync(coordinates);
+
+            WorkApplication workApplication = WorkApplication.Create(Guid.NewGuid(), Title.Create(title), Description.Create(description), workComplexityId,
+                coordinates.Id, DateTime.UtcNow, userId);
+
+            await _workApplicationsRepository.AddAsync(workApplication);
         }
     }
 }

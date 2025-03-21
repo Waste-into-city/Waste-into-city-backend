@@ -10,14 +10,18 @@
 
         public DateTime StartedDatetime { get; set; }
 
-        public Guid WorkComplexitiesId { get; set; }
+        public int WorkComplexityTypesId { get; set; }
 
-        public int CoordinatesId { get; }
+        public Guid CoordinatesId { get; set; }
+
+        public Guid FromUsersId { get; set; }
 
         public WorkComplexityTypeEntity? WorkComplexityType { get; set; }
 
         public List<ImageEntity> Images { get; set; } = [];
 
         public CoordinatesEntity? Coordinates { get; set; }
+
+        public UserEntity? FromUser { get; set; }
     }
 }

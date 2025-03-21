@@ -8,7 +8,7 @@
 
         public Guid UsersId { get; set; }
 
-        public int CoordinatesId { get; set; }
+        public Guid CoordinatesId { get; set; }
 
         public DateTime SubmissionTime { get; set; }
 

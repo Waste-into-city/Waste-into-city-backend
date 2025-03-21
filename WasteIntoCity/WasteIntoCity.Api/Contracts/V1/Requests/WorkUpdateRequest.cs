@@ -10,10 +10,10 @@
 
         required public DateTime FinishDatetime { get; init; }
 
-        required public Guid WorkComplexityId { get; init; }
+        required public int WorkComplexityTypesId { get; init; }
 
         required public Guid WorkStatusesId { get; init; }
 
-        required public int CoordinatesId { get; init; }
+        required public Guid CoordinatesId { get; init; }
     }
 }

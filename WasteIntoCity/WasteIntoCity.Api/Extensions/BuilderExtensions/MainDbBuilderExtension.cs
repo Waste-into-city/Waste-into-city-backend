@@ -14,6 +14,7 @@ namespace WasteIntoCity.Api.Extensions.BuilderExtensions
                 context.Database.Migrate();
                 context.SeedRoles();
                 context.SeedWorkReportComplaintStatusTypes();
+                context.SeedWorkComplexityTypes();
             }
 
             return app;

@@ -12,8 +12,8 @@ using WasteIntoCity.Persistance;
 namespace WasteIntoCity.Persistance.Migrations
 {
     [DbContext(typeof(MainDbContext))]
-    [Migration("20250321133110_Refactor_configurations")]
-    partial class Refactor_configurations
+    [Migration("20250321231438_complexity")]
+    partial class complexity
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -59,12 +59,10 @@ namespace WasteIntoCity.Persistance.Migrations
 
             modelBuilder.Entity("WasteIntoCity.Persistance.Entities.CoordinatesEntity", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("id");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Lat")
                         .IsRequired()
@@ -229,8 +227,8 @@ namespace WasteIntoCity.Persistance.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("average_trashcan_occupancy_type_id");
 
-                    b.Property<int>("CoordinatesId")
-                        .HasColumnType("int")
+                    b.Property<Guid>("CoordinatesId")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("coordinates_id");
 
                     b.Property<Guid>("TrashcanTypesId")
@@ -315,8 +313,8 @@ namespace WasteIntoCity.Persistance.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("id");
 
-                    b.Property<int>("CoordinatesId")
-                        .HasColumnType("int")
+                    b.Property<Guid>("CoordinatesId")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("coordinates_id");
 
                     b.Property<bool>("IsReviewed")
@@ -422,8 +420,8 @@ namespace WasteIntoCity.Persistance.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("id");
 
-                    b.Property<int>("CoordinatesId")
-                        .HasColumnType("int")
+                    b.Property<Guid>("CoordinatesId")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("coordinates_id");
 
                     b.Property<string>("Description")
@@ -431,6 +429,9 @@ namespace WasteIntoCity.Persistance.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)")
                         .HasColumnName("description");
+
+                    b.Property<Guid>("FromUsersId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("StartedDatetime")
                         .HasColumnType("datetime2")
@@ -442,15 +443,17 @@ namespace WasteIntoCity.Persistance.Migrations
                         .HasColumnType("nvarchar(100)")
                         .HasColumnName("title");
 
-                    b.Property<Guid>("WorkComplexitiesId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("work_complexities_id");
+                    b.Property<int>("WorkComplexityTypesId")
+                        .HasColumnType("int")
+                        .HasColumnName("work_complexity_types_id");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CoordinatesId");
 
-                    b.HasIndex("WorkComplexitiesId");
+                    b.HasIndex("FromUsersId");
+
+                    b.HasIndex("WorkComplexityTypesId");
 
                     b.ToTable("work_applications", (string)null);
                 });
@@ -493,10 +496,12 @@ namespace WasteIntoCity.Persistance.Migrations
 
             modelBuilder.Entity("WasteIntoCity.Persistance.Entities.WorkComplexityTypeEntity", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("int")
                         .HasColumnName("id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("DurationHours")
                         .HasColumnType("int")
@@ -539,8 +544,8 @@ namespace WasteIntoCity.Persistance.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("id");
 
-                    b.Property<int>("CoordinatesId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("CoordinatesId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -562,8 +567,8 @@ namespace WasteIntoCity.Persistance.Migrations
                         .HasColumnType("nvarchar(100)")
                         .HasColumnName("title");
 
-                    b.Property<Guid>("WorkComplexityTypesId")
-                        .HasColumnType("uniqueidentifier")
+                    b.Property<int>("WorkComplexityTypesId")
+                        .HasColumnType("int")
                         .HasColumnName("work_complexity_id");
 
                     b.Property<Guid>("WorkStatusTypesId")
@@ -881,12 +886,19 @@ namespace WasteIntoCity.Persistance.Migrations
                         .HasForeignKey("CoordinatesId")
                         .IsRequired();
 
+                    b.HasOne("WasteIntoCity.Persistance.Entities.UserEntity", "FromUser")
+                        .WithMany("WorkApplications")
+                        .HasForeignKey("FromUsersId")
+                        .IsRequired();
+
                     b.HasOne("WasteIntoCity.Persistance.Entities.WorkComplexityTypeEntity", "WorkComplexityType")
                         .WithMany("WorkApplications")
-                        .HasForeignKey("WorkComplexitiesId")
+                        .HasForeignKey("WorkComplexityTypesId")
                         .IsRequired();
 
                     b.Navigation("Coordinates");
+
+                    b.Navigation("FromUser");
 
                     b.Navigation("WorkComplexityType");
                 });
@@ -1042,6 +1054,8 @@ namespace WasteIntoCity.Persistance.Migrations
                     b.Navigation("RefreshTokens");
 
                     b.Navigation("TrashcanPointReports");
+
+                    b.Navigation("WorkApplications");
 
                     b.Navigation("WorkColleagueReportsAbout");
 

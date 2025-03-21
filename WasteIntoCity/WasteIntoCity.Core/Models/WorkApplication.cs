@@ -1,4 +1,7 @@
-﻿using WasteIntoCity.Core.ValueObjects;
+﻿using WasteIntoCity.Core.Exceptions;
+using WasteIntoCity.Core.Extensions;
+using WasteIntoCity.Core.Types;
+using WasteIntoCity.Core.ValueObjects;
 
 namespace WasteIntoCity.Core.Models
 {
@@ -12,14 +15,16 @@ namespace WasteIntoCity.Core.Models
 
         public const int DESCRIPTION_LENGTH_MAX = Description.VALUE_LENGTH_MAX;
 
-        private WorkApplication(Guid id, Title title, Description description, Guid workComplexitiesId, int coordinatesId, DateTime startedDatetime)
+        private WorkApplication(Guid id, Title title, Description description, int workComplexityTypesId, Guid coordinatesId,
+            DateTime startedDatetime, Guid fromUsersId)
         {
             Id = id;
             Title = title;
             Description = description;
-            WorkComplexitiesId = workComplexitiesId;
+            WorkComplexityTypesId = workComplexityTypesId;
             CoordinatesId = coordinatesId;
             StartedDatetime = startedDatetime;
+            FromUsersId = fromUsersId;
         }
 
         public Guid Id { get; }
@@ -30,13 +35,22 @@ namespace WasteIntoCity.Core.Models
 
         public DateTime StartedDatetime { get; }
 
-        public Guid WorkComplexitiesId { get; }
+        public int WorkComplexityTypesId { get; }
 
-        public int CoordinatesId { get; }
+        public Guid CoordinatesId { get; }
 
-        public static WorkApplication Create(Guid id, Title title, Description description, Guid workComplexitiesId, int coordinatesId, DateTime startedDatetime)
+        public Guid FromUsersId { get; }
+
+        public static WorkApplication Create(Guid id, Title title, Description description, int workComplexityTypesId, Guid coordinatesId,
+            DateTime startedDatetime, Guid fromUsersId)
         {
-            return new WorkApplication(id, title, description, workComplexitiesId, coordinatesId, startedDatetime);
+            if (!Enum.IsDefined(typeof(WorkComplexityEnum), workComplexityTypesId))
+            {
+                throw new InvalidValueFormatException(nameof(WorkApplication),
+                    $"The value should be an enum ({EnumOperationsExtension.ToStringAllValidValuesThroughComma<WorkComplexityEnum>()})");
+            }
+
+            return new WorkApplication(id, title, description, workComplexityTypesId, coordinatesId, startedDatetime, fromUsersId);
         }
     }
 }

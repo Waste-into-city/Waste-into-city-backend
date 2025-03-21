@@ -2,12 +2,12 @@
 {
     public class TrashcanPointReport
     {
-        private TrashcanPointReport(Guid id, bool isReviewed, Guid usersId, Guid trashcanPointsId, DateTime submissionTime)
+        private TrashcanPointReport(Guid id, bool isReviewed, Guid usersId, Guid coordinatesId, DateTime submissionTime)
         {
             Id = id;
             IsReviewed = isReviewed;
             UsersId = usersId;
-            TrashcanPointsId = trashcanPointsId;
+            CoordinatesId = coordinatesId;
             SubmissionTime = submissionTime;
         }
 
@@ -17,13 +17,13 @@
 
         public Guid UsersId { get; }
 
-        public Guid TrashcanPointsId { get; }
+        public Guid CoordinatesId { get; }
 
         public DateTime SubmissionTime { get; }
 
-        public static TrashcanPointReport Create(Guid id, bool isReviewed, Guid usersId, Guid trashcanPointsId, DateTime submissionTime)
+        public static TrashcanPointReport Create(Guid id, bool isReviewed, Guid usersId, Guid coordinatesId, DateTime submissionTime)
         {
-            return new TrashcanPointReport(id, isReviewed, usersId, trashcanPointsId, submissionTime);
+            return new TrashcanPointReport(id, isReviewed, usersId, coordinatesId, submissionTime);
         }
     }
 }

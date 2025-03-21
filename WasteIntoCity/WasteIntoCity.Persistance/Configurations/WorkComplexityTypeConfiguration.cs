@@ -33,7 +33,7 @@ namespace WasteIntoCity.Persistance.Configurations
 
             builder.HasMany(w => w.WorkApplications)
                 .WithOne(wo => wo.WorkComplexityType)
-                .HasForeignKey(wo => wo.WorkComplexitiesId);
+                .HasForeignKey(wo => wo.WorkComplexityTypesId);
 
             builder.HasMany(w => w.Works)
                 .WithOne(wo => wo.WorkComplexityType)

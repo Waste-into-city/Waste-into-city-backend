@@ -13,14 +13,15 @@ namespace WasteIntoCity.Core.Models
 
         public const int DESCRIPTION_LENGTH_MAX = Description.VALUE_LENGTH_MAX;
 
-        private Work(Guid id, Title title, Description description, DateTime startedDatetime, DateTime finishDatetime, Guid workComplexityId, Guid workStatusesId, int coordinatesId)
+        private Work(Guid id, Title title, Description description, DateTime startedDatetime, DateTime finishDatetime, int workComplexityTypesId,
+            Guid workStatusesId, Guid coordinatesId)
         {
             Id = id;
             Title = title;
             Description = description;
             StartedDatetime = startedDatetime;
             FinishDatetime = finishDatetime;
-            WorkComplexityId = workComplexityId;
+            WorkComplexityTypesId = workComplexityTypesId;
             WorkStatusesId = workStatusesId;
             CoordinatesId = coordinatesId;
         }
@@ -35,20 +36,21 @@ namespace WasteIntoCity.Core.Models
 
         public DateTime FinishDatetime { get; }
 
-        public Guid WorkComplexityId { get; }
+        public int WorkComplexityTypesId { get; }
 
         public Guid WorkStatusesId { get; }
 
-        public int CoordinatesId { get; }
+        public Guid CoordinatesId { get; }
 
-        public static Work Create(Guid id, Title title, Description description, DateTime startedDatetime, DateTime finishDatetime, Guid workComplexityId, Guid workStatusesId, int coordinatesId)
+        public static Work Create(Guid id, Title title, Description description, DateTime startedDatetime, DateTime finishDatetime, int workComplexityTypesId,
+            Guid workStatusesId, Guid coordinatesId)
         {
             if (startedDatetime > finishDatetime)
             {
                 throw new ValueOutOfRangeException<DateTime>("startDatetime", DateTime.MinValue, finishDatetime);
             }
 
-            return new Work(id, title, description, startedDatetime, finishDatetime, workComplexityId, workStatusesId, coordinatesId);
+            return new Work(id, title, description, startedDatetime, finishDatetime, workComplexityTypesId, workStatusesId, coordinatesId);
         }
     }
 }

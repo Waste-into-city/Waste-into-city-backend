@@ -59,6 +59,10 @@ namespace WasteIntoCity.Persistance.Configurations
                 .WithOne(u => u.User)
                 .HasForeignKey(u => u.UserId);
 
+            builder.HasMany(u => u.WorkApplications)
+                .WithOne(w => w.FromUser)
+                .HasForeignKey(w => w.FromUsersId);
+
             //builder.HasOne(u => u.AccessToken)
             //    .WithOne(a => a.User);
         }
