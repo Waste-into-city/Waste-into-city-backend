@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using WasteIntoCity.Api.AuthorizationPolicies.Requirements;
+using WasteIntoCity.Core.Enums;
 using WasteIntoCity.Core.Exceptions;
 using WasteIntoCity.Core.Interfaces.Repositories;
 using WasteIntoCity.Core.Models;
-using WasteIntoCity.Core.Types;
 
 namespace WasteIntoCity.Api.AuthorizationPolicies.Handlers
 {
@@ -30,7 +30,7 @@ namespace WasteIntoCity.Api.AuthorizationPolicies.Handlers
                 return;
             }
 
-            if (!roles.Contains(nameof(RoleType.Moderator)) && !roles.Contains(nameof(RoleType.SuperAdmin)) && roles.Contains(nameof(RoleType.User)))
+            if (!roles.Contains(nameof(RoleEnum.Moderator)) && !roles.Contains(nameof(RoleEnum.SuperAdmin)) && roles.Contains(nameof(RoleEnum.User)))
             {
                 User user = await _usersRepository.FindByIdWithRolesAsync(context.User.Claims.Single(x => x.Type == "id").Value);
 

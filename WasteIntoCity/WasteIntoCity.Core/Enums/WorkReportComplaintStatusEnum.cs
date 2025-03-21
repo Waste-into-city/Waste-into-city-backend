@@ -1,6 +1,6 @@
 ﻿namespace WasteIntoCity.Core.Types
 {
-    public enum WorkReportComplaintStatusType
+    public enum WorkReportComplaintStatusEnum
     {
         Pending = 1,
 

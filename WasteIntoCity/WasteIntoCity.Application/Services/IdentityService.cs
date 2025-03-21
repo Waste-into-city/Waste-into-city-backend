@@ -3,12 +3,12 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using WasteIntoCity.Application.Options;
+using WasteIntoCity.Core.Enums;
 using WasteIntoCity.Core.Exceptions;
 using WasteIntoCity.Core.Interfaces.Repositories;
 using WasteIntoCity.Core.Interfaces.Services;
 using WasteIntoCity.Core.Models;
 using WasteIntoCity.Core.Structs;
-using WasteIntoCity.Core.Types;
 using WasteIntoCity.Core.ValueObjects;
 using WasteIntoCity.Persistance.Entities;
 using WasteIntoCity.Persistance.Repositories;
@@ -92,7 +92,7 @@ namespace WasteIntoCity.Application.Services
 
             string hashedPassword = BCrypt.Net.BCrypt.EnhancedHashPassword(password);
 
-            Role role = await _rolesRepository.FindById((int)RoleType.User);
+            Role role = await _rolesRepository.FindById((int)RoleEnum.User);
 
             User newUser = User.Create(Guid.NewGuid(), Nickname.Create(nickname), Email.Create(email),
                 Password.Create(hashedPassword), USER_RANKING, [role]);

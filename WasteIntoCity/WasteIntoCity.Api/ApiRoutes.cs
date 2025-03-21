@@ -52,5 +52,12 @@
             public const string UPDATE_WORK_STATUS = $$"""{{BASE}}/{{CONTROLLER_NAME}}/update-work-status/{id}""";
         }
 
+        public static class WorkApplications
+        {
+            private const string CONTROLLER_NAME = "work-applications";
+
+            public const string CREATE = $"{BASE}/{CONTROLLER_NAME}/create";
+        }
+
     }
 }

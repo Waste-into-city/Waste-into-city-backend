@@ -2,7 +2,7 @@
 using WasteIntoCity.Api.AuthorizationPolicies;
 using WasteIntoCity.Api.AuthorizationPolicies.Handlers;
 using WasteIntoCity.Api.AuthorizationPolicies.Requirements;
-using WasteIntoCity.Core.Types;
+using WasteIntoCity.Core.Enums;
 
 namespace WasteIntoCity.Api.Extensions.ServiceExtensions
 {
@@ -14,7 +14,7 @@ namespace WasteIntoCity.Api.Extensions.ServiceExtensions
             {
                 options.AddPolicy(PolicyType.HONEST_USER, policy =>
                 {
-                    policy.RequireRole([nameof(RoleType.SuperAdmin), nameof(RoleType.User), nameof(RoleType.Moderator)]);
+                    policy.RequireRole([nameof(RoleEnum.SuperAdmin), nameof(RoleEnum.User), nameof(RoleEnum.Moderator)]);
                     policy.AddRequirements(new HonestUserRequirement(1));
                 });
             });

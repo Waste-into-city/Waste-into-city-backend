@@ -1,8 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WasteIntoCity.Core.Exceptions;
-using WasteIntoCity.Core.Types;
 using WasteIntoCity.Persistance.Configurations;
-using WasteIntoCity.Persistance.Entities;
 
 namespace WasteIntoCity.Persistance.Extension
 {
@@ -15,12 +13,12 @@ namespace WasteIntoCity.Persistance.Extension
 #pragma warning restore EF1002
         }
 
-        private static void SeedEnumBasedEntities<TEnum, TEntity>(
+        private static void SeedEntityBasedEntities<TEntity>(
             this DbContext context,
             DbSet<TEntity> dbSet,
-            Func<TEnum, TEntity> entityCreator,
+            IEnumerable<TEntity> entities,
             string tableName
-        ) where TEntity : class where TEnum : struct, Enum
+        ) where TEntity : class
         {
             HashSet<int> existingIds = dbSet
                 .AsEnumerable()
@@ -29,13 +27,10 @@ namespace WasteIntoCity.Persistance.Extension
                 .Select(id => id!.Value)
                 .ToHashSet();
 
-            IEnumerable<TEntity> requiredEntities = Enum.GetValues<TEnum>()
-                .Cast<TEnum>()
-                .Select(entityCreator);
-
-            List<TEntity> missingEntities = requiredEntities
+            List<TEntity> missingEntities = entities
                 .Where(entity => !existingIds.Contains(entity.GetType().GetProperty("Id")?.GetValue(entity) as int? ??
-                throw new DbAddException(nameof(TEntity), "Init db error"))).ToList();
+                        throw new DbAddException(nameof(TEntity), "Init db error")))
+                .ToList();
 
             if (missingEntities.Any())
             {
@@ -59,31 +54,25 @@ namespace WasteIntoCity.Persistance.Extension
             }
         }
 
+
         public static void SeedRoles(this MainDbContext context)
         {
-            context.SeedEnumBasedEntities<RoleType, RoleEntity>(
+            context.SeedEntityBasedEntities(
                 context.Roles,
-                role => new RoleEntity
-                {
-                    Id = (int)role,
-                    Name = role.ToString()
-                },
+                DefaultInitTypes.roleEntities,
                 RoleConfiguration.TABLE_NAME
             );
         }
 
         public static void SeedWorkReportComplaintStatusTypes(this MainDbContext context)
         {
-            context.SeedEnumBasedEntities<WorkReportComplaintStatusType, WorkReportComplaintStatusTypeEntity>(
+            context.SeedEntityBasedEntities(
                 context.WorkReportComplaintTypes,
-                statusType => new WorkReportComplaintStatusTypeEntity
-                {
-                    Id = (int)statusType,
-                    Name = statusType.ToString()
-                },
+                DefaultInitTypes.workReportComplaintStatusTypeEntities,
                 WorkReportComplaintStatusTypeConfiguration.TABLE_NAME
             );
         }
+
     }
 
 
