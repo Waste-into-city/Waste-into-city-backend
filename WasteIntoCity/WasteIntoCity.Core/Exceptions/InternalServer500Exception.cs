@@ -11,5 +11,10 @@ namespace WasteIntoCity.Core.Exceptions
         protected InternalServer500Exception(string message) : base(message)
         {
         }
+
+        public InternalServer500Exception() : base(NAME)
+        {
+
+        }
     }
 }

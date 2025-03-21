@@ -8,6 +8,14 @@ namespace WasteIntoCity.Api.Middleware
         private readonly RequestDelegate _next;
         private readonly ILogger<ExceptionHandlingMiddleware> _logger;
 
+        private readonly Dictionary<int, string> exceptionMessages = new Dictionary<int, string>
+        {
+            { BadRequest400Exception.STATUS_CODE, BadRequest400Exception.NAME},
+            { Unauthorized401Exception.STATUS_CODE, Unauthorized401Exception.NAME },
+            { ForbiddenAccessResource403Exception.STATUS_CODE, ForbiddenAccessResource403Exception.NAME },
+            { InternalServer500Exception.STATUS_CODE, InternalServer500Exception.NAME }
+        };
+
         public ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger)
         {
             _next = next;
@@ -91,6 +99,25 @@ namespace WasteIntoCity.Api.Middleware
 
             if (errorResponse is not null)
             {
+                await context.Response.WriteAsJsonAsync(errorResponse);
+            }
+            else if (context.Response.StatusCode >= 400)
+            {
+                if (exceptionMessages.TryGetValue(context.Response.StatusCode, out string? message))
+                {
+                    errorResponse = new ErrorResponse
+                    {
+                        Message = message
+                    };
+                }
+                else
+                {
+                    errorResponse = new ErrorResponse
+                    {
+                        Message = "Error: Unexpected server exception."
+                    };
+                }
+
                 await context.Response.WriteAsJsonAsync(errorResponse);
             }
         }

@@ -11,5 +11,10 @@ namespace WasteIntoCity.Core.Exceptions
         protected NotFound404Exception(string message) : base(message)
         {
         }
+
+        public NotFound404Exception() : base(NAME)
+        {
+
+        }
     }
 }

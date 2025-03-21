@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WasteIntoCity.Api.AuthorizationPolicies;
 using WasteIntoCity.Api.Contracts.V1.Responses;
 using WasteIntoCity.Application;
 using WasteIntoCity.Application.Contracts.V1.Requests;
@@ -83,7 +84,7 @@ namespace WasteIntoCity.Api.Controllers.V1
             return Ok();
         }
 
-        [Authorize(Roles = $"{nameof(RoleType.SuperAdmin)},{nameof(RoleType.Moderator)},{nameof(RoleType.User)}")]
+        [Authorize(Policy = PolicyType.HONEST_USER)]
         [HttpPut(ApiRoutes.Works.UPDATE_WORK_STATUS)]
         public async Task<IActionResult> UpdateWorkStatusAsync([FromRoute] Guid id, [FromBody] WorkUpdateStatusRequest workUpdateStatusRequest)
         {

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WasteIntoCity.Api.AuthorizationPolicies;
 using WasteIntoCity.Api.Contracts.V1.Requests;
 using WasteIntoCity.Application.Contracts.V1.Requests;
 using WasteIntoCity.Application.Extensions;
@@ -60,7 +61,7 @@ namespace WasteIntoCity.Application.Controllers.V1
         }
 
         [Authorize(Roles = $"{nameof(RoleType.SuperAdmin)},{nameof(RoleType.User)},{nameof(RoleType.Moderator)}")]
-        [HttpPost(ApiRoutes.Identity.LOGOUT)]
+        [Authorize(Policy = PolicyType.HONEST_USER)]
         public async Task<IActionResult> Logout()
         {
             Guid userId = HttpContext.TakeUserIdFromAccessToken();

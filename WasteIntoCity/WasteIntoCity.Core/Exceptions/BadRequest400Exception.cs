@@ -11,5 +11,10 @@ namespace WasteIntoCity.Core.Exceptions
         protected BadRequest400Exception(string message) : base(message)
         {
         }
+
+        public BadRequest400Exception() : base(NAME)
+        {
+
+        }
     }
 }

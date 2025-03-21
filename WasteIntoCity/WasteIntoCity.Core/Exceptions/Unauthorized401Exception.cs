@@ -11,5 +11,10 @@ namespace WasteIntoCity.Core.Exceptions
         protected Unauthorized401Exception(string message) : base(message)
         {
         }
+
+        public Unauthorized401Exception() : base(NAME)
+        {
+
+        }
     }
 }
