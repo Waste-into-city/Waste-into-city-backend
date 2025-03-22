@@ -17,7 +17,8 @@ namespace WasteIntoCity.Application.Services
 {
     public class IdentityService : IIdentityService
     {
-        private const int USER_RANKING = 0;
+        private const int USER_START_RANKING = 0;
+        private const int USER_START_NEGATIVE_SCORE = 0;
 
         private readonly IUsersRepository _userRepository;
         private readonly RefreshTokensRepository _refreshTokensRepository;
@@ -95,7 +96,7 @@ namespace WasteIntoCity.Application.Services
             Role role = await _rolesRepository.FindById((int)RoleEnum.User);
 
             User newUser = User.Create(Guid.NewGuid(), Nickname.Create(nickname), Email.Create(email),
-                Password.Create(hashedPassword), USER_RANKING, [role]);
+                Password.Create(hashedPassword), USER_START_RANKING, [role], USER_START_NEGATIVE_SCORE);
 
             try
             {

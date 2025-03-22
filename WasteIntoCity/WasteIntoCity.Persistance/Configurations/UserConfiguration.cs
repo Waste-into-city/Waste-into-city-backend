@@ -23,6 +23,8 @@ namespace WasteIntoCity.Persistance.Configurations
 
             builder.Property(u => u.Ranking).IsRequired().HasColumnName("ranking");
 
+            builder.Property(u => u.NegativeScore).IsRequired().HasColumnName("negative_score");
+
             builder.HasKey(u => u.Id);
 
             builder.HasIndex(u => u.Email).IsUnique();

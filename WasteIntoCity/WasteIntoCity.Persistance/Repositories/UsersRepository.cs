@@ -37,6 +37,7 @@ namespace WasteIntoCity.Persistance.Repositories
                 Email = user.Email.Value,
                 Password = user.Password.Value,
                 Ranking = user.Ranking,
+                NegativeScore = user.NegativeScore
             };
 
             await _mainDbContext.Users.AddAsync(userEntity);
@@ -64,7 +65,7 @@ namespace WasteIntoCity.Persistance.Repositories
             List<Role> roles = userEntity.Roles.Select(r => Role.Create(r.Id, r.Name)).ToList();
 
             return User.Create(userEntity.Id, Nickname.Create(userEntity.Nickname), Email.Create(userEntity.Email), Password.Create(userEntity.Password),
-                userEntity.Ranking, roles);
+                userEntity.Ranking, roles, userEntity.NegativeScore);
         }
 
         public async Task<User> FindByIdWithRolesAsync(string id)
@@ -75,7 +76,7 @@ namespace WasteIntoCity.Persistance.Repositories
             List<Role> roles = userEntity.Roles.Select(r => Role.Create(r.Id, r.Name)).ToList();
 
             return User.Create(userEntity.Id, Nickname.Create(userEntity.Nickname), Email.Create(userEntity.Email), Password.Create(userEntity.Password),
-                userEntity.Ranking, roles);
+                userEntity.Ranking, roles, userEntity.NegativeScore);
         }
 
         //public async Task<User> GetByEmail(string email)

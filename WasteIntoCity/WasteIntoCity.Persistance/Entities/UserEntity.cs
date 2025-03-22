@@ -12,6 +12,8 @@
 
         public int Ranking { get; set; }
 
+        public int NegativeScore { get; set; }
+
         public List<WorkReportResultEntity> WorkReportResults { get; set; } = [];
 
         public ICollection<WorkEntity> Works { get; set; } = [];
