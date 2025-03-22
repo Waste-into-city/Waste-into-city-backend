@@ -13,7 +13,7 @@ namespace WasteIntoCity.Api.Extensions.BuilderExtensions
                 MainDbContext context = scope.ServiceProvider.GetRequiredService<MainDbContext>();
                 context.Database.Migrate();
                 context.SeedRoles();
-                context.SeedWorkReportComplaintStatusTypes();
+                context.SeedWorkReportStatusTypes();
                 context.SeedWorkComplexityTypes();
             }
 

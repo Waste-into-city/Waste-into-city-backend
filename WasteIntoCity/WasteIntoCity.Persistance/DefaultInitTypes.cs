@@ -13,11 +13,11 @@ namespace WasteIntoCity.Persistance
             new RoleEntity { Id = (int) RoleEnum.SuperAdmin, Name = nameof(RoleEnum.SuperAdmin)},
         };
 
-        public static readonly WorkReportComplaintStatusTypeEntity[] workReportComplaintStatusTypeEntities = new WorkReportComplaintStatusTypeEntity[]
+        public static readonly WorkReportStatusTypeEntity[] workReportStatusTypeEntities = new WorkReportStatusTypeEntity[]
         {
-            new WorkReportComplaintStatusTypeEntity{Id = (int) WorkReportComplaintStatusEnum.Pending, Name = nameof(WorkReportComplaintStatusEnum.Pending) },
-            new WorkReportComplaintStatusTypeEntity{Id = (int) WorkReportComplaintStatusEnum.Accepted, Name = nameof(WorkReportComplaintStatusEnum.Accepted) },
-            new WorkReportComplaintStatusTypeEntity{Id = (int) WorkReportComplaintStatusEnum.Denied, Name = nameof(WorkReportComplaintStatusEnum.Denied) },
+            new WorkReportStatusTypeEntity{Id = (int) WorkReportStatusEnum.Pending, Name = nameof(WorkReportStatusEnum.Pending) },
+            new WorkReportStatusTypeEntity{Id = (int) WorkReportStatusEnum.Accepted, Name = nameof(WorkReportStatusEnum.Accepted) },
+            new WorkReportStatusTypeEntity{Id = (int) WorkReportStatusEnum.Denied, Name = nameof(WorkReportStatusEnum.Denied) },
         };
 
         public static readonly WorkComplexityTypeEntity[] workComplexityTypeEntities = new WorkComplexityTypeEntity[]

@@ -1,6 +1,7 @@
 ﻿using WasteIntoCity.Core.Interfaces.Repositories;
 using WasteIntoCity.Core.Interfaces.Services;
 using WasteIntoCity.Core.Models;
+using WasteIntoCity.Core.Types;
 using WasteIntoCity.Core.ValueObjects;
 
 namespace WasteIntoCity.Application.Services
@@ -24,7 +25,7 @@ namespace WasteIntoCity.Application.Services
             await _coordinatesRepository.AddAsync(coordinates);
 
             WorkApplication workApplication = WorkApplication.Create(Guid.NewGuid(), Title.Create(title), Description.Create(description), workComplexityId,
-                coordinates.Id, DateTime.UtcNow, userId);
+                coordinates.Id, DateTime.UtcNow, userId, (int)WorkReportStatusEnum.Pending);
 
             await _workApplicationsRepository.AddAsync(workApplication);
         }

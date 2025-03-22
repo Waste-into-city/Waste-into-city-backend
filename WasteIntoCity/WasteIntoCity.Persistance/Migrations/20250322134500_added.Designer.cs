@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WasteIntoCity.Persistance;
 
@@ -11,9 +12,11 @@ using WasteIntoCity.Persistance;
 namespace WasteIntoCity.Persistance.Migrations
 {
     [DbContext(typeof(MainDbContext))]
-    partial class MainDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250322134500_added")]
+    partial class added
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -428,8 +431,7 @@ namespace WasteIntoCity.Persistance.Migrations
                         .HasColumnName("description");
 
                     b.Property<Guid>("FromUsersId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("from_users_id");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("StartedDatetime")
                         .HasColumnType("datetime2")
@@ -446,8 +448,7 @@ namespace WasteIntoCity.Persistance.Migrations
                         .HasColumnName("work_complexity_types_id");
 
                     b.Property<int>("WorkReportStatusTypesId")
-                        .HasColumnType("int")
-                        .HasColumnName("work_report_status_types_id");
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

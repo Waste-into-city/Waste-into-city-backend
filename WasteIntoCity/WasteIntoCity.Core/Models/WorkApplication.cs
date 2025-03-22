@@ -16,7 +16,7 @@ namespace WasteIntoCity.Core.Models
         public const int DESCRIPTION_LENGTH_MAX = Description.VALUE_LENGTH_MAX;
 
         private WorkApplication(Guid id, Title title, Description description, int workComplexityTypesId, Guid coordinatesId,
-            DateTime startedDatetime, Guid fromUsersId)
+            DateTime startedDatetime, Guid fromUsersId, int workReportStatusTypesId)
         {
             Id = id;
             Title = title;
@@ -25,6 +25,7 @@ namespace WasteIntoCity.Core.Models
             CoordinatesId = coordinatesId;
             StartedDatetime = startedDatetime;
             FromUsersId = fromUsersId;
+            WorkReportStatusTypesId = workReportStatusTypesId;
         }
 
         public Guid Id { get; }
@@ -41,16 +42,24 @@ namespace WasteIntoCity.Core.Models
 
         public Guid FromUsersId { get; }
 
+        public int WorkReportStatusTypesId { get; }
+
         public static WorkApplication Create(Guid id, Title title, Description description, int workComplexityTypesId, Guid coordinatesId,
-            DateTime startedDatetime, Guid fromUsersId)
+            DateTime startedDatetime, Guid fromUsersId, int workReportStatusTypesId)
         {
             if (!Enum.IsDefined(typeof(WorkComplexityEnum), workComplexityTypesId))
             {
                 throw new InvalidValueFormatException(nameof(WorkApplication),
-                    $"The value should be an enum ({EnumOperationsExtension.ToStringAllValidValuesThroughComma<WorkComplexityEnum>()})");
+                    $"The workComplexityTypesId should be an enum ({EnumOperationsExtension.ToStringAllValidValuesThroughComma<WorkComplexityEnum>()})");
             }
 
-            return new WorkApplication(id, title, description, workComplexityTypesId, coordinatesId, startedDatetime, fromUsersId);
+            if (!Enum.IsDefined(typeof(WorkReportStatusEnum), workReportStatusTypesId))
+            {
+                throw new InvalidValueFormatException(nameof(WorkApplication),
+                    $"The workReportStatusTypesId should be an enum ({EnumOperationsExtension.ToStringAllValidValuesThroughComma<WorkReportStatusEnum>()})");
+            }
+
+            return new WorkApplication(id, title, description, workComplexityTypesId, coordinatesId, startedDatetime, fromUsersId, workReportStatusTypesId);
         }
     }
 }

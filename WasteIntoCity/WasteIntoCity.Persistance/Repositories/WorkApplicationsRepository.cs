@@ -23,7 +23,8 @@ namespace WasteIntoCity.Persistance.Repositories
                 StartedDatetime = workApplication.StartedDatetime,
                 WorkComplexityTypesId = workApplication.WorkComplexityTypesId,
                 CoordinatesId = workApplication.CoordinatesId,
-                FromUsersId = workApplication.FromUsersId
+                FromUsersId = workApplication.FromUsersId,
+                WorkReportStatusTypesId = workApplication.WorkReportStatusTypesId
             };
 
             await _mainDbContext.WorkApplications.AddAsync(workApplicationEntity);

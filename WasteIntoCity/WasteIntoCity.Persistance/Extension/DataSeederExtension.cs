@@ -64,12 +64,12 @@ namespace WasteIntoCity.Persistance.Extension
             );
         }
 
-        public static void SeedWorkReportComplaintStatusTypes(this MainDbContext context)
+        public static void SeedWorkReportStatusTypes(this MainDbContext context)
         {
             context.SeedEntityBasedEntities(
                 context.WorkReportComplaintTypes,
-                DefaultInitTypes.workReportComplaintStatusTypeEntities,
-                WorkReportComplaintStatusTypeConfiguration.TABLE_NAME
+                DefaultInitTypes.workReportStatusTypeEntities,
+                WorkReportStatusTypeConfiguration.TABLE_NAME
             );
         }
 

@@ -12,11 +12,15 @@
 
         public int WorkComplexityTypesId { get; set; }
 
+        public int WorkReportStatusTypesId { get; set; }
+
         public Guid CoordinatesId { get; set; }
 
         public Guid FromUsersId { get; set; }
 
         public WorkComplexityTypeEntity? WorkComplexityType { get; set; }
+
+        public WorkReportStatusTypeEntity? WorkReportStatusType { get; set; }
 
         public List<ImageEntity> Images { get; set; } = [];
 
