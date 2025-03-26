@@ -86,7 +86,9 @@ namespace WasteIntoCity.Persistance.Migrations
                     nickname = table.Column<string>(type: "nvarchar(45)", maxLength: 45, nullable: false),
                     email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     password = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    ranking = table.Column<int>(type: "int", nullable: false)
+                    ranking = table.Column<int>(type: "int", nullable: false),
+                    negative_score = table.Column<int>(type: "int", nullable: false),
+                    is_banned = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -125,7 +127,7 @@ namespace WasteIntoCity.Persistance.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "work_report_complaint_status_types",
+                name: "work_report_status_types",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "int", nullable: false)
@@ -134,7 +136,7 @@ namespace WasteIntoCity.Persistance.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_work_report_complaint_status_types", x => x.id);
+                    table.PrimaryKey("PK_work_report_status_types", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -282,9 +284,10 @@ namespace WasteIntoCity.Persistance.Migrations
                     title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
                     started_datetime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    work_complexities_id = table.Column<int>(type: "int", nullable: false),
+                    work_complexity_types_id = table.Column<int>(type: "int", nullable: false),
+                    work_report_status_types_id = table.Column<int>(type: "int", nullable: false),
                     coordinates_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    FromUsersId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    from_users_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -295,14 +298,19 @@ namespace WasteIntoCity.Persistance.Migrations
                         principalTable: "coordinates",
                         principalColumn: "id");
                     table.ForeignKey(
-                        name: "FK_work_applications_users_FromUsersId",
-                        column: x => x.FromUsersId,
+                        name: "FK_work_applications_users_from_users_id",
+                        column: x => x.from_users_id,
                         principalTable: "users",
                         principalColumn: "id");
                     table.ForeignKey(
-                        name: "FK_work_applications_work_complexity_types_work_complexities_id",
-                        column: x => x.work_complexities_id,
+                        name: "FK_work_applications_work_complexity_types_work_complexity_types_id",
+                        column: x => x.work_complexity_types_id,
                         principalTable: "work_complexity_types",
+                        principalColumn: "id");
+                    table.ForeignKey(
+                        name: "FK_work_applications_work_report_status_types_work_report_status_types_id",
+                        column: x => x.work_report_status_types_id,
+                        principalTable: "work_report_status_types",
                         principalColumn: "id");
                 });
 
@@ -471,9 +479,9 @@ namespace WasteIntoCity.Persistance.Migrations
                         principalTable: "users",
                         principalColumn: "id");
                     table.ForeignKey(
-                        name: "FK_work_report_complaints_work_report_complaint_status_types_work_report_complaint_status_types_id",
+                        name: "FK_work_report_complaints_work_report_status_types_work_report_complaint_status_types_id",
                         column: x => x.work_report_complaint_status_types_id,
-                        principalTable: "work_report_complaint_status_types",
+                        principalTable: "work_report_status_types",
                         principalColumn: "id");
                     table.ForeignKey(
                         name: "FK_work_report_complaints_works_works_id",
@@ -618,14 +626,19 @@ namespace WasteIntoCity.Persistance.Migrations
                 column: "coordinates_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_work_applications_FromUsersId",
+                name: "IX_work_applications_from_users_id",
                 table: "work_applications",
-                column: "FromUsersId");
+                column: "from_users_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_work_applications_work_complexities_id",
+                name: "IX_work_applications_work_complexity_types_id",
                 table: "work_applications",
-                column: "work_complexities_id");
+                column: "work_complexity_types_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_work_applications_work_report_status_types_id",
+                table: "work_applications",
+                column: "work_report_status_types_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_work_colleague_reports_about_colleague_id",
@@ -760,7 +773,7 @@ namespace WasteIntoCity.Persistance.Migrations
                 name: "work_mark_types");
 
             migrationBuilder.DropTable(
-                name: "work_report_complaint_status_types");
+                name: "work_report_status_types");
 
             migrationBuilder.DropTable(
                 name: "works");

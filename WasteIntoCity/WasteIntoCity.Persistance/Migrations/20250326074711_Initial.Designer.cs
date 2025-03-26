@@ -12,8 +12,8 @@ using WasteIntoCity.Persistance;
 namespace WasteIntoCity.Persistance.Migrations
 {
     [DbContext(typeof(MainDbContext))]
-    [Migration("20250322142121_users_negative_score")]
-    partial class users_negative_score
+    [Migration("20250326074711_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -388,6 +388,10 @@ namespace WasteIntoCity.Persistance.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)")
                         .HasColumnName("email");
+
+                    b.Property<bool>("IsBanned")
+                        .HasColumnType("bit")
+                        .HasColumnName("is_banned");
 
                     b.Property<int>("NegativeScore")
                         .HasColumnType("int")

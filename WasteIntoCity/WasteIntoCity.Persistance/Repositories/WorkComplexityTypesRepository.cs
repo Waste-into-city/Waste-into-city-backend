@@ -1,17 +1,20 @@
-﻿using AutoMapper;
+﻿using WasteIntoCity.Core.Interfaces.Repositories;
+using WasteIntoCity.Core.Models;
 
 namespace WasteIntoCity.Persistance.Repositories
 {
-    public class WorkComplexityTypesRepository
+    public class WorkComplexityTypesRepository : IWorkComplexityTypesRepository
     {
         private readonly MainDbContext _mainDbContext;
 
-        private readonly IMapper _mapper;
-
-        public WorkComplexityTypesRepository(MainDbContext mainDbContext, IMapper mapper)
+        public WorkComplexityTypesRepository(MainDbContext mainDbContext)
         {
             _mainDbContext = mainDbContext;
-            _mapper = mapper;
+        }
+
+        public Task<WorkComplexityType> FindById(int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

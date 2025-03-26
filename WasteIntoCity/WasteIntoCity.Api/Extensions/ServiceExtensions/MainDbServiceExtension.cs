@@ -20,6 +20,7 @@ namespace WasteIntoCity.Api.Extensions.ServiceExtensions
             services.AddScoped<IWorksRepository, WorksRepository>();
             services.AddScoped<IWorkApplicationsRepository, WorkApplicationsRepository>();
             services.AddScoped<ICoordinatesRepository, CoordinatesRepository>();
+            services.AddScoped<IWorkComplexityTypesRepository, WorkComplexityTypesRepository>();
 
             return services;
         }

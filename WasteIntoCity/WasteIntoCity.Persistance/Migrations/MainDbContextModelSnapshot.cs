@@ -386,6 +386,10 @@ namespace WasteIntoCity.Persistance.Migrations
                         .HasColumnType("nvarchar(100)")
                         .HasColumnName("email");
 
+                    b.Property<bool>("IsBanned")
+                        .HasColumnType("bit")
+                        .HasColumnName("is_banned");
+
                     b.Property<int>("NegativeScore")
                         .HasColumnType("int")
                         .HasColumnName("negative_score");
