@@ -25,6 +25,8 @@ namespace WasteIntoCity.Persistance.Configurations
 
             builder.Property(u => u.NegativeScore).IsRequired().HasColumnName("negative_score");
 
+            builder.Property(u => u.IsBanned).IsRequired().HasColumnName("is_banned");
+
             builder.HasKey(u => u.Id);
 
             builder.HasIndex(u => u.Email).IsUnique();

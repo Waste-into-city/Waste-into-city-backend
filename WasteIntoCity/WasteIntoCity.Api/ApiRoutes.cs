@@ -15,13 +15,6 @@
             public const string SWAGGER_ENDPOINT = $"{CONTROLLER_NAME}/{VERSION}/swagger.json";
         }
 
-        public static class Users
-        {
-            private const string CONTROLLER_NAME = "users";
-
-            public const string GET = $$"""{{BASE}}/{{CONTROLLER_NAME}}/{userId}""";
-        }
-
         public static class Identity
         {
             private const string CONTROLLER_NAME = "identity";
@@ -43,13 +36,13 @@
 
             public const string GET_ALL = $"{BASE}/{CONTROLLER_NAME}/get-all";
 
-            public const string GET_BY_ID = $$"""{{BASE}}/{{CONTROLLER_NAME}}/get-by-id/{id}""";
+            public const string GET_BY_ID = $$"""{{BASE}}/{{CONTROLLER_NAME}}/get-by-id/{id:Guid}""";
 
             public const string GET_ALL_OWN_TAKE_PART_IN = $"{BASE}/{CONTROLLER_NAME}/get-all-own-take-part-in";
 
-            public const string UPDATE = $$"""{{BASE}}/{{CONTROLLER_NAME}}/update/{id}""";
+            public const string UPDATE = $$"""{{BASE}}/{{CONTROLLER_NAME}}/update/{id:Guid}""";
 
-            public const string UPDATE_WORK_STATUS = $$"""{{BASE}}/{{CONTROLLER_NAME}}/update-work-status/{id}""";
+            public const string UPDATE_WORK_STATUS = $$"""{{BASE}}/{{CONTROLLER_NAME}}/update-work-status/{id:Guid}""";
         }
 
         public static class WorkApplications
@@ -57,6 +50,10 @@
             private const string CONTROLLER_NAME = "work-applications";
 
             public const string CREATE = $"{BASE}/{CONTROLLER_NAME}/create";
+
+            public const string REJECT = $$"""{{BASE}}/{{CONTROLLER_NAME}}/reject/{workApplicationsId:Guid}""";
+
+            public const string CONFIRM = $$"""{{BASE}}/{{CONTROLLER_NAME}}/confirm/{workApplicationsId:Guid}""";
         }
 
     }

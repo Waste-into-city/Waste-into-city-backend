@@ -14,6 +14,8 @@ namespace WasteIntoCity.Core.Interfaces.Repositories
 
         Task UpdateAsync(Work work);
 
-        Task UpdateStatusesIdByIdAsync(Guid id, Guid statusGuid);
+        Task UpdateStatusesIdByIdAsync(Guid id, Guid statusId);
+
+        Task<Work> FindFirstFilteredWithParticipantsByTimestampFinishedWork();
     }
 }

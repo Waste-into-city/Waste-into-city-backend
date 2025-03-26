@@ -102,7 +102,7 @@ namespace WasteIntoCity.Api.Extensions.ServiceExtensions
                                     return;
                                 }
 
-                                if (refreshTokenEntity?.Used == true)
+                                if (refreshTokenEntity?.Used == true || refreshTokenEntity?.Invalidated == true)
                                 {
                                     context.Fail(InvalidTokenException.MESSAGE_DEFAULT);
                                     return;

@@ -40,7 +40,7 @@ namespace WasteIntoCity.Persistance.Repositories
             List<Work> works = workEntities.Select(e =>
             {
                 return Work.Create(e.Id, Title.Create(e.Title), Description.Create(e.Description), e.StartedDatetime, e.FinishDatetime,
-                    e.WorkComplexityTypesId, e.WorkStatusTypesId, e.CoordinatesId);
+                    e.WorkComplexityTypesId, e.WorkStatusTypesId, e.CoordinatesId, []);
             }).ToList();
 
             return works;
@@ -54,7 +54,7 @@ namespace WasteIntoCity.Persistance.Repositories
                       wp => wp.WorksId,
                       w => w.Id,
                       (wp, w) => Work.Create(w.Id, Title.Create(w.Title), Description.Create(w.Description), w.StartedDatetime, w.FinishDatetime,
-                        w.WorkComplexityTypesId, w.WorkStatusTypesId, w.CoordinatesId)
+                        w.WorkComplexityTypesId, w.WorkStatusTypesId, w.CoordinatesId, new List<User> { })
                       )
                 .ToListAsync();
 
@@ -67,7 +67,7 @@ namespace WasteIntoCity.Persistance.Repositories
                 ?? throw new DbIsNotFoundException(nameof(User), null);
 
             return Work.Create(work.Id, Title.Create(work.Title), Description.Create(work.Description), work.StartedDatetime, work.FinishDatetime,
-                work.WorkComplexityTypesId, work.WorkStatusTypesId, work.CoordinatesId);
+                work.WorkComplexityTypesId, work.WorkStatusTypesId, work.CoordinatesId, []);
         }
 
         public async Task UpdateAsync(Work work)
@@ -102,7 +102,10 @@ namespace WasteIntoCity.Persistance.Repositories
                 throw new DbUpdateCustomException(nameof(Work), null);
             }
         }
+
+        public Task<Work> FindFirstFilteredWithParticipantsByTimestampFinishedWork()
+        {
+            throw new NotImplementedException();
+        }
     }
-
-
 }

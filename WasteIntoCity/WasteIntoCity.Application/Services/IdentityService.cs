@@ -96,7 +96,7 @@ namespace WasteIntoCity.Application.Services
             Role role = await _rolesRepository.FindById((int)RoleEnum.User);
 
             User newUser = User.Create(Guid.NewGuid(), Nickname.Create(nickname), Email.Create(email),
-                Password.Create(hashedPassword), USER_START_RANKING, [role], USER_START_NEGATIVE_SCORE);
+                Password.Create(hashedPassword), USER_START_RANKING, [role], USER_START_NEGATIVE_SCORE, false);
 
             try
             {
@@ -115,6 +115,11 @@ namespace WasteIntoCity.Application.Services
             if (!BCrypt.Net.BCrypt.EnhancedVerify(password, user.Password.Value))
             {
                 throw new LoginException();
+            }
+
+            if (user.IsBanned)
+            {
+                throw new UserWasBannedException();
             }
 
             return await CreateTokens(user);
@@ -149,7 +154,21 @@ namespace WasteIntoCity.Application.Services
             refreshToken.Used = true;
             await _refreshTokensRepository.UpdateAsync(refreshToken);
 
-            User user = await _userRepository.FindByIdWithRolesAsync(accessTokenClaimsPrincipal.Claims.Single(x => x.Type == "id").Value);
+            User user;
+
+            if (Guid.TryParse(accessTokenClaimsPrincipal.Claims.Single(x => x.Type == "id").Value, out Guid parsedGuid))
+            {
+                user = await _userRepository.FindByIdWithRolesAsync(parsedGuid);
+            }
+            else
+            {
+                throw new InvalidTokenException();
+            }
+
+            if (user.IsBanned)
+            {
+                throw new UserWasBannedException();
+            }
 
             return await CreateTokens(user);
         }

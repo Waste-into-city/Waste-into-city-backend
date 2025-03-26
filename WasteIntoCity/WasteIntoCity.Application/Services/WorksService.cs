@@ -18,7 +18,7 @@ namespace WasteIntoCity.Application.Services
             Guid workStatusesId, Guid coordinatesId)
         {
             Work work = Work.Create(Guid.NewGuid(), Title.Create(title), Description.Create(description), startedDatetime, finishDatetime,
-                workComplexityTypesId, workStatusesId, coordinatesId);
+                workComplexityTypesId, workStatusesId, coordinatesId, []);
 
             await _worksRepository.AddAsync(work);
         }
@@ -42,7 +42,7 @@ namespace WasteIntoCity.Application.Services
             Guid workStatusesId, Guid coordinatesId)
         {
             Work work = Work.Create(id, Title.Create(title), Description.Create(description), startedDatetime, finishDatetime,
-                workComplexityTypesId, workStatusesId, coordinatesId);
+                workComplexityTypesId, workStatusesId, coordinatesId, []);
 
             await _worksRepository.UpdateAsync(work);
         }
@@ -50,6 +50,60 @@ namespace WasteIntoCity.Application.Services
         public async Task UpdateWorkStatusAsync(Guid id, Guid workStatusesId)
         {
             await _worksRepository.UpdateStatusesIdByIdAsync(id, workStatusesId);
+        }
+
+        public async Task AddPointsForUserAsync(Guid workId, User currentUser, Dictionary<Guid, int> workMarkTypesDict, int participantsCount,
+            IWorkColleaguesReportRepository workColleaguesReportRepository, IUsersRepository usersRepository)
+        {
+            const int DEFAULT_ADDITION_RANKING = 1;
+            const int NEGATIVE_SCORE_DECREASING = 1;
+
+            List<WorkColleagueReport> workColleagueReports = await workColleaguesReportRepository.
+                FindByFromParticipantIdAndWorksIdAsync(currentUser.Id, workId);
+
+            int score = 0;
+
+            foreach (WorkColleagueReport workColleagueReport in workColleagueReports)
+            {
+                score = score + workMarkTypesDict.GetValueOrDefault(workColleagueReport.WorkMarkTypesId);
+            }
+
+            score = score + DEFAULT_ADDITION_RANKING * (participantsCount - workColleagueReports.Count);
+            int ranking = currentUser.Ranking + score / participantsCount;
+            int negativeScore = currentUser.NegativeScore - NEGATIVE_SCORE_DECREASING;
+
+            User updatedUser = User.Create(currentUser.Id, currentUser.Nickname, currentUser.Email, currentUser.Password, ranking,
+                currentUser.Roles, negativeScore, currentUser.IsBanned);
+
+            await usersRepository.UpdateAsync(updatedUser);
+        }
+
+
+        public async Task AddPointsAsync(IWorksRepository worksRepository, IUsersRepository usersRepository,
+            IWorkColleaguesReportRepository workColleaguesReportRepository, IWorkMarkTypesRepository workMarkTypesRepository)
+        {
+            Guid statusClosed = Guid.NewGuid();
+            Work work;
+
+            try
+            {
+                work = await worksRepository.FindFirstFilteredWithParticipantsByTimestampFinishedWork();
+            }
+            catch
+            {
+                return;
+            }
+
+            Dictionary<Guid, int> workMarkTypesDict = await workMarkTypesRepository.TakeDictionaryAllWithKeyIdAndValueAdditionRanking();
+
+            int participantsCount = work.Participants.Count;
+
+            for (int i = 0; i < participantsCount; i++)
+            {
+                await AddPointsForUserAsync(work.Id, work.Participants[i], workMarkTypesDict, participantsCount, workColleaguesReportRepository, usersRepository);
+            }
+
+            await worksRepository.UpdateStatusesIdByIdAsync(work.Id, statusClosed);
         }
     }
 }

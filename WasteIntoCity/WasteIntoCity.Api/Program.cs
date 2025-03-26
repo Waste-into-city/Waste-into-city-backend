@@ -24,7 +24,7 @@ services.AddCustomMainDbContext(configuration);
 
 services.AddScoped<IIdentityService, IdentityService>();
 services.AddScoped<IWorksService, WorksService>();
-services.AddScoped<IWorkApplicationService, WorkApplicationService>();
+services.AddScoped<IWorkApplicationsService, WorkApplicationsService>();
 
 //services.AddAutoMapper();
 

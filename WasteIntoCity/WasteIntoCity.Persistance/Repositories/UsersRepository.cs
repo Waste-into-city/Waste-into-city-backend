@@ -37,7 +37,8 @@ namespace WasteIntoCity.Persistance.Repositories
                 Email = user.Email.Value,
                 Password = user.Password.Value,
                 Ranking = user.Ranking,
-                NegativeScore = user.NegativeScore
+                NegativeScore = user.NegativeScore,
+                IsBanned = user.IsBanned
             };
 
             await _mainDbContext.Users.AddAsync(userEntity);
@@ -65,28 +66,42 @@ namespace WasteIntoCity.Persistance.Repositories
             List<Role> roles = userEntity.Roles.Select(r => Role.Create(r.Id, r.Name)).ToList();
 
             return User.Create(userEntity.Id, Nickname.Create(userEntity.Nickname), Email.Create(userEntity.Email), Password.Create(userEntity.Password),
-                userEntity.Ranking, roles, userEntity.NegativeScore);
+                userEntity.Ranking, roles, userEntity.NegativeScore, userEntity.IsBanned);
         }
 
-        public async Task<User> FindByIdWithRolesAsync(string id)
+        public async Task<User> FindByIdWithRolesAsync(Guid id)
         {
-            UserEntity userEntity = await _mainDbContext.Users.AsNoTracking().Include(u => u.Roles).FirstOrDefaultAsync(u => u.Id.ToString() == id)
+            UserEntity userEntity = await _mainDbContext.Users.AsNoTracking().Include(u => u.Roles).FirstOrDefaultAsync(u => u.Id == id)
                 ?? throw new DbIsNotFoundException(nameof(User), null);
 
             List<Role> roles = userEntity.Roles.Select(r => Role.Create(r.Id, r.Name)).ToList();
 
             return User.Create(userEntity.Id, Nickname.Create(userEntity.Nickname), Email.Create(userEntity.Email), Password.Create(userEntity.Password),
-                userEntity.Ranking, roles, userEntity.NegativeScore);
+                userEntity.Ranking, roles, userEntity.NegativeScore, userEntity.IsBanned);
         }
 
-        //public async Task<User> GetByEmail(string email)
-        //{
-        //    throw new Exception();
-        //    //UserEntity userEntity = await _mainDbContext.Users
-        //    //    .AsNoTracking()
-        //    //    .FirstOrDefaultAsync(u => u.Email == email) ?? throw new ;
-
-        //    //return _mapper.Map<User>(userEntity);
-        //}
+        public async Task UpdateAsync(User user)
+        {
+            await _mainDbContext.Users
+                .Where(r => r.Id == user.Id)
+                .ExecuteUpdateAsync(t => t
+                    .SetProperty(r => r.Nickname, user.Nickname.Value)
+                    .SetProperty(r => r.Email, user.Email.Value)
+                    .SetProperty(r => r.Password, user.Password.Value)
+                    .SetProperty(r => r.Ranking, user.Ranking)
+                    .SetProperty(r => r.NegativeScore, user.NegativeScore)
+                );
+        }
     }
+
+    //public async Task<User> GetByEmail(string email)
+    //{
+    //    throw new Exception();
+    //    //UserEntity userEntity = await _mainDbContext.Users
+    //    //    .AsNoTracking()
+    //    //    .FirstOrDefaultAsync(u => u.Email == email) ?? throw new ;
+
+    //    //return _mapper.Map<User>(userEntity);
+    //}
 }
+

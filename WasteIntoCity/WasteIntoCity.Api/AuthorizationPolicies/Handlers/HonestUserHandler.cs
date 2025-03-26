@@ -32,11 +32,19 @@ namespace WasteIntoCity.Api.AuthorizationPolicies.Handlers
 
             if (!roles.Contains(nameof(RoleEnum.Moderator)) && !roles.Contains(nameof(RoleEnum.SuperAdmin)) && roles.Contains(nameof(RoleEnum.User)))
             {
-                User user = await _usersRepository.FindByIdWithRolesAsync(context.User.Claims.Single(x => x.Type == "id").Value);
-
-                if (user.Ranking < requirement.RankingMin)
+                if (Guid.TryParse(context.User.Claims.Single(x => x.Type == "id").Value, out Guid parsedGuid))
                 {
-                    context.Fail(new AuthorizationFailureReason(this, UnhonestUserAccessDeniedException.DEFAULT_MESSAGE));
+                    User user = await _usersRepository.FindByIdWithRolesAsync(parsedGuid);
+
+                    if (user.Ranking < requirement.RankingMin)
+                    {
+                        context.Fail(new AuthorizationFailureReason(this, UnhonestUserAccessDeniedException.DEFAULT_MESSAGE));
+                        return;
+                    }
+                }
+                else
+                {
+                    context.Fail(new AuthorizationFailureReason(this, InvalidTokenException.MESSAGE_DEFAULT));
                     return;
                 }
             }

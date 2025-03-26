@@ -14,6 +14,8 @@
 
         public int NegativeScore { get; set; }
 
+        public bool IsBanned { get; set; }
+
         public List<WorkReportResultEntity> WorkReportResults { get; set; } = [];
 
         public ICollection<WorkEntity> Works { get; set; } = [];

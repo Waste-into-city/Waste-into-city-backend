@@ -26,7 +26,7 @@ namespace WasteIntoCity.Core.Models
         public const int PASSWORD_LENGTH_MAX = Password.VALUE_LENGTH_MAX;
 
 
-        private User(Guid id, Nickname nickname, Email email, Password password, int ranking, List<Role> roles, int negativeScore)
+        private User(Guid id, Nickname nickname, Email email, Password password, int ranking, List<Role> roles, int negativeScore, bool isBanned)
         {
             Id = id;
             Nickname = nickname;
@@ -35,6 +35,7 @@ namespace WasteIntoCity.Core.Models
             Ranking = ranking;
             Roles = roles;
             NegativeScore = negativeScore;
+            IsBanned = isBanned;
         }
 
         public Guid Id { get; }
@@ -49,9 +50,12 @@ namespace WasteIntoCity.Core.Models
 
         public int NegativeScore { get; }
 
+        public bool IsBanned { get; set; }
+
         public List<Role> Roles { get; }
 
-        public static User Create(Guid id, Nickname nickname, Email email, Password password, int ranking, List<Role> roles, int negativeScore)
+        public static User Create(Guid id, Nickname nickname, Email email, Password password, int ranking, List<Role> roles, int negativeScore,
+            bool isBanned)
         {
             if (ranking is < RANKING_MIN or > RANKING_MAX)
             {
@@ -63,7 +67,7 @@ namespace WasteIntoCity.Core.Models
                 throw new ValueOutOfRangeException<int>(nameof(negativeScore), NEGATIVE_SCORE_MIN, NEGATIVE_SCORE_MAX);
             }
 
-            return new User(id, nickname, email, password, ranking, roles, negativeScore);
+            return new User(id, nickname, email, password, ranking, roles, negativeScore, isBanned);
         }
     }
 }

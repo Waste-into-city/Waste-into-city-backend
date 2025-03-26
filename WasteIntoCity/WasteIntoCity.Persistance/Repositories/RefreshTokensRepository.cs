@@ -72,5 +72,19 @@ namespace WasteIntoCity.Persistance.Repositories
                 throw new DbUpdateCustomException(nameof(RefreshTokenEntity), null);
             }
         }
+
+        public async Task UpdateInvalidatedByUserIdTokensAsync(bool isInvalidated, Guid userId)
+        {
+            int updatedRows = await _mainDbContext.RefreshTokens
+                .Where(r => r.UserId == userId)
+                .ExecuteUpdateAsync(t => t
+                    .SetProperty(r => r.Invalidated, isInvalidated)
+                );
+
+            if (updatedRows == 0)
+            {
+                throw new DbUpdateCustomException(nameof(RefreshTokenEntity), null);
+            }
+        }
     }
 }
