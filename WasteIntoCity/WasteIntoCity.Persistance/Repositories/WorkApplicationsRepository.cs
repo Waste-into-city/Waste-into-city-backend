@@ -59,9 +59,13 @@ namespace WasteIntoCity.Persistance.Repositories
                 );
         }
 
-        public Task UpdateWorkReportStatusTypesIdByIdAsync(Guid id, int workReportStatusTypesId)
+        public async Task UpdateWorkReportStatusTypesIdByIdAsync(Guid id, int workReportStatusTypesId)
         {
-            throw new NotImplementedException();
+            await _mainDbContext.WorkApplications
+                .Where(r => r.Id == id)
+                .ExecuteUpdateAsync(t => t
+                    .SetProperty(r => r.WorkReportStatusTypesId, workReportStatusTypesId)
+                );
         }
     }
 }

@@ -1,5 +1,9 @@
-﻿using WasteIntoCity.Core.Interfaces.Repositories;
+﻿using Microsoft.EntityFrameworkCore;
+using WasteIntoCity.Core.Exceptions;
+using WasteIntoCity.Core.Interfaces.Repositories;
 using WasteIntoCity.Core.Models;
+using WasteIntoCity.Core.ValueObjects;
+using WasteIntoCity.Persistance.Entities;
 
 namespace WasteIntoCity.Persistance.Repositories
 {
@@ -12,9 +16,14 @@ namespace WasteIntoCity.Persistance.Repositories
             _mainDbContext = mainDbContext;
         }
 
-        public Task<WorkComplexityType> FindById(int id)
+        public async Task<WorkComplexityType> FindById(int id)
         {
-            throw new NotImplementedException();
+            WorkComplexityTypeEntity workComplexityTypeEntity = await _mainDbContext.WorkComplexityTypes.AsNoTracking().
+                            FirstOrDefaultAsync(u => u.Id == id) ?? throw new DbIsNotFoundException(nameof(WorkComplexityType), null);
+
+            return WorkComplexityType.Create(workComplexityTypeEntity.Id, MeanText.Create(workComplexityTypeEntity.Name), workComplexityTypeEntity.ParticipantsMin,
+                workComplexityTypeEntity.ParticipantsMax, workComplexityTypeEntity.DurationHours, workComplexityTypeEntity.MultiplierRanking,
+                workComplexityTypeEntity.RadiusOnMap);
         }
     }
 }
