@@ -1,0 +1,81 @@
+# version: '3.5'
+
+# networks:
+#   localdev:
+#     name: localdev
+
+# services:
+#   main-api:
+#     build: 
+#       context: .
+#       dockerfile: ./WasteIntoCity.Api/Dockerfile
+#     # build: WasteIntoCity.Api/
+#     restart: always
+#     ports:
+#       - "7181:80"
+#     depends_on:
+#       - db-server
+#       # - otel-collector
+#     networks:
+#       - localdev
+#     # environment:
+#     #   - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
+
+#   db-server:
+#     image: mcr.microsoft.com/mssql/server:2017-latest
+#     container_name: db-server
+#     environment:
+#       - ACCEPT_EULA=Y
+#       - MSSQL_SA_PASSWORD=Pass1234
+#       - MSSQL_TCP_PORT=1433
+#     ports:
+#       - "1434:1433"
+#     networks:
+#       - localdev
+
+#   # otel-collector:
+#   #   image: otel/opentelemetry-collector-contrib:latest
+#   #   command: ["--config=/etc/otel-collector-config.yaml"]
+#   #   volumes:
+#   #     - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml
+#   #   ports:
+#   #     - "4317:4317" # gRPC
+#   #     - "4318:4318" # HTTP
+#   #   networks:
+#   #     - localdev
+
+
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: WasteIntoCity.Api/Dockerfile
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=mssql;Database=MyDatabase;User Id=sa;Password=Str0ngP@ssw0rd123;
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTPS_PORTS=8081
+      - ASPNETCORE_HTTP_PORTS=8080
+    volumes:
+      - ~/.aspnet/https:/https:ro  # For SSL certificates
+    depends_on:
+      - mssql
+
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=Str0ngP@ssw0rd123
+      - MSSQL_TCP_PORT=1433
+    ports:
+      - "1434:1433"
+    volumes:
+      - mssql_data:/var/opt/mssql
+
+volumes:
+  mssql_data:
+

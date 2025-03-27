@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using Microsoft.Extensions.Logging;
 using WasteIntoCity.Persistance.Entities;
 
 namespace WasteIntoCity.Persistance
@@ -8,6 +9,14 @@ namespace WasteIntoCity.Persistance
     {
         public MainDbContext(DbContextOptions<MainDbContext> options) : base(options)
         {
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder
+                .LogTo(Console.WriteLine, LogLevel.Information) // Логирование запросов в консоль
+                .EnableSensitiveDataLogging()                   // Для детального логирования
+                .EnableDetailedErrors();                        // Показывает больше данных при ошибках
         }
 
         //public DbSet<AccessTokenEntity> AccessTokens { get; set; }

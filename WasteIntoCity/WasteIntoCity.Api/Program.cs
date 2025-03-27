@@ -1,8 +1,10 @@
+using Microsoft.EntityFrameworkCore;
 using WasteIntoCity.Api.Extensions.BuilderExtensions;
 using WasteIntoCity.Api.Extensions.ServiceExtensions;
 using WasteIntoCity.Api.Middleware;
 using WasteIntoCity.Application.Services;
 using WasteIntoCity.Core.Interfaces.Services;
+using WasteIntoCity.Persistance;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,6 +40,20 @@ services.AddCustomSwagger(configuration);
 
 services.AddEndpointsApiExplorer();
 
+//builder.Services.AddOpenTelemetry()
+//    .WithTracing(tracerProviderBuilder =>
+//    {
+//        tracerProviderBuilder
+//            .AddAspNetCoreInstrumentation()
+//            .AddHttpClientInstrumentation()
+//            .AddSource("Microsoft.EntityFrameworkCore")
+//            .AddOtlpExporter(options =>
+//            {
+//                options.Endpoint = new Uri("http://otel-collector:4317"); // gRPC endpoint
+//            })
+//            .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("MainApi"));
+//    });
+
 
 WebApplication app = builder.Build();
 
@@ -60,6 +76,12 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.UseCustomSwagger(configuration);
+
+using var scope = app.Services.CreateScope();
+var dbContext = scope.ServiceProvider.GetRequiredService<MainDbContext>();
+
+// Применить миграции при старте
+dbContext.Database.Migrate();
 
 if (app.Environment.IsDevelopment())
 {
