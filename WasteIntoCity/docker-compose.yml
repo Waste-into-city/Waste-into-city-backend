@@ -61,9 +61,21 @@ services:
       - ASPNETCORE_HTTPS_PORTS=8081
       - ASPNETCORE_HTTP_PORTS=8080
     volumes:
-      - ~/.aspnet/https:/https:ro  # For SSL certificates
+      - ~/.aspnet/https:/https:ro  # Подключаем SSL для Kestrel
     depends_on:
       - mssql
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx_proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ~/.aspnet/https:/https:ro  # Подключаем ваш сертификат Kestrel в Nginx
+    depends_on:
+      - api
 
   mssql:
     image: mcr.microsoft.com/mssql/server:2022-latest
