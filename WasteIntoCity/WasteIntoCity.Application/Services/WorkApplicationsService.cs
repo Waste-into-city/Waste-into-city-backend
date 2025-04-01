@@ -43,8 +43,8 @@ namespace WasteIntoCity.Application.Services
 
             await _coordinatesRepository.AddAsync(coordinates);
 
-            WorkApplication workApplication = WorkApplication.Create(Guid.NewGuid(), Title.Create(title), Description.Create(description), workComplexityId,
-                coordinates.Id, DateTime.UtcNow, userId, (int)WorkReportStatusEnum.Pending);
+            WorkApplication workApplication = WorkApplication.Create(Guid.NewGuid(), Title.Create(title), Description.Create(description),
+                (WorkComplexityEnum)workComplexityId, coordinates.Id, DateTime.UtcNow, userId, WorkReportStatusEnum.Pending);
 
             await _workApplicationsRepository.AddAsync(workApplication);
         }
@@ -94,13 +94,14 @@ namespace WasteIntoCity.Application.Services
 
             await _usersRepository.UpdateAsync(updatedUser);
 
-            WorkComplexityType workComplexityType = await _workComplexityTypesRepository.FindById(workApplication.WorkComplexityTypesId);
+            WorkComplexityType workComplexityType = await _workComplexityTypesRepository.FindById((int)workApplication.WorkComplexityTypesId);
 
             Guid statusOpen = Guid.NewGuid();
             DateTime startDateTime = DateTime.UtcNow;
 
             Work work = Work.Create(Guid.NewGuid(), workApplication.Title, workApplication.Description, startDateTime,
-                startDateTime.AddHours(workComplexityType.DurationHours), workApplication.WorkComplexityTypesId, statusOpen, workApplication.CoordinatesId, []);
+                startDateTime.AddHours(workComplexityType.DurationHours), workApplication.WorkComplexityTypesId, WorkStatusEnum.Avaliable,
+                workApplication.CoordinatesId, []);
 
             await _worksRepository.AddAsync(work);
 

@@ -14,7 +14,7 @@
 
         public int WorkComplexityTypesId { get; set; }
 
-        public Guid WorkStatusTypesId { get; set; }
+        public int WorkStatusTypesId { get; set; }
 
         public Guid CoordinatesId { get; set; }
 

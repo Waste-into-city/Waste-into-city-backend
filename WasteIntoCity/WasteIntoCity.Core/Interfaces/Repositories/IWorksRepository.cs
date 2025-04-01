@@ -1,4 +1,5 @@
 ﻿using WasteIntoCity.Core.Models;
+using WasteIntoCity.Core.Types;
 
 namespace WasteIntoCity.Core.Interfaces.Repositories
 {
@@ -14,7 +15,7 @@ namespace WasteIntoCity.Core.Interfaces.Repositories
 
         Task UpdateAsync(Work work);
 
-        Task UpdateStatusesIdByIdAsync(Guid id, Guid statusId);
+        Task UpdateStatusesIdByIdAsync(Guid id, WorkStatusEnum workStatusTypesId);
 
         Task<Work> FindFirstFilteredWithParticipantsByTimestampFinishedWork();
     }

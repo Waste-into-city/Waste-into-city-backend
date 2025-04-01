@@ -2,6 +2,6 @@
 {
     public record WorkUpdateStatusRequest
     {
-        required public Guid WorkStatusesId { get; init; }
+        required public int WorkStatusesId { get; init; }
     }
 }

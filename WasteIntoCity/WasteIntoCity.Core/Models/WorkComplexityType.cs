@@ -1,4 +1,5 @@
 ﻿using WasteIntoCity.Core.Exceptions;
+using WasteIntoCity.Core.Types;
 using WasteIntoCity.Core.ValueObjects;
 
 namespace WasteIntoCity.Core.Models
@@ -26,7 +27,7 @@ namespace WasteIntoCity.Core.Models
         public const int RADIUS_ON_MAP_MAX = 100;
 
 
-        private WorkComplexityType(int id, MeanText name, int participantsMin, int participantsMax, int durationHours, int multiplierRanking, int radiusOnMap)
+        private WorkComplexityType(WorkComplexityEnum id, MeanText name, int participantsMin, int participantsMax, int durationHours, int multiplierRanking, int radiusOnMap)
         {
             Id = id;
             Name = name;
@@ -37,7 +38,7 @@ namespace WasteIntoCity.Core.Models
             RadiusOnMap = radiusOnMap;
         }
 
-        public int Id { get; }
+        public WorkComplexityEnum Id { get; }
 
         public MeanText Name { get; }
 
@@ -51,7 +52,7 @@ namespace WasteIntoCity.Core.Models
 
         public int RadiusOnMap { get; }
 
-        public static WorkComplexityType Create(int id, MeanText name, int participantsMin, int participantsMax, int durationHours, int multiplierRanking, int radiusOnMap)
+        public static WorkComplexityType Create(WorkComplexityEnum id, MeanText name, int participantsMin, int participantsMax, int durationHours, int multiplierRanking, int radiusOnMap)
         {
             if (name.Value.Length is < NAME_LENGTH_MIN or > NAME_LENGTH_MAX)
             {

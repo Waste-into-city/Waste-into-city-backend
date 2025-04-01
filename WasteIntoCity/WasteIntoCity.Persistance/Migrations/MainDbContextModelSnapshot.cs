@@ -485,8 +485,8 @@ namespace WasteIntoCity.Persistance.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("from_participant_id");
 
-                    b.Property<Guid>("WorkMarkTypesId")
-                        .HasColumnType("uniqueidentifier")
+                    b.Property<int>("WorkMarkTypesId")
+                        .HasColumnType("int")
                         .HasColumnName("work_mark_types_id");
 
                     b.Property<Guid>("WorksId")
@@ -583,8 +583,8 @@ namespace WasteIntoCity.Persistance.Migrations
                         .HasColumnType("int")
                         .HasColumnName("work_complexity_id");
 
-                    b.Property<Guid>("WorkStatusTypesId")
-                        .HasColumnType("uniqueidentifier")
+                    b.Property<int>("WorkStatusTypesId")
+                        .HasColumnType("int")
                         .HasColumnName("work_statuses_id");
 
                     b.HasKey("Id");
@@ -600,10 +600,12 @@ namespace WasteIntoCity.Persistance.Migrations
 
             modelBuilder.Entity("WasteIntoCity.Persistance.Entities.WorkMarkTypeEntity", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("int")
                         .HasColumnName("id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("AdditionRanking")
                         .HasColumnType("int")
@@ -708,8 +710,8 @@ namespace WasteIntoCity.Persistance.Migrations
                         .HasColumnType("nvarchar(1)")
                         .HasColumnName("title");
 
-                    b.Property<Guid>("WorkStatusTypesId")
-                        .HasColumnType("uniqueidentifier")
+                    b.Property<int>("WorkStatusTypesId")
+                        .HasColumnType("int")
                         .HasColumnName("work_statuses_id");
 
                     b.HasKey("Id");
@@ -743,10 +745,12 @@ namespace WasteIntoCity.Persistance.Migrations
 
             modelBuilder.Entity("WasteIntoCity.Persistance.Entities.WorkStatusTypeEntity", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("int")
                         .HasColumnName("id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("MultiplierRanking")
                         .HasColumnType("int")

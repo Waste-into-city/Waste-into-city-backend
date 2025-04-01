@@ -1,4 +1,5 @@
 ﻿using WasteIntoCity.Core.Exceptions;
+using WasteIntoCity.Core.Types;
 using WasteIntoCity.Core.ValueObjects;
 
 namespace WasteIntoCity.Core.Models
@@ -13,20 +14,20 @@ namespace WasteIntoCity.Core.Models
 
         public const int NAME_LENGTH_MAX = 100;
 
-        private WorkStatusType(Guid id, MeanText name, int multiplierRanking)
+        private WorkStatusType(WorkStatusEnum id, MeanText name, int multiplierRanking)
         {
             Id = id;
             Name = name;
             MultiplierRanking = multiplierRanking;
         }
 
-        public Guid Id { get; }
+        public WorkStatusEnum Id { get; }
 
         public MeanText Name { get; }
 
         public int MultiplierRanking { get; }
 
-        public static WorkStatusType Create(Guid id, MeanText name, int multiplierRanking)
+        public static WorkStatusType Create(WorkStatusEnum id, MeanText name, int multiplierRanking)
         {
             if (name.Value.Length is < NAME_LENGTH_MIN or > NAME_LENGTH_MAX)
             {

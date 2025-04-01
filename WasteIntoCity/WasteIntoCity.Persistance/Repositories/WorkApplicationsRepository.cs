@@ -2,6 +2,7 @@
 using WasteIntoCity.Core.Exceptions;
 using WasteIntoCity.Core.Interfaces.Repositories;
 using WasteIntoCity.Core.Models;
+using WasteIntoCity.Core.Types;
 using WasteIntoCity.Core.ValueObjects;
 using WasteIntoCity.Persistance.Entities;
 
@@ -24,10 +25,10 @@ namespace WasteIntoCity.Persistance.Repositories
                 Title = workApplication.Title.Value,
                 Description = workApplication.Description.Value,
                 StartedDatetime = workApplication.StartedDatetime,
-                WorkComplexityTypesId = workApplication.WorkComplexityTypesId,
+                WorkComplexityTypesId = (int)workApplication.WorkComplexityTypesId,
                 CoordinatesId = workApplication.CoordinatesId,
                 FromUsersId = workApplication.FromUsersId,
-                WorkReportStatusTypesId = workApplication.WorkReportStatusTypesId
+                WorkReportStatusTypesId = (int)workApplication.WorkReportStatusTypesId
             };
 
             await _mainDbContext.WorkApplications.AddAsync(workApplicationEntity);
@@ -40,8 +41,9 @@ namespace WasteIntoCity.Persistance.Repositories
                 FirstOrDefaultAsync(u => u.Id == id) ?? throw new DbIsNotFoundException(nameof(WorkApplication), null);
 
             return WorkApplication.Create(workApplicationEntity.Id, Title.Create(workApplicationEntity.Title),
-                Description.Create(workApplicationEntity.Description), workApplicationEntity.WorkComplexityTypesId, workApplicationEntity.CoordinatesId,
-                workApplicationEntity.StartedDatetime, workApplicationEntity.FromUsersId, workApplicationEntity.WorkReportStatusTypesId);
+                Description.Create(workApplicationEntity.Description), (WorkComplexityEnum)workApplicationEntity.WorkComplexityTypesId,
+                workApplicationEntity.CoordinatesId, workApplicationEntity.StartedDatetime, workApplicationEntity.FromUsersId,
+                (WorkReportStatusEnum)workApplicationEntity.WorkReportStatusTypesId);
         }
 
         public async Task UpdateAsync(WorkApplication workApplication)
@@ -52,10 +54,10 @@ namespace WasteIntoCity.Persistance.Repositories
                     .SetProperty(r => r.Title, workApplication.Title.Value)
                     .SetProperty(r => r.Description, workApplication.Description.Value)
                     .SetProperty(r => r.StartedDatetime, workApplication.StartedDatetime)
-                    .SetProperty(r => r.WorkComplexityTypesId, workApplication.WorkComplexityTypesId)
+                    .SetProperty(r => r.WorkComplexityTypesId, (int)workApplication.WorkComplexityTypesId)
                     .SetProperty(r => r.CoordinatesId, workApplication.CoordinatesId)
                     .SetProperty(r => r.FromUsersId, workApplication.FromUsersId)
-                    .SetProperty(r => r.WorkReportStatusTypesId, workApplication.WorkReportStatusTypesId)
+                    .SetProperty(r => r.WorkReportStatusTypesId, (int)workApplication.WorkReportStatusTypesId)
                 );
         }
 

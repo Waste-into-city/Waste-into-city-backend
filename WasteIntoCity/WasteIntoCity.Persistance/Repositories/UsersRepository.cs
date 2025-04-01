@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using WasteIntoCity.Core.Enums;
 using WasteIntoCity.Core.Exceptions;
 using WasteIntoCity.Core.Interfaces.Repositories;
 using WasteIntoCity.Core.Models;
@@ -21,7 +22,7 @@ namespace WasteIntoCity.Persistance.Repositories
 
         public async Task AddAsync(User user)
         {
-            List<int> roleIds = user.Roles.Select(r => r.Id).ToList();
+            List<int> roleIds = user.Roles.Select(r => (int)r.Id).ToList();
 
             List<UserAccordingRoleEntity> userRoles = roleIds.Select(roleId => new UserAccordingRoleEntity
             {
@@ -63,7 +64,7 @@ namespace WasteIntoCity.Persistance.Repositories
             UserEntity userEntity = await _mainDbContext.Users.AsNoTracking().Include(u => u.Roles).FirstOrDefaultAsync(u => u.Email == email)
                 ?? throw new DbIsNotFoundException(nameof(User), null);
 
-            List<Role> roles = userEntity.Roles.Select(r => Role.Create(r.Id, r.Name)).ToList();
+            List<Role> roles = userEntity.Roles.Select(r => Role.Create((RoleEnum)r.Id, r.Name)).ToList();
 
             return User.Create(userEntity.Id, Nickname.Create(userEntity.Nickname), Email.Create(userEntity.Email), Password.Create(userEntity.Password),
                 userEntity.Ranking, roles, userEntity.NegativeScore, userEntity.IsBanned);
@@ -74,7 +75,7 @@ namespace WasteIntoCity.Persistance.Repositories
             UserEntity userEntity = await _mainDbContext.Users.AsNoTracking().Include(u => u.Roles).FirstOrDefaultAsync(u => u.Id == id)
                 ?? throw new DbIsNotFoundException(nameof(User), null);
 
-            List<Role> roles = userEntity.Roles.Select(r => Role.Create(r.Id, r.Name)).ToList();
+            List<Role> roles = userEntity.Roles.Select(r => Role.Create((RoleEnum)r.Id, r.Name)).ToList();
 
             return User.Create(userEntity.Id, Nickname.Create(userEntity.Nickname), Email.Create(userEntity.Email), Password.Create(userEntity.Password),
                 userEntity.Ranking, roles, userEntity.NegativeScore, userEntity.IsBanned);

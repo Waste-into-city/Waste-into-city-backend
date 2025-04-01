@@ -1,6 +1,7 @@
 ﻿using WasteIntoCity.Core.Interfaces.Repositories;
 using WasteIntoCity.Core.Interfaces.Services;
 using WasteIntoCity.Core.Models;
+using WasteIntoCity.Core.Types;
 using WasteIntoCity.Core.ValueObjects;
 
 namespace WasteIntoCity.Application.Services
@@ -15,10 +16,10 @@ namespace WasteIntoCity.Application.Services
         }
 
         public async Task CreateAsync(string title, string description, DateTime startedDatetime, DateTime finishDatetime, int workComplexityTypesId,
-            Guid workStatusesId, Guid coordinatesId)
+            int workStatusesId, Guid coordinatesId)
         {
             Work work = Work.Create(Guid.NewGuid(), Title.Create(title), Description.Create(description), startedDatetime, finishDatetime,
-                workComplexityTypesId, workStatusesId, coordinatesId, []);
+                (WorkComplexityEnum)workComplexityTypesId, (WorkStatusEnum)workStatusesId, coordinatesId, []);
 
             await _worksRepository.AddAsync(work);
         }
@@ -39,20 +40,20 @@ namespace WasteIntoCity.Application.Services
         }
 
         public async Task UpdateAsync(Guid id, string title, string description, DateTime startedDatetime, DateTime finishDatetime, int workComplexityTypesId,
-            Guid workStatusesId, Guid coordinatesId)
+            int workStatusesId, Guid coordinatesId)
         {
             Work work = Work.Create(id, Title.Create(title), Description.Create(description), startedDatetime, finishDatetime,
-                workComplexityTypesId, workStatusesId, coordinatesId, []);
+                (WorkComplexityEnum)workComplexityTypesId, (WorkStatusEnum)workStatusesId, coordinatesId, []);
 
             await _worksRepository.UpdateAsync(work);
         }
 
-        public async Task UpdateWorkStatusAsync(Guid id, Guid workStatusesId)
+        public async Task UpdateWorkStatusAsync(Guid id, int workStatusesId)
         {
-            await _worksRepository.UpdateStatusesIdByIdAsync(id, workStatusesId);
+            await _worksRepository.UpdateStatusesIdByIdAsync(id, (WorkStatusEnum)workStatusesId);
         }
 
-        public async Task AddPointsForUserAsync(Guid workId, User currentUser, Dictionary<Guid, int> workMarkTypesDict, int participantsCount,
+        public async Task AddPointsForUserAsync(Guid workId, User currentUser, Dictionary<WorkMarkEnum, int> workMarkTypesDict, int participantsCount,
             IWorkColleaguesReportRepository workColleaguesReportRepository, IUsersRepository usersRepository)
         {
             const int DEFAULT_ADDITION_RANKING = 1;
@@ -82,7 +83,6 @@ namespace WasteIntoCity.Application.Services
         public async Task AddPointsAsync(IWorksRepository worksRepository, IUsersRepository usersRepository,
             IWorkColleaguesReportRepository workColleaguesReportRepository, IWorkMarkTypesRepository workMarkTypesRepository)
         {
-            Guid statusClosed = Guid.NewGuid();
             Work work;
 
             try
@@ -94,7 +94,7 @@ namespace WasteIntoCity.Application.Services
                 return;
             }
 
-            Dictionary<Guid, int> workMarkTypesDict = await workMarkTypesRepository.TakeDictionaryAllWithKeyIdAndValueAdditionRanking();
+            Dictionary<WorkMarkEnum, int> workMarkTypesDict = await workMarkTypesRepository.TakeDictionaryAllWithKeyIdAndValueAdditionRanking();
 
             int participantsCount = work.Participants.Count;
 
@@ -103,7 +103,17 @@ namespace WasteIntoCity.Application.Services
                 await AddPointsForUserAsync(work.Id, work.Participants[i], workMarkTypesDict, participantsCount, workColleaguesReportRepository, usersRepository);
             }
 
-            await worksRepository.UpdateStatusesIdByIdAsync(work.Id, statusClosed);
+            await worksRepository.UpdateStatusesIdByIdAsync(work.Id, WorkStatusEnum.Closed);
+        }
+
+        public Task CreateAsync(string title, string description, DateTime startedDatetime, DateTime finishDatetime, int workComplexityTypesId, Guid workStatusesId, Guid coordinatesId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task UpdateAsync(Guid id, string title, string description, DateTime startedDatetime, DateTime finishDatetime, int workComplexityTypesId, Guid workStatusesId, Guid coordinatesId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

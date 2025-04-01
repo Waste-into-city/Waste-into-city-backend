@@ -117,7 +117,8 @@ namespace WasteIntoCity.Persistance.Migrations
                 name: "work_mark_types",
                 columns: table => new
                 {
-                    id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     addition_ranking = table.Column<int>(type: "int", nullable: false)
                 },
@@ -143,7 +144,8 @@ namespace WasteIntoCity.Persistance.Migrations
                 name: "work_status_types",
                 columns: table => new
                 {
-                    id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     multiplier_ranking = table.Column<int>(type: "int", nullable: false)
                 },
@@ -322,7 +324,7 @@ namespace WasteIntoCity.Persistance.Migrations
                     title = table.Column<string>(type: "nvarchar(1)", maxLength: 1, nullable: false),
                     description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
                     from_participant_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    work_statuses_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    work_statuses_id = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -349,7 +351,7 @@ namespace WasteIntoCity.Persistance.Migrations
                     start_datetime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     finish_datetime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     work_complexity_id = table.Column<int>(type: "int", nullable: false),
-                    work_statuses_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    work_statuses_id = table.Column<int>(type: "int", nullable: false),
                     CoordinatesId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
@@ -409,7 +411,7 @@ namespace WasteIntoCity.Persistance.Migrations
                     from_participant_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     about_colleague_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     works_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    work_mark_types_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    work_mark_types_id = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {

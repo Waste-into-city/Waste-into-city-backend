@@ -12,7 +12,7 @@
 
         required public int WorkComplexityTypesId { get; init; }
 
-        required public Guid WorkStatusesId { get; init; }
+        required public int WorkStatusTypesId { get; init; }
 
         required public Guid CoordinatesId { get; init; }
     }

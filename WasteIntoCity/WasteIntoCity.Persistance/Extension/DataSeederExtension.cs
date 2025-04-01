@@ -64,15 +64,6 @@ namespace WasteIntoCity.Persistance.Extension
             );
         }
 
-        public static void SeedWorkReportStatusTypes(this MainDbContext context)
-        {
-            context.SeedEntityBasedEntities(
-                context.WorkReportComplaintTypes,
-                DefaultInitTypes.workReportStatusTypeEntities,
-                WorkReportStatusTypeConfiguration.TABLE_NAME
-            );
-        }
-
         public static void SeedWorkComplexityTypes(this MainDbContext context)
         {
             context.SeedEntityBasedEntities(
@@ -82,11 +73,31 @@ namespace WasteIntoCity.Persistance.Extension
             );
         }
 
+        public static void SeedWorkMarkTypes(this MainDbContext context)
+        {
+            context.SeedEntityBasedEntities(
+                context.WorkMarkTypes,
+                DefaultInitTypes.workMarkTypeEntities,
+                WorkMarkTypeConfiguration.TABLE_NAME
+            );
+        }
+
+        public static void SeedWorkReportStatusTypes(this MainDbContext context)
+        {
+            context.SeedEntityBasedEntities(
+                context.WorkReportStatusTypes,
+                DefaultInitTypes.workReportStatusTypeEntities,
+                WorkReportStatusTypeConfiguration.TABLE_NAME
+            );
+        }
+
+        public static void SeedWorkStatusTypes(this MainDbContext context)
+        {
+            context.SeedEntityBasedEntities(
+                context.WorkStatusTypes,
+                DefaultInitTypes.workStatusTypeEntities,
+                WorkStatusTypeConfiguration.TABLE_NAME
+            );
+        }
     }
-
-
-
-
-
-
 }

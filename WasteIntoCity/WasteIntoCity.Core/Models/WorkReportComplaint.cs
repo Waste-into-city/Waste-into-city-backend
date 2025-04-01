@@ -1,6 +1,4 @@
-﻿using WasteIntoCity.Core.Exceptions;
-using WasteIntoCity.Core.Extensions;
-using WasteIntoCity.Core.Types;
+﻿using WasteIntoCity.Core.Types;
 using WasteIntoCity.Core.ValueObjects;
 
 namespace WasteIntoCity.Core.Models
@@ -15,7 +13,7 @@ namespace WasteIntoCity.Core.Models
 
         public const int DESCRIPTION_LENGTH_MAX = Description.VALUE_LENGTH_MAX;
 
-        private WorkReportComplaint(Guid id, Title title, Description description, Guid worksId, Guid fromUsersId, int workReportStatusTypesId)
+        private WorkReportComplaint(Guid id, Title title, Description description, Guid worksId, Guid fromUsersId, WorkReportStatusEnum workReportStatusTypesId)
         {
             Id = id;
             Title = title;
@@ -35,16 +33,10 @@ namespace WasteIntoCity.Core.Models
 
         public Guid FromUsersId { get; }
 
-        public int WorkReportStatusTypesId { get; }
+        public WorkReportStatusEnum WorkReportStatusTypesId { get; }
 
-        public static WorkReportComplaint Create(Guid id, Title title, Description description, Guid worksId, Guid fromUsersId, int workReportStatusTypesId)
+        public static WorkReportComplaint Create(Guid id, Title title, Description description, Guid worksId, Guid fromUsersId, WorkReportStatusEnum workReportStatusTypesId)
         {
-            if (!Enum.IsDefined(typeof(WorkReportStatusEnum), workReportStatusTypesId))
-            {
-                throw new InvalidValueFormatException(nameof(WorkApplication),
-                    $"The workReportStatusTypesId should be an enum ({EnumOperationsExtension.ToStringAllValidValuesThroughComma<WorkReportStatusEnum>()})");
-            }
-
             return new WorkReportComplaint(id, title, description, worksId, fromUsersId, workReportStatusTypesId);
         }
     }

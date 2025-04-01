@@ -10,7 +10,7 @@
 
         public Guid WorksId { get; set; }
 
-        public Guid WorkMarkTypesId { get; set; }
+        public int WorkMarkTypesId { get; set; }
 
         public WorkEntity? Work { get; set; }
 

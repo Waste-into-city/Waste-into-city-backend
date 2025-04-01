@@ -2,6 +2,7 @@
 using WasteIntoCity.Core.Exceptions;
 using WasteIntoCity.Core.Interfaces.Repositories;
 using WasteIntoCity.Core.Models;
+using WasteIntoCity.Core.Types;
 using WasteIntoCity.Core.ValueObjects;
 using WasteIntoCity.Persistance.Entities;
 
@@ -21,7 +22,7 @@ namespace WasteIntoCity.Persistance.Repositories
             WorkComplexityTypeEntity workComplexityTypeEntity = await _mainDbContext.WorkComplexityTypes.AsNoTracking().
                             FirstOrDefaultAsync(u => u.Id == id) ?? throw new DbIsNotFoundException(nameof(WorkComplexityType), null);
 
-            return WorkComplexityType.Create(workComplexityTypeEntity.Id, MeanText.Create(workComplexityTypeEntity.Name), workComplexityTypeEntity.ParticipantsMin,
+            return WorkComplexityType.Create((WorkComplexityEnum)workComplexityTypeEntity.Id, MeanText.Create(workComplexityTypeEntity.Name), workComplexityTypeEntity.ParticipantsMin,
                 workComplexityTypeEntity.ParticipantsMax, workComplexityTypeEntity.DurationHours, workComplexityTypeEntity.MultiplierRanking,
                 workComplexityTypeEntity.RadiusOnMap);
         }

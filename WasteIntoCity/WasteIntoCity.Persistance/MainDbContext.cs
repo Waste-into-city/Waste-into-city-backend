@@ -61,11 +61,11 @@ namespace WasteIntoCity.Persistance
 
         public DbSet<WorkReportComplaintEntity> WorkReportComplaints { get; set; }
 
-        public DbSet<WorkReportStatusTypeEntity> WorkReportComplaintTypes { get; set; }
+        public DbSet<WorkReportStatusTypeEntity> WorkReportStatusTypes { get; set; }
 
         public DbSet<WorkReportResultEntity> WorkReportResults { get; set; }
 
-        public DbSet<WorkStatusTypeEntity> WorkStatuses { get; set; }
+        public DbSet<WorkStatusTypeEntity> WorkStatusTypes { get; set; }
 
         protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
         {

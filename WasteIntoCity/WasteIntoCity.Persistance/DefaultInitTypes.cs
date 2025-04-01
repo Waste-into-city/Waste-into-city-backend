@@ -13,13 +13,6 @@ namespace WasteIntoCity.Persistance
             new RoleEntity { Id = (int) RoleEnum.SuperAdmin, Name = nameof(RoleEnum.SuperAdmin)},
         };
 
-        public static readonly WorkReportStatusTypeEntity[] workReportStatusTypeEntities = new WorkReportStatusTypeEntity[]
-        {
-            new WorkReportStatusTypeEntity{Id = (int) WorkReportStatusEnum.Pending, Name = nameof(WorkReportStatusEnum.Pending) },
-            new WorkReportStatusTypeEntity{Id = (int) WorkReportStatusEnum.Accepted, Name = nameof(WorkReportStatusEnum.Accepted) },
-            new WorkReportStatusTypeEntity{Id = (int) WorkReportStatusEnum.Denied, Name = nameof(WorkReportStatusEnum.Denied) },
-        };
-
         public static readonly WorkComplexityTypeEntity[] workComplexityTypeEntities = new WorkComplexityTypeEntity[]
         {
             new WorkComplexityTypeEntity
@@ -52,6 +45,31 @@ namespace WasteIntoCity.Persistance
                 ParticipantsMin = 10,
                 ParticipantsMax = 12
             },
+        };
+
+        public static readonly WorkMarkTypeEntity[] workMarkTypeEntities = new WorkMarkTypeEntity[]
+        {
+            new WorkMarkTypeEntity{Id = (int) WorkMarkEnum.One, Name = nameof(WorkMarkEnum.One), AdditionRanking = -2},
+            new WorkMarkTypeEntity{Id = (int) WorkMarkEnum.Two, Name = nameof(WorkMarkEnum.Two), AdditionRanking = -1},
+            new WorkMarkTypeEntity{Id = (int) WorkMarkEnum.Three, Name = nameof(WorkMarkEnum.Three), AdditionRanking = 0 },
+            new WorkMarkTypeEntity{Id = (int) WorkMarkEnum.Four, Name = nameof(WorkMarkEnum.Four), AdditionRanking = 1 },
+            new WorkMarkTypeEntity{Id = (int) WorkMarkEnum.Five, Name = nameof(WorkMarkEnum.Five), AdditionRanking = 2 },
+        };
+
+        public static readonly WorkReportStatusTypeEntity[] workReportStatusTypeEntities = new WorkReportStatusTypeEntity[]
+        {
+            new WorkReportStatusTypeEntity{Id = (int) WorkReportStatusEnum.Pending, Name = nameof(WorkReportStatusEnum.Pending) },
+            new WorkReportStatusTypeEntity{Id = (int) WorkReportStatusEnum.Accepted, Name = nameof(WorkReportStatusEnum.Accepted) },
+            new WorkReportStatusTypeEntity{Id = (int) WorkReportStatusEnum.Denied, Name = nameof(WorkReportStatusEnum.Denied) },
+        };
+
+        public static readonly WorkStatusTypeEntity[] workStatusTypeEntities = new WorkStatusTypeEntity[]
+        {
+            new WorkStatusTypeEntity{Id = (int) WorkStatusEnum.Avaliable, Name = nameof(WorkStatusEnum.Avaliable) },
+            new WorkStatusTypeEntity{Id = (int) WorkStatusEnum.InProgress, Name = nameof(WorkStatusEnum.InProgress) },
+            new WorkStatusTypeEntity{Id = (int) WorkStatusEnum.FinishedSuccessfully, Name = nameof(WorkStatusEnum.FinishedSuccessfully) },
+            new WorkStatusTypeEntity{Id = (int) WorkStatusEnum.FinishedFailed, Name = nameof(WorkStatusEnum.FinishedFailed) },
+            new WorkStatusTypeEntity{Id = (int) WorkStatusEnum.Closed, Name = nameof(WorkStatusEnum.Closed) },
         };
     }
 }

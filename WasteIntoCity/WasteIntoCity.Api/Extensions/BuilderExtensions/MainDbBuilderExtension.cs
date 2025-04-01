@@ -12,9 +12,12 @@ namespace WasteIntoCity.Api.Extensions.BuilderExtensions
             {
                 MainDbContext context = scope.ServiceProvider.GetRequiredService<MainDbContext>();
                 context.Database.Migrate();
+
                 context.SeedRoles();
-                context.SeedWorkReportStatusTypes();
                 context.SeedWorkComplexityTypes();
+                context.SeedWorkMarkTypes();
+                context.SeedWorkReportStatusTypes();
+                context.SeedWorkStatusTypes();
             }
 
             return app;

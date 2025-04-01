@@ -1,4 +1,5 @@
 ﻿using WasteIntoCity.Core.Exceptions;
+using WasteIntoCity.Core.Types;
 using WasteIntoCity.Core.ValueObjects;
 
 namespace WasteIntoCity.Core.Models
@@ -13,8 +14,8 @@ namespace WasteIntoCity.Core.Models
 
         public const int DESCRIPTION_LENGTH_MAX = Description.VALUE_LENGTH_MAX;
 
-        private Work(Guid id, Title title, Description description, DateTime startedDatetime, DateTime finishDatetime, int workComplexityTypesId,
-            Guid workStatusesId, Guid coordinatesId, List<User> participants)
+        private Work(Guid id, Title title, Description description, DateTime startedDatetime, DateTime finishDatetime, WorkComplexityEnum workComplexityTypesId,
+            WorkStatusEnum workStatusTypesId, Guid coordinatesId, List<User> participants)
         {
             Id = id;
             Title = title;
@@ -22,7 +23,7 @@ namespace WasteIntoCity.Core.Models
             StartedDatetime = startedDatetime;
             FinishDatetime = finishDatetime;
             WorkComplexityTypesId = workComplexityTypesId;
-            WorkStatusesId = workStatusesId;
+            WorkStatusTypesId = workStatusTypesId;
             CoordinatesId = coordinatesId;
             Participants = participants;
         }
@@ -37,23 +38,23 @@ namespace WasteIntoCity.Core.Models
 
         public DateTime FinishDatetime { get; }
 
-        public int WorkComplexityTypesId { get; }
+        public WorkComplexityEnum WorkComplexityTypesId { get; }
 
-        public Guid WorkStatusesId { get; }
+        public WorkStatusEnum WorkStatusTypesId { get; }
 
         public Guid CoordinatesId { get; }
 
         public List<User> Participants { get; }
 
-        public static Work Create(Guid id, Title title, Description description, DateTime startedDatetime, DateTime finishDatetime, int workComplexityTypesId,
-            Guid workStatusesId, Guid coordinatesId, List<User> participants)
+        public static Work Create(Guid id, Title title, Description description, DateTime startedDatetime, DateTime finishDatetime, WorkComplexityEnum workComplexityTypesId,
+            WorkStatusEnum workStatusTypesId, Guid coordinatesId, List<User> participants)
         {
             if (startedDatetime > finishDatetime)
             {
                 throw new ValueOutOfRangeException<DateTime>("startDatetime", DateTime.MinValue, finishDatetime);
             }
 
-            return new Work(id, title, description, startedDatetime, finishDatetime, workComplexityTypesId, workStatusesId, coordinatesId, participants);
+            return new Work(id, title, description, startedDatetime, finishDatetime, workComplexityTypesId, workStatusTypesId, coordinatesId, participants);
         }
     }
 }

@@ -10,7 +10,7 @@
 
         public Guid FromParticipantsId { get; set; }
 
-        public Guid WorkStatusTypesId { get; set; }
+        public int WorkStatusTypesId { get; set; }
 
         public UserEntity? FromParticipant { get; set; }
 
