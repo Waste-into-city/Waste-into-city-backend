@@ -63,7 +63,7 @@ app.UseStaticFiles();
 
 app.UseCustomMainDbContext(configuration);
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
