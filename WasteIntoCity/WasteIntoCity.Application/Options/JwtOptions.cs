@@ -7,7 +7,5 @@
         public TimeSpan RefreshTokenLifetime { get; set; }
 
         public TimeSpan AccessTokenLifetime { get; set; }
-
-        public TimeSpan AdditionalAccessTokenCookieLifetime { get; set; }
     }
 }

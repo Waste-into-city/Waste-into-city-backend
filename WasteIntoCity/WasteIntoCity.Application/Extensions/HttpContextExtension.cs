@@ -59,7 +59,7 @@ namespace WasteIntoCity.Application.Extensions
                     HttpOnly = true,
                     Secure = true,
                     SameSite = SameSiteMode.Lax,
-                    Expires = userPrepareTokensContextResponse.AccessTokenExpiredTimestamp.Add(jwtOptions.AdditionalAccessTokenCookieLifetime)
+                    Expires = userPrepareTokensContextResponse.RefreshTokenExpiredTimestamp
                 });
 
             httpContext.Response.Cookies.Append(TokenContextKeys.GetValueOrDefault(TokenType.REFRESH)!,
