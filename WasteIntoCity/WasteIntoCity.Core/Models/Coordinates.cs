@@ -1,8 +1,10 @@
-﻿using WasteIntoCity.Core.Errors;
+﻿
+
+using WasteIntoCity.Core.Exceptions;
 
 namespace WasteIntoCity.Core.Models
 {
-    public class TrashcanPoint
+    public class Coordinates
     {
         public const int LAT_LEGTH_MIN = 1;
 
@@ -12,7 +14,7 @@ namespace WasteIntoCity.Core.Models
 
         public const int LNG_LEGTH_MAX = 255;
 
-        private TrashcanPoint(Guid id, string lat, string lng)
+        private Coordinates(Guid id, string lat, string lng)
         {
             Id = id;
             Lat = lat;
@@ -25,7 +27,7 @@ namespace WasteIntoCity.Core.Models
 
         public string Lng { get; }
 
-        public static TrashcanPoint Create(Guid id, string lat, string lng)
+        public static Coordinates Create(Guid id, string lat, string lng)
         {
             if (lat.Length is < LAT_LEGTH_MIN or > LAT_LEGTH_MAX)
             {
@@ -37,7 +39,7 @@ namespace WasteIntoCity.Core.Models
                 throw new InvalidLengthException(nameof(lng), LNG_LEGTH_MIN, LNG_LEGTH_MAX);
             }
 
-            return new TrashcanPoint(id, lat, lng);
+            return new Coordinates(id, lat, lng);
         }
     }
 }

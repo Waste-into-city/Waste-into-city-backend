@@ -12,9 +12,11 @@
 
         public DateTime FinishDatetime { get; set; }
 
-        public Guid WorkComplexityTypesId { get; set; }
+        public int WorkComplexityTypesId { get; set; }
 
-        public Guid WorkStatusTypesId { get; set; }
+        public int WorkStatusTypesId { get; set; }
+
+        public Guid CoordinatesId { get; set; }
 
         public WorkComplexityTypeEntity? WorkComplexityType { get; set; }
 
@@ -23,6 +25,8 @@
         public List<WorkReportComplaintEntity> WorkReportComplaints { get; set; } = [];
 
         public List<WorkColleagueReportEntity> WorkColleagueReports { get; set; } = [];
+
+        public CoordinatesEntity? Coordinates { get; set; }
 
         public ICollection<UserEntity> Users { get; set; } = [];
     }

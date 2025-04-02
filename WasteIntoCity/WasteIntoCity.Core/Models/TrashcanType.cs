@@ -1,4 +1,4 @@
-﻿using WasteIntoCity.Core.Errors;
+﻿using WasteIntoCity.Core.Exceptions;
 using WasteIntoCity.Core.ValueObjects;
 
 namespace WasteIntoCity.Core.Models

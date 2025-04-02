@@ -1,4 +1,5 @@
-﻿using WasteIntoCity.Core.Errors;
+﻿using WasteIntoCity.Core.Exceptions;
+using WasteIntoCity.Core.Types;
 using WasteIntoCity.Core.ValueObjects;
 
 namespace WasteIntoCity.Core.Models
@@ -13,20 +14,20 @@ namespace WasteIntoCity.Core.Models
 
         public const int NAME_LENGTH_MAX = 100;
 
-        private WorkMarkType(Guid id, MeanText name, int additionRanking)
+        private WorkMarkType(WorkMarkEnum id, MeanText name, int additionRanking)
         {
             Id = id;
             Name = name;
             AdditionRanking = additionRanking;
         }
 
-        public Guid Id { get; }
+        public WorkMarkEnum Id { get; }
 
         public MeanText Name { get; }
 
         public int AdditionRanking { get; }
 
-        public static WorkMarkType Create(Guid id, MeanText name, int additionRanking)
+        public static WorkMarkType Create(WorkMarkEnum id, MeanText name, int additionRanking)
         {
             if (name.Value.Length is < NAME_LENGTH_MIN or > NAME_LENGTH_MAX)
             {

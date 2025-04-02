@@ -6,9 +6,11 @@ namespace WasteIntoCity.Persistance.Configurations
 {
     public partial class WorkColleagueReportConfiguration : IEntityTypeConfiguration<WorkColleagueReportEntity>
     {
+        public const string TABLE_NAME = "work_colleague_reports";
+
         public void Configure(EntityTypeBuilder<WorkColleagueReportEntity> builder)
         {
-            builder.ToTable("work_colleague_reports");
+            builder.ToTable(TABLE_NAME);
 
             builder.Property(w => w.Id).HasColumnName("id");
 

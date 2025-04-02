@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace WasteIntoCity.Core.Errors
+namespace WasteIntoCity.Core.Exceptions
 {
     public class BadRequest400Exception : Exception
     {
@@ -10,6 +10,11 @@ namespace WasteIntoCity.Core.Errors
 
         protected BadRequest400Exception(string message) : base(message)
         {
+        }
+
+        public BadRequest400Exception() : base(NAME)
+        {
+
         }
     }
 }

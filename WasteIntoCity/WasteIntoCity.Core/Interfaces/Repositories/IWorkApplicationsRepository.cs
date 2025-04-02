@@ -1,17 +1,14 @@
 ﻿using WasteIntoCity.Core.Models;
+using WasteIntoCity.Core.Types;
 
 namespace WasteIntoCity.Core.Interfaces.Repositories
 {
     public interface IWorkApplicationsRepository
     {
-        Task Create(WorkApplication workApplication);
+        Task AddAsync(WorkApplication workApplication);
 
-        Task Delete(Guid id);
+        Task<WorkApplication> FindById(Guid id);
 
-        Task<List<WorkApplication>> Get();
-
-        Task<WorkApplication> GetById(Guid id);
-
-        Task Update(WorkApplication workApplication);
+        Task UpdateWorkReportStatusTypesIdByIdAsync(Guid id, WorkReportStatusEnum workReportStatusTypesId);
     }
 }

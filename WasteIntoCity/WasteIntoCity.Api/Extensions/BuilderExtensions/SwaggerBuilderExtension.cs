@@ -1,4 +1,5 @@
-﻿using WasteIntoCity.Application.Options;
+﻿using Microsoft.Extensions.Options;
+using WasteIntoCity.Application.Options;
 
 namespace WasteIntoCity.Api.Extensions.BuilderExtensions
 {
@@ -6,18 +7,20 @@ namespace WasteIntoCity.Api.Extensions.BuilderExtensions
     {
         public static IApplicationBuilder UseCustomSwagger(this IApplicationBuilder app, IConfiguration configuration)
         {
-            SwaggerOptions swaggerOptions = new SwaggerOptions();
-
-            configuration.GetSection(nameof(SwaggerOptions)).Bind(swaggerOptions);
+            SwaggerOptions swaggerOptions = app.ApplicationServices.GetRequiredService<IOptions<SwaggerOptions>>().Value;
 
             app.UseSwagger(options =>
             {
-                options.RouteTemplate = swaggerOptions.JsonRoute;
+                options.RouteTemplate = $"{swaggerOptions.ControllerName}/{swaggerOptions.JsonLocalRoute}";
             });
 
             return app.UseSwaggerUI(options =>
             {
                 options.SwaggerEndpoint(swaggerOptions.UIEndPoint, swaggerOptions.Description);
+            })
+            .UseEndpoints(endpoints =>
+            {
+                endpoints.MapSwagger().AllowAnonymous();
             });
         }
     }

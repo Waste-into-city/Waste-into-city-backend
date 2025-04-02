@@ -1,21 +1,21 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using WasteIntoCity.Core.Enums;
+using WasteIntoCity.Core.Models;
 using WasteIntoCity.Persistance.Entities;
 
 namespace WasteIntoCity.Persistance.Configurations
 {
     public partial class RoleConfiguration : IEntityTypeConfiguration<RoleEntity>
     {
-        private const int NAME_PROPERTY_MAX_LENGTH = 45;
+        public const string TABLE_NAME = "roles";
 
         public void Configure(EntityTypeBuilder<RoleEntity> builder)
         {
-            builder.ToTable("roles");
+            builder.ToTable(TABLE_NAME);
 
             builder.Property(r => r.Id).HasColumnName("id");
 
-            builder.Property(r => r.Name).IsRequired().HasColumnName("name").HasMaxLength(NAME_PROPERTY_MAX_LENGTH);
+            builder.Property(r => r.Name).IsRequired().HasColumnName("name").HasMaxLength(Role.NAME_LENGTH_MAX);
 
             builder.HasKey(r => r.Id);
 
@@ -28,13 +28,13 @@ namespace WasteIntoCity.Persistance.Configurations
                     r => r.HasOne<RoleEntity>().WithMany().HasForeignKey(e => e.RolesId)
                 );
 
-            IEnumerable<RoleEntity> roles = Enum.GetValues<RoleType>().Select(r => new RoleEntity
-            {
-                Id = (int)r,
-                Name = r.ToString()
-            });
+            //IEnumerable<RoleEntity> roles = Enum.GetValues<RoleType>().Select(r => new RoleEntity
+            //{
+            //    Id = (int)r,
+            //    Name = r.ToString()
+            //});
 
-            builder.HasData(roles);
+            //builder.HasData(roles);
         }
     }
 }

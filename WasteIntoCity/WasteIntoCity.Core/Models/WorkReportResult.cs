@@ -1,4 +1,5 @@
-﻿using WasteIntoCity.Core.ValueObjects;
+﻿using WasteIntoCity.Core.Types;
+using WasteIntoCity.Core.ValueObjects;
 
 namespace WasteIntoCity.Core.Models
 {
@@ -12,13 +13,13 @@ namespace WasteIntoCity.Core.Models
 
         public const int DESCRIPTION_LENGTH_MAX = Description.VALUE_LENGTH_MAX;
 
-        private WorkReportResult(Guid id, Guid fromParticipantId, Title title, Description description, Guid workStatusesId)
+        private WorkReportResult(Guid id, Guid fromParticipantId, Title title, Description description, WorkStatusEnum workStatusesId)
         {
             Id = id;
             FromParticipantId = fromParticipantId;
             Title = title;
             Description = description;
-            WorkStatusesId = workStatusesId;
+            WorkStatusTypesId = workStatusesId;
         }
 
         public Guid Id { get; }
@@ -29,9 +30,9 @@ namespace WasteIntoCity.Core.Models
 
         public Description Description { get; }
 
-        public Guid WorkStatusesId { get; }
+        public WorkStatusEnum WorkStatusTypesId { get; }
 
-        public static WorkReportResult Create(Guid id, Guid fromParticipantId, Title title, Description description, Guid workStatusesId)
+        public static WorkReportResult Create(Guid id, Guid fromParticipantId, Title title, Description description, WorkStatusEnum workStatusesId)
         {
             return new WorkReportResult(id, fromParticipantId, title, description, workStatusesId);
         }

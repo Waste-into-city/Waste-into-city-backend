@@ -26,7 +26,7 @@ namespace WasteIntoCity.Application.Controllers.V1
 
         [AllowAnonymous]
         [HttpPost(ApiRoutes.Identity.REGISTER)]
-        public async Task<IActionResult> Register([FromBody] UserRegistrationRequest request)
+        public async Task<IActionResult> RegisterAsync([FromBody] UserRegistrationRequest request)
         {
             await _identityService.RegisterAsync(request.Nickname, request.Email, request.Password);
 
@@ -46,7 +46,7 @@ namespace WasteIntoCity.Application.Controllers.V1
 
         [AllowAnonymous]
         [HttpPost(ApiRoutes.Identity.REFRESH)]
-        public async Task<IActionResult> RefreshToken()
+        public async Task<IActionResult> RefreshTokenAsync()
         {
             string accessTokenValue = HttpContext.TakeTokenValueByTokenType(TokenType.ACCESS);
 
@@ -59,11 +59,12 @@ namespace WasteIntoCity.Application.Controllers.V1
             return Ok();
         }
 
-        [Authorize(Roles = $"{nameof(RoleType.Admin)},{nameof(RoleType.User)},{nameof(RoleType.Moderator)}")]
+        //[Authorize(Policy = PolicyType.HONEST_USER)]
+        [Authorize(Roles = $"{nameof(RoleEnum.User)},{nameof(RoleEnum.Moderator)},{nameof(RoleEnum.SuperAdmin)}")]
         [HttpPost(ApiRoutes.Identity.LOGOUT)]
         public async Task<IActionResult> Logout()
         {
-            string userId = HttpContext.TakeUserIdFromAccessToken();
+            Guid userId = HttpContext.TakeUserIdFromAccessToken();
 
             await _identityService.LogoutAsync(userId);
 

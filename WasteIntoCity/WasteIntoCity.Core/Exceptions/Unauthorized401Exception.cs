@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace WasteIntoCity.Core.Errors
+namespace WasteIntoCity.Core.Exceptions
 {
     public class Unauthorized401Exception : Exception
     {
@@ -10,6 +10,11 @@ namespace WasteIntoCity.Core.Errors
 
         protected Unauthorized401Exception(string message) : base(message)
         {
+        }
+
+        public Unauthorized401Exception() : base(NAME)
+        {
+
         }
     }
 }

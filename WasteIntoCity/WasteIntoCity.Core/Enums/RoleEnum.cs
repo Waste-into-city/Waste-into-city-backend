@@ -1,11 +1,11 @@
 ﻿namespace WasteIntoCity.Core.Enums
 {
-    public enum RoleType
+    public enum RoleEnum
     {
         User = 1,
 
         Moderator = 2,
 
-        Admin = 3
+        SuperAdmin = 3
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using Microsoft.Extensions.Logging;
 using WasteIntoCity.Persistance.Entities;
 
 namespace WasteIntoCity.Persistance
@@ -8,6 +9,14 @@ namespace WasteIntoCity.Persistance
     {
         public MainDbContext(DbContextOptions<MainDbContext> options) : base(options)
         {
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder
+                .LogTo(Console.WriteLine, LogLevel.Information) // Логирование запросов в консоль
+                .EnableSensitiveDataLogging()                   // Для детального логирования
+                .EnableDetailedErrors();                        // Показывает больше данных при ошибках
         }
 
         //public DbSet<AccessTokenEntity> AccessTokens { get; set; }
@@ -26,7 +35,7 @@ namespace WasteIntoCity.Persistance
 
         public DbSet<TrashcanOccupancyTypeEntity> TrashcanOccupancyTypes { get; set; }
 
-        public DbSet<TrashcanPointEntity> TrashcanPoints { get; set; }
+        public DbSet<CoordinatesEntity> Coordinates { get; set; }
 
         public DbSet<TrashcanPointReportEachMarkEntity> TrashcanPointReportEachMarkSet { get; set; }
 
@@ -52,9 +61,11 @@ namespace WasteIntoCity.Persistance
 
         public DbSet<WorkReportComplaintEntity> WorkReportComplaints { get; set; }
 
+        public DbSet<WorkReportStatusTypeEntity> WorkReportStatusTypes { get; set; }
+
         public DbSet<WorkReportResultEntity> WorkReportResults { get; set; }
 
-        public DbSet<WorkStatusTypeEntity> WorkStatuses { get; set; }
+        public DbSet<WorkStatusTypeEntity> WorkStatusTypes { get; set; }
 
         protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
         {

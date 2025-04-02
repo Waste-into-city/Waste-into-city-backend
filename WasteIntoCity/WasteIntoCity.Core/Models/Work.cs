@@ -1,4 +1,5 @@
-﻿using WasteIntoCity.Core.Errors;
+﻿using WasteIntoCity.Core.Exceptions;
+using WasteIntoCity.Core.Types;
 using WasteIntoCity.Core.ValueObjects;
 
 namespace WasteIntoCity.Core.Models
@@ -13,15 +14,19 @@ namespace WasteIntoCity.Core.Models
 
         public const int DESCRIPTION_LENGTH_MAX = Description.VALUE_LENGTH_MAX;
 
-        private Work(Guid id, Title title, Description description, DateTime startedDatetime, DateTime finishDatetime, Guid workComplexityId, Guid workStatusesId)
+        private Work(Guid id, Title title, Description description, DateTime startedDatetime, DateTime finishDatetime, WorkComplexityEnum workComplexityTypesId,
+            WorkStatusEnum workStatusTypesId, Guid coordinatesId, List<User>? participants, Coordinates? coordinates)
         {
             Id = id;
             Title = title;
             Description = description;
             StartedDatetime = startedDatetime;
             FinishDatetime = finishDatetime;
-            WorkComplexityId = workComplexityId;
-            WorkStatusesId = workStatusesId;
+            WorkComplexityTypesId = workComplexityTypesId;
+            WorkStatusTypesId = workStatusTypesId;
+            CoordinatesId = coordinatesId;
+            Participants = participants;
+            Coordinates = coordinates;
         }
 
         public Guid Id { get; }
@@ -34,18 +39,25 @@ namespace WasteIntoCity.Core.Models
 
         public DateTime FinishDatetime { get; }
 
-        public Guid WorkComplexityId { get; }
+        public WorkComplexityEnum WorkComplexityTypesId { get; }
 
-        public Guid WorkStatusesId { get; }
+        public WorkStatusEnum WorkStatusTypesId { get; }
 
-        public static Work Create(Guid id, Title title, Description description, DateTime startedDatetime, DateTime finishDatetime, Guid workComplexityId, Guid workStatusesId)
+        public Guid CoordinatesId { get; }
+
+        public List<User>? Participants { get; }
+
+        public Coordinates? Coordinates { get; }
+
+        public static Work Create(Guid id, Title title, Description description, DateTime startedDatetime, DateTime finishDatetime, WorkComplexityEnum workComplexityTypesId,
+            WorkStatusEnum workStatusTypesId, Guid coordinatesId, List<User>? participants, Coordinates? coordinates)
         {
             if (startedDatetime > finishDatetime)
             {
                 throw new ValueOutOfRangeException<DateTime>("startDatetime", DateTime.MinValue, finishDatetime);
             }
 
-            return new Work(id, title, description, startedDatetime, finishDatetime, workComplexityId, workStatusesId);
+            return new Work(id, title, description, startedDatetime, finishDatetime, workComplexityTypesId, workStatusTypesId, coordinatesId, participants, coordinates);
         }
     }
 }

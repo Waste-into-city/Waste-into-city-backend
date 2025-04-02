@@ -12,6 +12,10 @@
 
         public int Ranking { get; set; }
 
+        public int NegativeScore { get; set; }
+
+        public bool IsBanned { get; set; }
+
         public List<WorkReportResultEntity> WorkReportResults { get; set; } = [];
 
         public ICollection<WorkEntity> Works { get; set; } = [];
@@ -33,5 +37,7 @@
         //public AccessTokenEntity? AccessToken { get; set; }
 
         public List<RefreshTokenEntity> RefreshTokens { get; set; } = [];
+
+        public List<WorkApplicationEntity> WorkApplications { get; set; } = [];
     }
 }

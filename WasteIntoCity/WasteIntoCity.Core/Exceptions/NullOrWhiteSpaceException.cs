@@ -1,4 +1,4 @@
-﻿namespace WasteIntoCity.Core.Errors
+﻿namespace WasteIntoCity.Core.Exceptions
 {
     public class NullOrWhiteSpaceException : BadRequest400Exception
     {

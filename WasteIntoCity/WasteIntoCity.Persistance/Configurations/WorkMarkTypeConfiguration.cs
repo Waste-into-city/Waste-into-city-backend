@@ -7,9 +7,11 @@ namespace WasteIntoCity.Persistance.Configurations
 {
     public partial class WorkMarkTypeConfiguration : IEntityTypeConfiguration<WorkMarkTypeEntity>
     {
+        public const string TABLE_NAME = "work_mark_types";
+
         public void Configure(EntityTypeBuilder<WorkMarkTypeEntity> builder)
         {
-            builder.ToTable("work_mark_types");
+            builder.ToTable(TABLE_NAME);
 
             builder.Property(w => w.Id).HasColumnName("id");
 

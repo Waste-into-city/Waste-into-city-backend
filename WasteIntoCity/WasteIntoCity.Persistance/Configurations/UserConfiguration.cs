@@ -7,9 +7,11 @@ namespace WasteIntoCity.Persistance.Configurations
 {
     public partial class UserConfiguration : IEntityTypeConfiguration<UserEntity>
     {
+        public const string TABLE_NAME = "users";
+
         public void Configure(EntityTypeBuilder<UserEntity> builder)
         {
-            builder.ToTable("users");
+            builder.ToTable(TABLE_NAME);
 
             builder.Property(u => u.Id).HasColumnName("id");
 
@@ -20,6 +22,10 @@ namespace WasteIntoCity.Persistance.Configurations
             builder.Property(u => u.Password).IsRequired().HasColumnName("password").HasMaxLength(User.PASSWORD_LENGTH_MAX);
 
             builder.Property(u => u.Ranking).IsRequired().HasColumnName("ranking");
+
+            builder.Property(u => u.NegativeScore).IsRequired().HasColumnName("negative_score");
+
+            builder.Property(u => u.IsBanned).IsRequired().HasColumnName("is_banned");
 
             builder.HasKey(u => u.Id);
 
@@ -56,6 +62,10 @@ namespace WasteIntoCity.Persistance.Configurations
             builder.HasMany(u => u.RefreshTokens)
                 .WithOne(u => u.User)
                 .HasForeignKey(u => u.UserId);
+
+            builder.HasMany(u => u.WorkApplications)
+                .WithOne(w => w.FromUser)
+                .HasForeignKey(w => w.FromUsersId);
 
             //builder.HasOne(u => u.AccessToken)
             //    .WithOne(a => a.User);

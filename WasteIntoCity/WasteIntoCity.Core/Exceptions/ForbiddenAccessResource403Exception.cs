@@ -11,5 +11,10 @@ namespace WasteIntoCity.Core.Exceptions
         protected ForbiddenAccessResource403Exception(string message) : base(message)
         {
         }
+
+        public ForbiddenAccessResource403Exception() : base(NAME)
+        {
+
+        }
     }
 }

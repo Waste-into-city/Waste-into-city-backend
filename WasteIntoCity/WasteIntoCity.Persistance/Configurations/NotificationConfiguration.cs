@@ -7,9 +7,11 @@ namespace WasteIntoCity.Persistance.Configurations
 {
     public partial class NotificationConfiguration : IEntityTypeConfiguration<NotificationEntity>
     {
+        public const string TABLE_NAME = "notifications";
+
         public void Configure(EntityTypeBuilder<NotificationEntity> builder)
         {
-            builder.ToTable("notifications");
+            builder.ToTable(TABLE_NAME);
 
             builder.Property(n => n.Id).HasColumnName("id");
 

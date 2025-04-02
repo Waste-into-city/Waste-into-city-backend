@@ -8,9 +8,11 @@ namespace WasteIntoCity.Persistance.Configurations
     {
         private const int COLUMN_JWT_ID_LENGTH = 255;
 
+        public const string TABLE_NAME = "refresh_tokens";
+
         public void Configure(EntityTypeBuilder<RefreshTokenEntity> builder)
         {
-            builder.ToTable("refresh_tokens");
+            builder.ToTable(TABLE_NAME);
 
             builder.Property(t => t.Value).HasColumnName("value");
 

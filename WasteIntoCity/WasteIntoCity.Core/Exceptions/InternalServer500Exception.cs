@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace WasteIntoCity.Core.Errors
+namespace WasteIntoCity.Core.Exceptions
 {
     public class InternalServer500Exception : Exception
     {
@@ -10,6 +10,11 @@ namespace WasteIntoCity.Core.Errors
 
         protected InternalServer500Exception(string message) : base(message)
         {
+        }
+
+        public InternalServer500Exception() : base(NAME)
+        {
+
         }
     }
 }

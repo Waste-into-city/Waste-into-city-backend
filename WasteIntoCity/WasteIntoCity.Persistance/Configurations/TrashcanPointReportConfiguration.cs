@@ -6,9 +6,11 @@ namespace WasteIntoCity.Persistance.Configurations
 {
     public partial class TrashcanPointReportConfiguration : IEntityTypeConfiguration<TrashcanPointReportEntity>
     {
+        public const string TABLE_NAME = "trashcan_point_reports";
+
         public void Configure(EntityTypeBuilder<TrashcanPointReportEntity> builder)
         {
-            builder.ToTable("trashcan_point_reports");
+            builder.ToTable(TABLE_NAME);
 
             builder.Property(t => t.Id).HasColumnName("id");
 
@@ -16,7 +18,7 @@ namespace WasteIntoCity.Persistance.Configurations
 
             builder.Property(t => t.UsersId).IsRequired().HasColumnName("users_id");
 
-            builder.Property(t => t.TrashcanPointsId).IsRequired().HasColumnName("trashcan_points_id");
+            builder.Property(t => t.CoordinatesId).IsRequired().HasColumnName("coordinates_id");
 
             builder.Property(t => t.SubmissionTime).IsRequired().HasColumnName("submission_time");
 
@@ -25,7 +27,7 @@ namespace WasteIntoCity.Persistance.Configurations
             builder.HasOne(t => t.User)
                 .WithMany(u => u.TrashcanPointReports);
 
-            builder.HasOne(t => t.TrashcanPoint)
+            builder.HasOne(t => t.Coordinates)
                 .WithMany(tr => tr.TrashcanPointReports);
 
             builder.HasMany(t => t.TrashcanPointReportEachMarkList)

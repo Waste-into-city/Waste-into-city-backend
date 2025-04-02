@@ -4,7 +4,7 @@ using System.Security.Claims;
 using System.Text;
 using WasteIntoCity.Application.Options;
 using WasteIntoCity.Core.Enums;
-using WasteIntoCity.Core.Errors;
+using WasteIntoCity.Core.Exceptions;
 using WasteIntoCity.Core.Interfaces.Repositories;
 using WasteIntoCity.Core.Interfaces.Services;
 using WasteIntoCity.Core.Models;
@@ -17,16 +17,17 @@ namespace WasteIntoCity.Application.Services
 {
     public class IdentityService : IIdentityService
     {
-        private const int USER_RANKING = 0;
+        private const int USER_START_RANKING = 0;
+        private const int USER_START_NEGATIVE_SCORE = 0;
 
         private readonly IUsersRepository _userRepository;
         private readonly RefreshTokensRepository _refreshTokensRepository;
-        private readonly RolesRepository _rolesRepository;
+        private readonly IRolesRepository _rolesRepository;
         private readonly JwtOptions _jwtOptions;
         private readonly TokenValidationParameters _tokenValidationParameters;
 
         public IdentityService(IUsersRepository usersRepository, JwtOptions jwtOptions, TokenValidationParameters tokenValidationParameters,
-            RefreshTokensRepository refreshTokensRepository, RolesRepository rolesRepository)
+            RefreshTokensRepository refreshTokensRepository, IRolesRepository rolesRepository)
         {
             _userRepository = usersRepository;
             _jwtOptions = jwtOptions;
@@ -92,10 +93,10 @@ namespace WasteIntoCity.Application.Services
 
             string hashedPassword = BCrypt.Net.BCrypt.EnhancedHashPassword(password);
 
-            Role role = await _rolesRepository.FindById((int)RoleType.User);
+            Role role = await _rolesRepository.FindById((int)RoleEnum.User);
 
             User newUser = User.Create(Guid.NewGuid(), Nickname.Create(nickname), Email.Create(email),
-                Password.Create(hashedPassword), USER_RANKING, [role]);
+                Password.Create(hashedPassword), USER_START_RANKING, [role], USER_START_NEGATIVE_SCORE, false);
 
             try
             {
@@ -114,6 +115,11 @@ namespace WasteIntoCity.Application.Services
             if (!BCrypt.Net.BCrypt.EnhancedVerify(password, user.Password.Value))
             {
                 throw new LoginException();
+            }
+
+            if (user.IsBanned)
+            {
+                throw new UserWasBannedException();
             }
 
             return await CreateTokens(user);
@@ -148,12 +154,26 @@ namespace WasteIntoCity.Application.Services
             refreshToken.Used = true;
             await _refreshTokensRepository.UpdateAsync(refreshToken);
 
-            User user = await _userRepository.FindByIdWithRolesAsync(accessTokenClaimsPrincipal.Claims.Single(x => x.Type == "id").Value);
+            User user;
+
+            if (Guid.TryParse(accessTokenClaimsPrincipal.Claims.Single(x => x.Type == "id").Value, out Guid parsedGuid))
+            {
+                user = await _userRepository.FindByIdWithRolesAsync(parsedGuid);
+            }
+            else
+            {
+                throw new InvalidTokenException();
+            }
+
+            if (user.IsBanned)
+            {
+                throw new UserWasBannedException();
+            }
 
             return await CreateTokens(user);
         }
 
-        public async Task LogoutAsync(string userId)
+        public async Task LogoutAsync(Guid userId)
         {
             await _refreshTokensRepository.UpdateUsedByUserIdTokensAsync(true, userId);
         }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using WasteIntoCity.Core.Errors;
+using WasteIntoCity.Core.Enums;
+using WasteIntoCity.Core.Exceptions;
 using WasteIntoCity.Core.Interfaces.Repositories;
 using WasteIntoCity.Core.Models;
 using WasteIntoCity.Persistance.Entities;
@@ -20,7 +21,7 @@ namespace WasteIntoCity.Persistance.Repositories
             RoleEntity roleEntity = await _mainDbContext.Roles.AsNoTracking().FirstOrDefaultAsync(r => r.Id == id)
                  ?? throw new DbIsNotFoundException(nameof(Role), null);
 
-            return Role.Create(roleEntity.Id, roleEntity.Name);
+            return Role.Create((RoleEnum)roleEntity.Id, roleEntity.Name);
         }
     }
 }

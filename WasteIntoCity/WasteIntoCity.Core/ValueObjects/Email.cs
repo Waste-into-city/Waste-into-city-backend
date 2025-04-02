@@ -1,5 +1,5 @@
 ﻿using System.Text.RegularExpressions;
-using WasteIntoCity.Core.Errors;
+using WasteIntoCity.Core.Exceptions;
 
 namespace WasteIntoCity.Core.ValueObjects
 {

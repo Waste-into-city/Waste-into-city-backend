@@ -7,9 +7,11 @@ namespace WasteIntoCity.Persistance.Configurations
 {
     public partial class WorkReportComplaintConfiguration : IEntityTypeConfiguration<WorkReportComplaintEntity>
     {
+        public const string TABLE_NAME = "work_report_complaints";
+
         public void Configure(EntityTypeBuilder<WorkReportComplaintEntity> builder)
         {
-            builder.ToTable("work_report_complaints");
+            builder.ToTable(TABLE_NAME);
 
             builder.Property(w => w.Id).HasColumnName("id");
 
@@ -17,9 +19,13 @@ namespace WasteIntoCity.Persistance.Configurations
 
             builder.Property(w => w.Description).IsRequired().HasColumnName("description").HasMaxLength(WorkReportComplaint.DESCRIPTION_LENGTH_MAX);
 
+            builder.Property(w => w.StartedDatime).IsRequired().HasColumnName("started_datetime");
+
             builder.Property(w => w.WorksId).IsRequired().HasColumnName("works_id");
 
             builder.Property(w => w.FromUsersId).IsRequired().HasColumnName("from_users_id");
+
+            builder.Property(w => w.WorkReportStatusTypesId).IsRequired().HasColumnName("work_report_complaint_status_types_id");
 
             builder.HasKey(w => w.Id);
 
@@ -32,6 +38,9 @@ namespace WasteIntoCity.Persistance.Configurations
 
             builder.HasOne(w => w.FromUser)
                 .WithMany(w => w.WorkReportComplaints);
+
+            builder.HasOne(w => w.WorkReportComplaintType)
+                .WithMany(wo => wo.WorkReportComplaints);
         }
     }
 }

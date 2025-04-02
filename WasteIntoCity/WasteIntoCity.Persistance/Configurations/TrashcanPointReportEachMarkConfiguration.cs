@@ -6,9 +6,11 @@ namespace WasteIntoCity.Persistance.Configurations
 {
     public partial class TrashcanPointReportEachMarkConfiguration : IEntityTypeConfiguration<TrashcanPointReportEachMarkEntity>
     {
+        public const string TABLE_NAME = "trashcan_point_report_each_mark";
+
         public void Configure(EntityTypeBuilder<TrashcanPointReportEachMarkEntity> builder)
         {
-            builder.ToTable("trashcan_point_report_each_mark");
+            builder.ToTable(TABLE_NAME);
 
             builder.Property(t => t.Id).HasColumnName("id");
 

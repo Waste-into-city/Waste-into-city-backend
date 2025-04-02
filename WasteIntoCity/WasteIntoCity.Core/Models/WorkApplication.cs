@@ -1,4 +1,5 @@
-﻿using WasteIntoCity.Core.ValueObjects;
+﻿using WasteIntoCity.Core.Types;
+using WasteIntoCity.Core.ValueObjects;
 
 namespace WasteIntoCity.Core.Models
 {
@@ -12,12 +13,17 @@ namespace WasteIntoCity.Core.Models
 
         public const int DESCRIPTION_LENGTH_MAX = Description.VALUE_LENGTH_MAX;
 
-        private WorkApplication(Guid id, Title title, Description description, Guid workComplexitiesId)
+        private WorkApplication(Guid id, Title title, Description description, WorkComplexityEnum workComplexityTypesId, Guid coordinatesId,
+            DateTime startedDatetime, Guid fromUsersId, WorkReportStatusEnum workReportStatusTypesId)
         {
             Id = id;
             Title = title;
             Description = description;
-            WorkComplexitiesId = workComplexitiesId;
+            WorkComplexityTypesId = workComplexityTypesId;
+            CoordinatesId = coordinatesId;
+            StartedDatetime = startedDatetime;
+            FromUsersId = fromUsersId;
+            WorkReportStatusTypesId = workReportStatusTypesId;
         }
 
         public Guid Id { get; }
@@ -26,11 +32,20 @@ namespace WasteIntoCity.Core.Models
 
         public Description Description { get; }
 
-        public Guid WorkComplexitiesId { get; }
+        public DateTime StartedDatetime { get; }
 
-        public static WorkApplication Create(Guid id, Title title, Description description, Guid workComplexitiesId)
+        public WorkComplexityEnum WorkComplexityTypesId { get; }
+
+        public Guid CoordinatesId { get; }
+
+        public Guid FromUsersId { get; }
+
+        public WorkReportStatusEnum WorkReportStatusTypesId { get; }
+
+        public static WorkApplication Create(Guid id, Title title, Description description, WorkComplexityEnum workComplexityTypesId, Guid coordinatesId,
+            DateTime startedDatetime, Guid fromUsersId, WorkReportStatusEnum workReportStatusTypesId)
         {
-            return new WorkApplication(id, title, description, workComplexitiesId);
+            return new WorkApplication(id, title, description, workComplexityTypesId, coordinatesId, startedDatetime, fromUsersId, workReportStatusTypesId);
         }
     }
 }

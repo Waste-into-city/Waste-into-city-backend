@@ -7,9 +7,11 @@ namespace WasteIntoCity.Persistance.Configurations
 {
     public partial class WorkComplexityTypeConfiguration : IEntityTypeConfiguration<WorkComplexityTypeEntity>
     {
+        public const string TABLE_NAME = "work_complexity_types";
+
         public void Configure(EntityTypeBuilder<WorkComplexityTypeEntity> builder)
         {
-            builder.ToTable("work_complexity_types");
+            builder.ToTable(TABLE_NAME);
 
             builder.Property(w => w.Id).HasColumnName("id");
 
@@ -31,7 +33,7 @@ namespace WasteIntoCity.Persistance.Configurations
 
             builder.HasMany(w => w.WorkApplications)
                 .WithOne(wo => wo.WorkComplexityType)
-                .HasForeignKey(wo => wo.WorkComplexitiesId);
+                .HasForeignKey(wo => wo.WorkComplexityTypesId);
 
             builder.HasMany(w => w.Works)
                 .WithOne(wo => wo.WorkComplexityType)

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using WasteIntoCity.Application.Options;
 using WasteIntoCity.Application.Types;
-using WasteIntoCity.Core.Errors;
+using WasteIntoCity.Core.Exceptions;
 using WasteIntoCity.Core.Structs;
 
 namespace WasteIntoCity.Application.Extensions
@@ -37,14 +37,16 @@ namespace WasteIntoCity.Application.Extensions
             return accessTokenValue;
         }
 
-        public static string TakeUserIdFromAccessToken(this HttpContext httpContext)
+        public static Guid TakeUserIdFromAccessToken(this HttpContext httpContext)
         {
             if (httpContext.User is null)
             {
-                return string.Empty;
+                throw new NullValueServerException(nameof(HttpContext), "User field in httpContext of accessToken was not found ");
             }
 
-            return httpContext.User.Claims.Single(x => x.Type == "id").Value;
+            Guid userId = Guid.Parse(httpContext.User.Claims.Single(x => x.Type == "id").Value);
+
+            return userId;
         }
 
         public static void AppendTokensContextResponse(this HttpContext httpContext, UserPrepareTokensContextResponse userPrepareTokensContextResponse,
@@ -56,7 +58,7 @@ namespace WasteIntoCity.Application.Extensions
                     HttpOnly = true,
                     Secure = true,
                     SameSite = SameSiteMode.Lax,
-                    Expires = userPrepareTokensContextResponse.AccessTokenExpiredTimestamp.Add(jwtOptions.AdditionalAccessTokenCookieLifetime)
+                    Expires = userPrepareTokensContextResponse.RefreshTokenExpiredTimestamp
                 });
 
             httpContext.Response.Cookies.Append(TokenContextKeys.GetValueOrDefault(TokenType.REFRESH)!,

@@ -7,9 +7,11 @@ namespace WasteIntoCity.Persistance.Configurations
 {
     public partial class WorkApplicationConfiguration : IEntityTypeConfiguration<WorkApplicationEntity>
     {
+        public const string TABLE_NAME = "work_applications";
+
         public void Configure(EntityTypeBuilder<WorkApplicationEntity> builder)
         {
-            builder.ToTable("work_applications");
+            builder.ToTable(TABLE_NAME);
 
             builder.Property(w => w.Id).HasColumnName("id");
 
@@ -17,7 +19,15 @@ namespace WasteIntoCity.Persistance.Configurations
 
             builder.Property(w => w.Description).IsRequired().HasColumnName("description").HasMaxLength(WorkApplication.DESCRIPTION_LENGTH_MAX);
 
-            builder.Property(w => w.WorkComplexitiesId).IsRequired().HasColumnName("work_complexities_id");
+            builder.Property(w => w.StartedDatetime).IsRequired().HasColumnName("started_datetime");
+
+            builder.Property(w => w.WorkComplexityTypesId).IsRequired().HasColumnName("work_complexity_types_id");
+
+            builder.Property(w => w.CoordinatesId).IsRequired().HasColumnName("coordinates_id");
+
+            builder.Property(w => w.FromUsersId).IsRequired().HasColumnName("from_users_id");
+
+            builder.Property(w => w.WorkReportStatusTypesId).IsRequired().HasColumnName("work_report_status_types_id");
 
             builder.HasKey(w => w.Id);
 
@@ -27,6 +37,15 @@ namespace WasteIntoCity.Persistance.Configurations
             builder.HasMany(w => w.Images)
                 .WithOne(i => i.WorkApplication)
                 .HasForeignKey(i => i.WorkApplicationsId);
+
+            builder.HasOne(w => w.Coordinates)
+                .WithMany(c => c.WorkApplications);
+
+            builder.HasOne(w => w.FromUser)
+                .WithMany(u => u.WorkApplications);
+
+            builder.HasOne(w => w.WorkReportStatusType)
+                .WithMany(wo => wo.WorkApplications);
         }
     }
 }
