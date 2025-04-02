@@ -18,6 +18,10 @@ namespace WasteIntoCity.Api.Extensions.ServiceExtensions
     {
         public static IServiceCollection AddCustomAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
+            SwaggerOptions swaggerOptions = new SwaggerOptions();
+            configuration.GetSection(nameof(SwaggerOptions)).Bind(swaggerOptions);
+            string swaggerPathStart = $"/{swaggerOptions.ControllerName}";
+
             JwtOptions jwtOptions = new JwtOptions();
             configuration.Bind(nameof(jwtOptions), jwtOptions);
 
@@ -53,6 +57,11 @@ namespace WasteIntoCity.Api.Extensions.ServiceExtensions
                     {
                         OnMessageReceived = context =>
                         {
+                            if (context.HttpContext.Request.Path.StartsWithSegments(swaggerPathStart))
+                            {
+                                return Task.CompletedTask;
+                            }
+
                             if (context.HttpContext.GetEndpoint()?.Metadata.GetMetadata<AllowAnonymousAttribute>() != null)
                             {
                                 return Task.CompletedTask;
@@ -86,6 +95,12 @@ namespace WasteIntoCity.Api.Extensions.ServiceExtensions
 
                             if (context.SecurityToken is JsonWebToken accesstoken)
                             {
+                                //if (accesstoken.ValidTo < DateTime.UtcNow)
+                                //{
+                                //    context.Fail("Token expired");
+                                //    return;
+                                //}
+
                                 RefreshTokensRepository refreshTokensRepository = context.HttpContext.RequestServices
                                     .GetRequiredService<RefreshTokensRepository>();
 
@@ -118,7 +133,7 @@ namespace WasteIntoCity.Api.Extensions.ServiceExtensions
                         {
                             if (context.Exception is not null)
                             {
-                                throw new InvalidTokenException(context.Exception?.Message);
+                                throw new InvalidTokenException();
                             }
                             else
                             {

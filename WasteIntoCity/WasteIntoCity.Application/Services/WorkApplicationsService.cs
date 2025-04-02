@@ -1,4 +1,5 @@
-﻿using WasteIntoCity.Core.Interfaces.Repositories;
+﻿using WasteIntoCity.Core.Exceptions;
+using WasteIntoCity.Core.Interfaces.Repositories;
 using WasteIntoCity.Core.Interfaces.Services;
 using WasteIntoCity.Core.Models;
 using WasteIntoCity.Core.Types;
@@ -53,11 +54,27 @@ namespace WasteIntoCity.Application.Services
         {
             WorkApplication workApplication = await _workApplicationsRepository.FindById(workApplicationsId);
 
+            if (workApplication.WorkReportStatusTypesId != WorkReportStatusEnum.Pending)
+            {
+                throw new ValueOutOfRangeException<WorkReportStatusEnum>(
+                    nameof(WorkApplication), $"Application is not in {nameof(WorkReportStatusEnum.Pending)} state");
+            }
+
             User user = await _usersRepository.FindByIdWithRolesAsync(workApplication.FromUsersId);
 
-            int ranking = user.Ranking - (RANKING_BASE_DECREASING * user.NegativeScore);
+            int negativeScore;
+            int ranking;
 
-            int negativeScore = user.NegativeScore * NEGATIVE_SCORE_MULTIPLIER_INCREASING;
+            if (user.NegativeScore == 0)
+            {
+                negativeScore = 1;
+                ranking = user.Ranking - 1;
+            }
+            else
+            {
+                ranking = user.Ranking - (RANKING_BASE_DECREASING * user.NegativeScore);
+                negativeScore = user.NegativeScore * NEGATIVE_SCORE_MULTIPLIER_INCREASING;
+            }
 
             bool isBanned = false;
 
@@ -72,12 +89,18 @@ namespace WasteIntoCity.Application.Services
 
             await _usersRepository.UpdateAsync(updatedUser);
 
-            await _workApplicationsRepository.UpdateWorkReportStatusTypesIdByIdAsync(workApplicationsId, (int)WorkReportStatusEnum.Denied);
+            await _workApplicationsRepository.UpdateWorkReportStatusTypesIdByIdAsync(workApplicationsId, WorkReportStatusEnum.Denied);
         }
 
         public async Task ConfirmAsync(Guid workApplicationsId)
         {
             WorkApplication workApplication = await _workApplicationsRepository.FindById(workApplicationsId);
+
+            if (workApplication.WorkReportStatusTypesId != WorkReportStatusEnum.Pending)
+            {
+                throw new ValueOutOfRangeException<WorkReportStatusEnum>(
+                    nameof(WorkApplication), $"Application is not in {nameof(WorkReportStatusEnum.Pending)} state");
+            }
 
             User user = await _usersRepository.FindByIdWithRolesAsync(workApplication.FromUsersId);
 
@@ -96,16 +119,15 @@ namespace WasteIntoCity.Application.Services
 
             WorkComplexityType workComplexityType = await _workComplexityTypesRepository.FindById((int)workApplication.WorkComplexityTypesId);
 
-            Guid statusOpen = Guid.NewGuid();
             DateTime startDateTime = DateTime.UtcNow;
 
             Work work = Work.Create(Guid.NewGuid(), workApplication.Title, workApplication.Description, startDateTime,
                 startDateTime.AddHours(workComplexityType.DurationHours), workApplication.WorkComplexityTypesId, WorkStatusEnum.Avaliable,
-                workApplication.CoordinatesId, []);
+                workApplication.CoordinatesId, null, null);
 
             await _worksRepository.AddAsync(work);
 
-            await _workApplicationsRepository.UpdateWorkReportStatusTypesIdByIdAsync(workApplicationsId, (int)WorkReportStatusEnum.Accepted);
+            await _workApplicationsRepository.UpdateWorkReportStatusTypesIdByIdAsync(workApplicationsId, WorkReportStatusEnum.Accepted);
         }
     }
 }

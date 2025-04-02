@@ -32,11 +32,11 @@ services.AddScoped<IWorkApplicationsService, WorkApplicationsService>();
 
 services.AddControllers();
 
+services.AddCustomSwagger(configuration);
+
 services.AddCustomAuthentication(configuration);
 
 services.AddCustomAuthorization(configuration);
-
-services.AddCustomSwagger(configuration);
 
 services.AddEndpointsApiExplorer();
 

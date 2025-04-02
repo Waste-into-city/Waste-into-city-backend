@@ -14,6 +14,8 @@
 
         required public int WorkStatusTypesId { get; init; }
 
-        required public Guid CoordinatesId { get; init; }
+        required public string Lat { get; init; }
+
+        required public string Lng { get; init; }
     }
 }

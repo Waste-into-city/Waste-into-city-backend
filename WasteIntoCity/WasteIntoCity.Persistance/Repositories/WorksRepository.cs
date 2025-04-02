@@ -37,12 +37,13 @@ namespace WasteIntoCity.Persistance.Repositories
 
         public async Task<List<Work>> FindAllAsync()
         {
-            List<WorkEntity> workEntities = await _mainDbContext.Works.AsNoTracking().ToListAsync();
+            List<WorkEntity> workEntities = await _mainDbContext.Works.AsNoTracking().Include(w => w.Coordinates).ToListAsync();
 
-            List<Work> works = workEntities.Select(e =>
+            List<Work> works = workEntities.Select(work =>
             {
-                return Work.Create(e.Id, Title.Create(e.Title), Description.Create(e.Description), e.StartedDatetime, e.FinishDatetime,
-                    (WorkComplexityEnum)e.WorkComplexityTypesId, (WorkStatusEnum)e.WorkStatusTypesId, e.CoordinatesId, []);
+                return Work.Create(work.Id, Title.Create(work.Title), Description.Create(work.Description), work.StartedDatetime, work.FinishDatetime,
+                    (WorkComplexityEnum)work.WorkComplexityTypesId, (WorkStatusEnum)work.WorkStatusTypesId, work.CoordinatesId, [],
+                    Coordinates.Create(work.Coordinates!.Id, work.Coordinates!.Lat, work.Coordinates!.Lng));
             }).ToList();
 
             return works;
@@ -51,13 +52,23 @@ namespace WasteIntoCity.Persistance.Repositories
         public async Task<List<Work>> FindAllByParticipantIdAsync(Guid participantId)
         {
             List<Work> works = await _mainDbContext.WorkParticipants
-                .Where(wp => wp.ParticipantsId == participantId)
-                .Join(_mainDbContext.Works,
-                      wp => wp.WorksId,
-                      w => w.Id,
-                      (wp, w) => Work.Create(w.Id, Title.Create(w.Title), Description.Create(w.Description), w.StartedDatetime, w.FinishDatetime,
-                        (WorkComplexityEnum)w.WorkComplexityTypesId, (WorkStatusEnum)w.WorkStatusTypesId, w.CoordinatesId, new List<User> { })
-                      )
+                 .Where(wp => wp.ParticipantsId == participantId)
+                 .Join(_mainDbContext.Works.Include(w => w.Coordinates),
+                     wp => wp.WorksId,
+                     w => w.Id,
+                     (wp, w) =>
+                         Work.Create(w.Id,
+                             Title.Create(w.Title),
+                             Description.Create(w.Description),
+                             w.StartedDatetime,
+                             w.FinishDatetime,
+                             (WorkComplexityEnum)w.WorkComplexityTypesId,
+                             (WorkStatusEnum)w.WorkStatusTypesId,
+                             w.CoordinatesId,
+                             null,
+                             Coordinates.Create(w.Coordinates!.Id, w.Coordinates!.Lat, w.Coordinates!.Lng)
+                        )
+                    )
                 .ToListAsync();
 
             return works;
@@ -65,11 +76,12 @@ namespace WasteIntoCity.Persistance.Repositories
 
         public async Task<Work> FindByIdAsync(Guid id)
         {
-            WorkEntity work = await _mainDbContext.Works.AsNoTracking().FirstOrDefaultAsync(w => w.Id == id)
+            WorkEntity work = await _mainDbContext.Works.AsNoTracking().Include(w => w.Coordinates).FirstOrDefaultAsync(w => w.Id == id)
                 ?? throw new DbIsNotFoundException(nameof(User), null);
 
             return Work.Create(work.Id, Title.Create(work.Title), Description.Create(work.Description), work.StartedDatetime, work.FinishDatetime,
-                (WorkComplexityEnum)work.WorkComplexityTypesId, (WorkStatusEnum)work.WorkStatusTypesId, work.CoordinatesId, []);
+                (WorkComplexityEnum)work.WorkComplexityTypesId, (WorkStatusEnum)work.WorkStatusTypesId, work.CoordinatesId, [],
+                Coordinates.Create(work.Coordinates!.Id, work.Coordinates!.Lat, work.Coordinates!.Lng));
         }
 
         public async Task UpdateAsync(Work work)

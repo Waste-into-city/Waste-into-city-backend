@@ -1,4 +1,5 @@
-﻿using WasteIntoCity.Core.Interfaces.Repositories;
+﻿using WasteIntoCity.Core.Extensions;
+using WasteIntoCity.Core.Interfaces.Repositories;
 using WasteIntoCity.Core.Interfaces.Services;
 using WasteIntoCity.Core.Models;
 using WasteIntoCity.Core.Types;
@@ -13,15 +14,6 @@ namespace WasteIntoCity.Application.Services
         public WorksService(IWorksRepository worksRepository)
         {
             _worksRepository = worksRepository;
-        }
-
-        public async Task CreateAsync(string title, string description, DateTime startedDatetime, DateTime finishDatetime, int workComplexityTypesId,
-            int workStatusesId, Guid coordinatesId)
-        {
-            Work work = Work.Create(Guid.NewGuid(), Title.Create(title), Description.Create(description), startedDatetime, finishDatetime,
-                (WorkComplexityEnum)workComplexityTypesId, (WorkStatusEnum)workStatusesId, coordinatesId, []);
-
-            await _worksRepository.AddAsync(work);
         }
 
         public async Task<List<Work>> GetAll()
@@ -42,14 +34,19 @@ namespace WasteIntoCity.Application.Services
         public async Task UpdateAsync(Guid id, string title, string description, DateTime startedDatetime, DateTime finishDatetime, int workComplexityTypesId,
             int workStatusesId, Guid coordinatesId)
         {
+            EnumOperationsExtension.CheckEnumIntValue<WorkComplexityEnum>(workComplexityTypesId, "work complexity");
+            EnumOperationsExtension.CheckEnumIntValue<WorkStatusEnum>(workStatusesId, "work status");
+
             Work work = Work.Create(id, Title.Create(title), Description.Create(description), startedDatetime, finishDatetime,
-                (WorkComplexityEnum)workComplexityTypesId, (WorkStatusEnum)workStatusesId, coordinatesId, []);
+                (WorkComplexityEnum)workComplexityTypesId, (WorkStatusEnum)workStatusesId, coordinatesId, null, null);
 
             await _worksRepository.UpdateAsync(work);
         }
 
         public async Task UpdateWorkStatusAsync(Guid id, int workStatusesId)
         {
+            EnumOperationsExtension.CheckEnumIntValue<WorkStatusEnum>(workStatusesId, "work status");
+
             await _worksRepository.UpdateStatusesIdByIdAsync(id, (WorkStatusEnum)workStatusesId);
         }
 
@@ -96,7 +93,7 @@ namespace WasteIntoCity.Application.Services
 
             Dictionary<WorkMarkEnum, int> workMarkTypesDict = await workMarkTypesRepository.TakeDictionaryAllWithKeyIdAndValueAdditionRanking();
 
-            int participantsCount = work.Participants.Count;
+            int participantsCount = work.Participants!.Count;
 
             for (int i = 0; i < participantsCount; i++)
             {
@@ -104,16 +101,6 @@ namespace WasteIntoCity.Application.Services
             }
 
             await worksRepository.UpdateStatusesIdByIdAsync(work.Id, WorkStatusEnum.Closed);
-        }
-
-        public Task CreateAsync(string title, string description, DateTime startedDatetime, DateTime finishDatetime, int workComplexityTypesId, Guid workStatusesId, Guid coordinatesId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task UpdateAsync(Guid id, string title, string description, DateTime startedDatetime, DateTime finishDatetime, int workComplexityTypesId, Guid workStatusesId, Guid coordinatesId)
-        {
-            throw new NotImplementedException();
         }
     }
 }

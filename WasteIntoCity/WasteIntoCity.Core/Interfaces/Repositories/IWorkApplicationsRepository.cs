@@ -1,4 +1,5 @@
 ﻿using WasteIntoCity.Core.Models;
+using WasteIntoCity.Core.Types;
 
 namespace WasteIntoCity.Core.Interfaces.Repositories
 {
@@ -8,6 +9,6 @@ namespace WasteIntoCity.Core.Interfaces.Repositories
 
         Task<WorkApplication> FindById(Guid id);
 
-        Task UpdateWorkReportStatusTypesIdByIdAsync(Guid id, int workReportStatusTypesId);
+        Task UpdateWorkReportStatusTypesIdByIdAsync(Guid id, WorkReportStatusEnum workReportStatusTypesId);
     }
 }

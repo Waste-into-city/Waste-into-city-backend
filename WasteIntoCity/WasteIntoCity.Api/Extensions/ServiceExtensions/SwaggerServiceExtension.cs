@@ -1,6 +1,7 @@
 ﻿using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using WasteIntoCity.Application;
+using WasteIntoCity.Application.Options;
 
 namespace WasteIntoCity.Api.Extensions.ServiceExtensions
 {
@@ -48,6 +49,12 @@ namespace WasteIntoCity.Api.Extensions.ServiceExtensions
                 //services.AddSwaggerGenNewtonsoftSupport();
                 options.AddCustomSecuritySwaggerGenOptions();
             });
+
+            SwaggerOptions swaggerOptions = new SwaggerOptions();
+
+            configuration.GetSection(nameof(SwaggerOptions)).Bind(swaggerOptions);
+
+            services.Configure<SwaggerOptions>(configuration.GetSection(nameof(SwaggerOptions)));
 
             return services;
         }

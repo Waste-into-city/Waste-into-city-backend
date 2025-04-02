@@ -2,7 +2,9 @@
 {
     public class SwaggerOptions
     {
-        public string JsonRoute { get; set; } = string.Empty;
+        public string ControllerName { get; set; } = string.Empty;
+
+        public string JsonLocalRoute { get; set; } = string.Empty;
 
         public string Description { get; set; } = string.Empty;
 

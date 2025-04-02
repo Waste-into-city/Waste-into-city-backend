@@ -4,9 +4,6 @@ namespace WasteIntoCity.Core.Interfaces.Services
 {
     public interface IWorksService
     {
-        Task CreateAsync(string title, string description, DateTime startedDatetime, DateTime finishDatetime, int workComplexityTypesId,
-            int workStatusesId, Guid coordinatesId);
-
         Task<List<Work>> GetAll();
 
         Task<Work> GetById(Guid id);

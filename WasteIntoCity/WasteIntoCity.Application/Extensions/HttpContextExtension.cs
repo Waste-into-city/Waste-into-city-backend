@@ -37,12 +37,11 @@ namespace WasteIntoCity.Application.Extensions
             return accessTokenValue;
         }
 
-        //TODO: Add exceptions
         public static Guid TakeUserIdFromAccessToken(this HttpContext httpContext)
         {
             if (httpContext.User is null)
             {
-                throw new Exception();
+                throw new NullValueServerException(nameof(HttpContext), "User field in httpContext of accessToken was not found ");
             }
 
             Guid userId = Guid.Parse(httpContext.User.Claims.Single(x => x.Type == "id").Value);

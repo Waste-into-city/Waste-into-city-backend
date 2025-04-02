@@ -1,11 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using WasteIntoCity.Api.AuthorizationPolicies;
 using WasteIntoCity.Api.Contracts.V1.Responses;
 using WasteIntoCity.Application;
-using WasteIntoCity.Application.Contracts.V1.Requests;
 using WasteIntoCity.Application.Extensions;
 using WasteIntoCity.Core.Enums;
+using WasteIntoCity.Core.Exceptions;
 using WasteIntoCity.Core.Interfaces.Services;
 using WasteIntoCity.Core.Models;
 
@@ -20,29 +19,36 @@ namespace WasteIntoCity.Api.Controllers.V1
             _workService = workService;
         }
 
-        [Authorize(Roles = $"{nameof(RoleEnum.SuperAdmin)},{nameof(RoleEnum.Moderator)}")]
-        [HttpPost(ApiRoutes.Works.CREATE)]
-        public async Task<IActionResult> CreateAsync([FromBody] WorkCreateRequest workCreateRequest)
-        {
-            await _workService.CreateAsync(workCreateRequest.Title, workCreateRequest.Description, workCreateRequest.StartedDateTime,
-                workCreateRequest.FinishDatetime, workCreateRequest.WorkComplexityTypesId, workCreateRequest.WorkStatusTypesId,
-                workCreateRequest.CoordinatesId);
-
-            return Created();
-        }
-
         [AllowAnonymous]
         [HttpGet(ApiRoutes.Works.GET_ALL)]
         public async Task<IActionResult> GetAllAsync()
         {
             List<Work> works = await _workService.GetAll();
 
-            WorkGetAllResponse workGetAllResponse = new WorkGetAllResponse
-            {
-                Works = works
-            };
+            List<WorkGetAllResponse> workGetAllOwnTakePartInResponse = new List<WorkGetAllResponse>(
+                works.Select(work =>
+                {
+                    if (work.Coordinates is null)
+                    {
+                        throw new NullValueServerException(nameof(work.Coordinates), null);
+                    }
 
-            return Ok(workGetAllResponse);
+                    return new WorkGetAllResponse
+                    {
+                        Id = work.Id,
+                        Title = work.Title.Value,
+                        Description = work.Description.Value,
+                        StartedDatetime = work.StartedDatetime,
+                        FinishDatetime = work.FinishDatetime,
+                        WorkComplexityTypesId = (int)work.WorkComplexityTypesId,
+                        WorkStatusTypesId = (int)work.WorkStatusTypesId,
+                        Lat = work.Coordinates.Lat,
+                        Lng = work.Coordinates.Lng,
+                    };
+                }).ToList()
+            );
+
+            return Ok(workGetAllOwnTakePartInResponse);
         }
 
         [AllowAnonymous]
@@ -51,9 +57,22 @@ namespace WasteIntoCity.Api.Controllers.V1
         {
             Work work = await _workService.GetById(id);
 
+            if (work.Coordinates is null)
+            {
+                throw new NullValueServerException(nameof(work.Coordinates), null);
+            }
+
             WorkGetByIdResponse workGetByIdResponse = new WorkGetByIdResponse
             {
-                Work = work
+                Id = work.Id,
+                Title = work.Title.Value,
+                Description = work.Description.Value,
+                StartedDatetime = work.StartedDatetime,
+                FinishDatetime = work.FinishDatetime,
+                WorkComplexityTypesId = (int)work.WorkComplexityTypesId,
+                WorkStatusTypesId = (int)work.WorkStatusTypesId,
+                Lat = work.Coordinates.Lat,
+                Lng = work.Coordinates.Lng,
             };
 
             return Ok(workGetByIdResponse);
@@ -67,32 +86,30 @@ namespace WasteIntoCity.Api.Controllers.V1
 
             List<Work> works = await _workService.GetAllOwnTakePartIn(userId);
 
-            WorkGetAllOwnTakePartInResponse workGetAllOwnTakePartInResponse = new WorkGetAllOwnTakePartInResponse
-            {
-                Works = works
-            };
+            List<WorkGetAllOwnTakePartInResponse> workGetAllOwnTakePartInResponse = new List<WorkGetAllOwnTakePartInResponse>(
+                works.Select(work =>
+                {
+                    if (work.Coordinates is null)
+                    {
+                        throw new NullValueServerException(nameof(work.Coordinates), null);
+                    }
+
+                    return new WorkGetAllOwnTakePartInResponse
+                    {
+                        Id = work.Id,
+                        Title = work.Title.Value,
+                        Description = work.Description.Value,
+                        StartedDatetime = work.StartedDatetime,
+                        FinishDatetime = work.FinishDatetime,
+                        WorkComplexityTypesId = (int)work.WorkComplexityTypesId,
+                        WorkStatusTypesId = (int)work.WorkStatusTypesId,
+                        Lat = work.Coordinates.Lat,
+                        Lng = work.Coordinates.Lng,
+                    };
+                }).ToList()
+            );
 
             return Ok(workGetAllOwnTakePartInResponse);
-        }
-
-        [Authorize(Roles = $"{nameof(RoleEnum.SuperAdmin)},{nameof(RoleEnum.Moderator)}")]
-        [HttpPut(ApiRoutes.Works.UPDATE)]
-        public async Task<IActionResult> UpdateAsync([FromRoute] Guid id, [FromBody] WorkUpdateRequest workUpdateRequest)
-        {
-            await _workService.UpdateAsync(id, workUpdateRequest.Title, workUpdateRequest.Description, workUpdateRequest.StartedDateTime,
-                workUpdateRequest.FinishDatetime, workUpdateRequest.WorkComplexityTypesId, workUpdateRequest.WorkStatusTypesId,
-                workUpdateRequest.CoordinatesId);
-
-            return Ok();
-        }
-
-        [Authorize(Policy = PolicyType.HONEST_USER)]
-        [HttpPut(ApiRoutes.Works.UPDATE_WORK_STATUS)]
-        public async Task<IActionResult> UpdateWorkStatusAsync([FromRoute] Guid id, [FromBody] WorkUpdateStatusRequest workUpdateStatusRequest)
-        {
-            await _workService.UpdateWorkStatusAsync(id, workUpdateStatusRequest.WorkStatusesId);
-
-            return Ok();
         }
     }
 }

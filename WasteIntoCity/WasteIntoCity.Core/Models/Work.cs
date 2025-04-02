@@ -15,7 +15,7 @@ namespace WasteIntoCity.Core.Models
         public const int DESCRIPTION_LENGTH_MAX = Description.VALUE_LENGTH_MAX;
 
         private Work(Guid id, Title title, Description description, DateTime startedDatetime, DateTime finishDatetime, WorkComplexityEnum workComplexityTypesId,
-            WorkStatusEnum workStatusTypesId, Guid coordinatesId, List<User> participants)
+            WorkStatusEnum workStatusTypesId, Guid coordinatesId, List<User>? participants, Coordinates? coordinates)
         {
             Id = id;
             Title = title;
@@ -26,6 +26,7 @@ namespace WasteIntoCity.Core.Models
             WorkStatusTypesId = workStatusTypesId;
             CoordinatesId = coordinatesId;
             Participants = participants;
+            Coordinates = coordinates;
         }
 
         public Guid Id { get; }
@@ -44,17 +45,19 @@ namespace WasteIntoCity.Core.Models
 
         public Guid CoordinatesId { get; }
 
-        public List<User> Participants { get; }
+        public List<User>? Participants { get; }
+
+        public Coordinates? Coordinates { get; }
 
         public static Work Create(Guid id, Title title, Description description, DateTime startedDatetime, DateTime finishDatetime, WorkComplexityEnum workComplexityTypesId,
-            WorkStatusEnum workStatusTypesId, Guid coordinatesId, List<User> participants)
+            WorkStatusEnum workStatusTypesId, Guid coordinatesId, List<User>? participants, Coordinates? coordinates)
         {
             if (startedDatetime > finishDatetime)
             {
                 throw new ValueOutOfRangeException<DateTime>("startDatetime", DateTime.MinValue, finishDatetime);
             }
 
-            return new Work(id, title, description, startedDatetime, finishDatetime, workComplexityTypesId, workStatusTypesId, coordinatesId, participants);
+            return new Work(id, title, description, startedDatetime, finishDatetime, workComplexityTypesId, workStatusTypesId, coordinatesId, participants, coordinates);
         }
     }
 }
