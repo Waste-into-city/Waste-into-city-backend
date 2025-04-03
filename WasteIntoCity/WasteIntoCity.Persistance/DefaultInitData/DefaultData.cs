@@ -1,10 +1,13 @@
 ﻿using WasteIntoCity.Core.Enums;
+using WasteIntoCity.Core.Models;
 using WasteIntoCity.Core.Types;
+using WasteIntoCity.Core.ValueObjects;
 using WasteIntoCity.Persistance.Entities;
 
-namespace WasteIntoCity.Persistance
+
+namespace WasteIntoCity.Persistance.DefaultInitData
 {
-    public static class DefaultInitTypes
+    public static class DefaultData
     {
         public static readonly RoleEntity[] roleEntities = new RoleEntity[]
         {
@@ -70,6 +73,36 @@ namespace WasteIntoCity.Persistance
             new WorkStatusTypeEntity{Id = (int) WorkStatusEnum.FinishedSuccessfully, Name = nameof(WorkStatusEnum.FinishedSuccessfully) },
             new WorkStatusTypeEntity{Id = (int) WorkStatusEnum.FinishedFailed, Name = nameof(WorkStatusEnum.FinishedFailed) },
             new WorkStatusTypeEntity{Id = (int) WorkStatusEnum.Closed, Name = nameof(WorkStatusEnum.Closed) },
+        };
+
+        public static readonly User[] users = new User[]
+        {
+            User.Create(
+                Guid.NewGuid(),
+                Nickname.Create("moderator"),
+                Email.Create("moderator@gmail.com"),
+                Password.Create(BCrypt.Net.BCrypt.EnhancedHashPassword("12345678")),
+                0,
+                new List<Role>
+                {
+                    Role.Create(RoleEnum.Moderator, roleEntities.SingleOrDefault(w => w.Id == (int)RoleEnum.Moderator)!.Name)
+                },
+                0,
+                false
+            ),
+            User.Create(
+                Guid.NewGuid(),
+                Nickname.Create("superadmin"),
+                Email.Create("superadmin@gmail.com"),
+                Password.Create(BCrypt.Net.BCrypt.EnhancedHashPassword("12345678")),
+                0,
+                new List<Role>
+                {
+                    Role.Create(RoleEnum.SuperAdmin, roleEntities.SingleOrDefault(w => w.Id == (int)RoleEnum.SuperAdmin)!.Name)
+                },
+                0,
+                false
+            ),
         };
     }
 }
