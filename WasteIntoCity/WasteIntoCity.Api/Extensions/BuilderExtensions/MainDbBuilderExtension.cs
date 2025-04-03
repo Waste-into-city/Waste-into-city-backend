@@ -18,6 +18,8 @@ namespace WasteIntoCity.Api.Extensions.BuilderExtensions
                 context.SeedWorkMarkTypes();
                 context.SeedWorkReportStatusTypes();
                 context.SeedWorkStatusTypes();
+
+                context.SeedUsersWithRoles();
             }
 
             return app;

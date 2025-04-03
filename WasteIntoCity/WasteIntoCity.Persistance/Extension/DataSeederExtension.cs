@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WasteIntoCity.Core.Exceptions;
 using WasteIntoCity.Persistance.Configurations;
+using WasteIntoCity.Persistance.DefaultInitData;
+using WasteIntoCity.Persistance.Entities;
 
 namespace WasteIntoCity.Persistance.Extension
 {
@@ -59,7 +61,7 @@ namespace WasteIntoCity.Persistance.Extension
         {
             context.SeedEntityBasedEntities(
                 context.Roles,
-                DefaultInitTypes.roleEntities,
+                DefaultData.roleEntities,
                 RoleConfiguration.TABLE_NAME
             );
         }
@@ -68,7 +70,7 @@ namespace WasteIntoCity.Persistance.Extension
         {
             context.SeedEntityBasedEntities(
                 context.WorkComplexityTypes,
-                DefaultInitTypes.workComplexityTypeEntities,
+                DefaultData.workComplexityTypeEntities,
                 WorkComplexityTypeConfiguration.TABLE_NAME
             );
         }
@@ -77,7 +79,7 @@ namespace WasteIntoCity.Persistance.Extension
         {
             context.SeedEntityBasedEntities(
                 context.WorkMarkTypes,
-                DefaultInitTypes.workMarkTypeEntities,
+                DefaultData.workMarkTypeEntities,
                 WorkMarkTypeConfiguration.TABLE_NAME
             );
         }
@@ -86,7 +88,7 @@ namespace WasteIntoCity.Persistance.Extension
         {
             context.SeedEntityBasedEntities(
                 context.WorkReportStatusTypes,
-                DefaultInitTypes.workReportStatusTypeEntities,
+                DefaultData.workReportStatusTypeEntities,
                 WorkReportStatusTypeConfiguration.TABLE_NAME
             );
         }
@@ -95,9 +97,36 @@ namespace WasteIntoCity.Persistance.Extension
         {
             context.SeedEntityBasedEntities(
                 context.WorkStatusTypes,
-                DefaultInitTypes.workStatusTypeEntities,
+                DefaultData.workStatusTypeEntities,
                 WorkStatusTypeConfiguration.TABLE_NAME
             );
+        }
+
+        public static void SeedUsersWithRoles(this MainDbContext context)
+        {
+            List<UserEntity> users = DefaultData.users.Select(user => new UserEntity
+            {
+                Id = user.Id,
+                Nickname = user.Nickname.Value,
+                Email = user.Email.Value,
+                Password = user.Password.Value,
+                Ranking = user.Ranking,
+                NegativeScore = user.NegativeScore,
+                IsBanned = user.IsBanned
+            }).ToList();
+
+            List<UserAccordingRoleEntity> userRoles = DefaultData.users
+                .SelectMany(user => user.Roles.Select(role => new UserAccordingRoleEntity
+                {
+                    UsersId = user.Id,
+                    RolesId = (int)role.Id
+                }))
+                .ToList();
+
+            context.Users.AddRange(users);
+            context.UserAccordingRoles.AddRange(userRoles);
+
+            context.SaveChanges();
         }
     }
 }
