@@ -1,10 +1,6 @@
-using Microsoft.EntityFrameworkCore;
 using WasteIntoCity.Api.Extensions.BuilderExtensions;
 using WasteIntoCity.Api.Extensions.ServiceExtensions;
 using WasteIntoCity.Api.Middleware;
-using WasteIntoCity.Application.Services;
-using WasteIntoCity.Core.Interfaces.Services;
-using WasteIntoCity.Persistance;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,13 +20,9 @@ services.AddCors(options =>
 
 services.AddCustomMainDbContext(configuration);
 
-services.AddScoped<IIdentityService, IdentityService>();
-services.AddScoped<IWorksService, WorksService>();
-services.AddScoped<IWorkApplicationsService, WorkApplicationsService>();
+services.AddCustomServices(configuration);
 
-//services.AddAutoMapper();
-
-services.AddControllers();
+services.AddCustomControllers(configuration);
 
 services.AddCustomSwagger(configuration);
 
@@ -40,19 +32,6 @@ services.AddCustomAuthorization(configuration);
 
 services.AddEndpointsApiExplorer();
 
-//builder.Services.AddOpenTelemetry()
-//    .WithTracing(tracerProviderBuilder =>
-//    {
-//        tracerProviderBuilder
-//            .AddAspNetCoreInstrumentation()
-//            .AddHttpClientInstrumentation()
-//            .AddSource("Microsoft.EntityFrameworkCore")
-//            .AddOtlpExporter(options =>
-//            {
-//                options.Endpoint = new Uri("http://otel-collector:4317"); // gRPC endpoint
-//            })
-//            .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("MainApi"));
-//    });
 
 
 WebApplication app = builder.Build();
@@ -62,8 +41,6 @@ app.UseCors("CorsPolicy");
 app.UseStaticFiles();
 
 app.UseCustomMainDbContext(configuration);
-
-//app.UseHttpsRedirection();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
@@ -77,24 +54,9 @@ app.MapControllers();
 
 app.UseCustomSwagger(configuration);
 
-using var scope = app.Services.CreateScope();
-var dbContext = scope.ServiceProvider.GetRequiredService<MainDbContext>();
-
-// Применить миграции при старте
-dbContext.Database.Migrate();
-
 if (app.Environment.IsDevelopment())
 {
-    //app.UseSwagger();
-    //app.UseSwaggerUI(c =>
-    //{
-    //    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Your API V1");
-    //    c.RoutePrefix = string.Empty;
-    //    c.InjectJavascript("/custom-swagger.js");
-    //});
+
 }
 
 app.Run();
-
-
-// TODO: remove naming for roles in database, change token claim role to int, we don't need in types, 

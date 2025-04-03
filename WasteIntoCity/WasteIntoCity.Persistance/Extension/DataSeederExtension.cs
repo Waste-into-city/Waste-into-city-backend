@@ -104,27 +104,32 @@ namespace WasteIntoCity.Persistance.Extension
 
         public static void SeedUsersWithRoles(this MainDbContext context)
         {
-            List<UserEntity> users = DefaultData.users.Select(user => new UserEntity
+            foreach (var user in DefaultData.users)
             {
-                Id = user.Id,
-                Nickname = user.Nickname.Value,
-                Email = user.Email.Value,
-                Password = user.Password.Value,
-                Ranking = user.Ranking,
-                NegativeScore = user.NegativeScore,
-                IsBanned = user.IsBanned
-            }).ToList();
+                bool userExists = context.Users.Any(u => u.Email == user.Email.Value);
 
-            List<UserAccordingRoleEntity> userRoles = DefaultData.users
-                .SelectMany(user => user.Roles.Select(role => new UserAccordingRoleEntity
+                if (!userExists)
                 {
-                    UsersId = user.Id,
-                    RolesId = (int)role.Id
-                }))
-                .ToList();
+                    UserEntity newUser = new UserEntity
+                    {
+                        Id = user.Id,
+                        Nickname = user.Nickname.Value,
+                        Email = user.Email.Value,
+                        Password = user.Password.Value,
+                        Ranking = user.Ranking,
+                        NegativeScore = user.NegativeScore,
+                        IsBanned = user.IsBanned
+                    };
 
-            context.Users.AddRange(users);
-            context.UserAccordingRoles.AddRange(userRoles);
+                    context.Users.Add(newUser);
+
+                    context.UserAccordingRoles.AddRange(user.Roles.Select(role => new UserAccordingRoleEntity
+                    {
+                        UsersId = newUser.Id,
+                        RolesId = (int)role.Id
+                    }));
+                }
+            }
 
             context.SaveChanges();
         }
