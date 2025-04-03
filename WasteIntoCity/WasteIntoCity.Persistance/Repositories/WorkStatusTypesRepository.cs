@@ -1,17 +1,33 @@
-﻿using AutoMapper;
+﻿using WasteIntoCity.Core.Interfaces.Repositories;
+using WasteIntoCity.Core.Models;
+using WasteIntoCity.Persistance.Configurations;
+using WasteIntoCity.Persistance.Entities;
+using WasteIntoCity.Persistance.Extensions;
 
 namespace WasteIntoCity.Persistance.Repositories
 {
-    public class WorkStatusTypesRepository
+    public class WorkStatusTypesRepository : IWorkStatusTypesRepository
     {
         private readonly MainDbContext _mainDbContext;
 
-        private readonly IMapper _mapper;
-
-        public WorkStatusTypesRepository(MainDbContext mainDbContext, IMapper mapper)
+        public WorkStatusTypesRepository(MainDbContext mainDbContext)
         {
             _mainDbContext = mainDbContext;
-            _mapper = mapper;
+        }
+
+        public async Task AddAllIfEachNotExist(List<WorkStatusType> workStatusTypes)
+        {
+            List<WorkStatusTypeEntity> workStatusTypeEntities = workStatusTypes.Select(w =>
+                new WorkStatusTypeEntity
+                {
+                    Id = (int)w.Id,
+                    Name = w.Name.Value,
+                    MultiplierRanking = w.MultiplierRanking,
+                }
+            ).ToList();
+
+            await _mainDbContext.AddToDbTypesBasedEntitiesIfEachNotExistById(_mainDbContext.WorkStatusTypes, workStatusTypeEntities,
+                WorkStatusTypeConfiguration.TABLE_NAME);
         }
     }
 }
