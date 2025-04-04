@@ -1,25 +1,30 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using WasteIntoCity.Core.Interfaces.Repositories;
 using WasteIntoCity.Persistance;
-using WasteIntoCity.Persistance.Extension;
+using WasteIntoCity.Persistance.DefaultInitData;
 
 namespace WasteIntoCity.Api.Extensions.BuilderExtensions
 {
     public static class MainDbBuilderExtension
     {
+        private static async Task SeedDefaultInitData(IServiceScope scope)
+        {
+            await scope.ServiceProvider.GetRequiredService<IRolesRepository>().AddAllIfEachNotExist(DefaultData.Roles.ToList());
+            await scope.ServiceProvider.GetRequiredService<IWorkComplexityTypesRepository>().AddAllIfEachNotExist(DefaultData.WorkComplexityTypes.ToList());
+            await scope.ServiceProvider.GetRequiredService<IWorkMarkTypesRepository>().AddAllIfEachNotExist(DefaultData.WorkMarkTypes.ToList());
+            await scope.ServiceProvider.GetRequiredService<IWorkReportStatusTypesRepository>().AddAllIfEachNotExist(DefaultData.WorkReportStatusTypes.ToList());
+            await scope.ServiceProvider.GetRequiredService<IWorkStatusTypesRepository>().AddAllIfEachNotExist(DefaultData.WorkStatusTypes.ToList());
+
+            await scope.ServiceProvider.GetRequiredService<IUsersRepository>().AddAllIfNotExistByEmail(DefaultData.Users.ToList());
+        }
+
         public static IApplicationBuilder UseCustomMainDbContext(this IApplicationBuilder app, IConfiguration configuration)
         {
             using (IServiceScope scope = app.ApplicationServices.CreateScope())
             {
-                MainDbContext context = scope.ServiceProvider.GetRequiredService<MainDbContext>();
-                context.Database.Migrate();
+                scope.ServiceProvider.GetRequiredService<MainDbContext>().Database.Migrate();
 
-                context.SeedRoles();
-                context.SeedWorkComplexityTypes();
-                context.SeedWorkMarkTypes();
-                context.SeedWorkReportStatusTypes();
-                context.SeedWorkStatusTypes();
-
-                context.SeedUsersWithRoles();
+                SeedDefaultInitData(scope).Wait();
             }
 
             return app;

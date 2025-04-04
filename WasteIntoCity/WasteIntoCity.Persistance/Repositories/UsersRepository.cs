@@ -12,12 +12,9 @@ namespace WasteIntoCity.Persistance.Repositories
     {
         private readonly MainDbContext _mainDbContext;
 
-        //private readonly IMapper _mapper;
-
         public UsersRepository(MainDbContext mainDbContext)
         {
             _mainDbContext = mainDbContext;
-            //_mapper = mapper;
         }
 
         public async Task AddAsync(User user)
@@ -92,6 +89,38 @@ namespace WasteIntoCity.Persistance.Repositories
                     .SetProperty(r => r.Ranking, user.Ranking)
                     .SetProperty(r => r.NegativeScore, user.NegativeScore)
                 );
+        }
+
+        public async Task AddAllIfNotExistByEmail(List<User> users)
+        {
+            foreach (var user in users)
+            {
+                bool userExists = await _mainDbContext.Users.AnyAsync(u => u.Email == user.Email.Value);
+
+                if (!userExists)
+                {
+                    UserEntity newUser = new UserEntity
+                    {
+                        Id = user.Id,
+                        Nickname = user.Nickname.Value,
+                        Email = user.Email.Value,
+                        Password = user.Password.Value,
+                        Ranking = user.Ranking,
+                        NegativeScore = user.NegativeScore,
+                        IsBanned = user.IsBanned
+                    };
+
+                    await _mainDbContext.Users.AddAsync(newUser);
+
+                    await _mainDbContext.UserAccordingRoles.AddRangeAsync(user.Roles.Select(role => new UserAccordingRoleEntity
+                    {
+                        UsersId = newUser.Id,
+                        RolesId = (int)role.Id
+                    }));
+                }
+            }
+
+            await _mainDbContext.SaveChangesAsync();
         }
     }
 

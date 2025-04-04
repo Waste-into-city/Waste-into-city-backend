@@ -20,6 +20,8 @@ services.AddCors(options =>
 
 services.AddCustomMainDbContext(configuration);
 
+services.AddCustomBackgroundServices(configuration);
+
 services.AddCustomServices(configuration);
 
 services.AddCustomControllers(configuration);

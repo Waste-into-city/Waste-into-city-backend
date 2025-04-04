@@ -86,5 +86,16 @@ namespace WasteIntoCity.Persistance.Repositories
                 throw new DbUpdateCustomException(nameof(RefreshTokenEntity), null);
             }
         }
+
+        public async Task DeleteUsedAndInvalid(int recordsAtTimeAmount)
+        {
+            var tokensToDelete = _mainDbContext.RefreshTokens
+                .Where(t => t.Invalidated || t.Used)
+                .Take(recordsAtTimeAmount)
+                .ToList();
+
+            _mainDbContext.RefreshTokens.RemoveRange(tokensToDelete);
+            await _mainDbContext.SaveChangesAsync();
+        }
     }
 }

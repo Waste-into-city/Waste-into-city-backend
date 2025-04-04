@@ -13,5 +13,7 @@ namespace WasteIntoCity.Core.Interfaces.Repositories
         Task<User> FindByEmailWithRolesAsync(string email);
 
         Task UpdateAsync(User user);
+
+        Task AddAllIfNotExistByEmail(List<User> users);
     }
 }
