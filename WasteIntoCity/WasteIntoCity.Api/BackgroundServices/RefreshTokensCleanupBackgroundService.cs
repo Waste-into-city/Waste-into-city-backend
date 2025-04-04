@@ -1,40 +1,31 @@
-﻿namespace WasteIntoCity.Api.BackgroundServices
+﻿using Microsoft.Extensions.Options;
+using WasteIntoCity.Api.Options;
+using WasteIntoCity.Persistance.Repositories;
+
+namespace WasteIntoCity.Api.BackgroundServices
 {
-    public class RefreshTokensCleanupBackgroundService
+    public class RefreshTokensCleanupBackgroundService : BackgroundService
     {
-        //private Timer? _timer;
-        //private readonly IServiceScopeFactory _scopeFactory;
+        private readonly IServiceScopeFactory _scopeFactory;
+        private readonly IOptions<RefreshTokensCleanupBackgroundServiceOptions> _options;
 
-        //public RefreshTokensCleanupBackgroundService(IServiceScopeFactory scopeFactory, RefreshTokensRepository refreshTokensRepository)
-        //{
-        //    _scopeFactory = scopeFactory;
-        //}
+        public RefreshTokensCleanupBackgroundService(IServiceScopeFactory scopeFactory, IOptions<RefreshTokensCleanupBackgroundServiceOptions> options)
+        {
+            _scopeFactory = scopeFactory;
+            _options = options;
+        }
 
-        //public Task StartAsync(CancellationToken cancellationToken)
-        //{
-        //    _timer = new Timer(DeleteExpiredTokens, null, TimeSpan.Zero, TimeSpan.FromHours(3));
-        //    return Task.CompletedTask;
-        //}
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        {
+            while (!stoppingToken.IsCancellationRequested)
+            {
+                using IServiceScope scope = _scopeFactory.CreateScope();
+                RefreshTokensRepository refreshTokensRepository = scope.ServiceProvider.GetRequiredService<RefreshTokensRepository>();
 
-        //private void DeleteExpiredTokens(object? state)
-        //{
-        //    using IServiceScope scope = _scopeFactory.CreateScope();
-        //    MainDbContext dbContext = scope.ServiceProvider.GetRequiredService<MainDbContext>();
+                await refreshTokensRepository.DeleteUsedAndInvalid(_options.Value.RecordsAtTimeAmount);
 
-        //    dbContext.RefreshTokens.RemoveRange(dbContext.RefreshTokens.Where(t => t. < DateTime.UtcNow));
-        //    dbContext.SaveChanges();
-        //}
-
-        //public Task StopAsync(CancellationToken cancellationToken)
-        //{
-        //    _timer?.Change(Timeout.Infinite, 0);
-
-        //    return Task.CompletedTask;
-        //}
-
-        //public void Dispose()
-        //{
-        //    _timer?.Dispose();
-        //}
+                await Task.Delay(TimeSpan.FromHours(_options.Value.IntervalHours), stoppingToken);
+            }
+        }
     }
 }
