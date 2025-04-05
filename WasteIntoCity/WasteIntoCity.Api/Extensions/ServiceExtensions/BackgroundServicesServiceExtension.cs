@@ -8,10 +8,12 @@ namespace WasteIntoCity.Api.Extensions.ServiceExtensions
         public static IServiceCollection AddCustomBackgroundServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<RefreshTokensCleanupBackgroundServiceOptions>(configuration.GetSection(nameof(RefreshTokensCleanupBackgroundServiceOptions)));
+            services.AddHostedService<RefreshTokensCleanupBackgroundService>();
 
-            //return services;
+            services.Configure<FinishedWorksHandlerBackgroundServiceOptions>(configuration.GetSection(nameof(FinishedWorksHandlerBackgroundServiceOptions)));
+            services.AddHostedService<FinishedWorksHandlerBackgroundService>();
 
-            return services.AddHostedService<RefreshTokensCleanupBackgroundService>();
+            return services;
         }
     }
 }

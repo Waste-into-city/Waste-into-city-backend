@@ -11,12 +11,12 @@ namespace WasteIntoCity.Core.Interfaces.Repositories
 
         Task<Work> FindByIdAsync(Guid id);
 
-        Task<List<Work>> FindAllByParticipantIdAsync(Guid participantId);
+        Task<List<Work>> FindAllWithCoordinatesByParticipantIdAsync(Guid participantId);
 
         Task UpdateAsync(Work work);
 
         Task UpdateStatusesIdByIdAsync(Guid id, WorkStatusEnum workStatusTypesId);
 
-        Task<Work> FindFirstFilteredWithParticipantsByTimestampFinishedWork();
+        Task<List<Work>> TakeFirstWorksByFinishedTimeWithParticipantsAndMultiplierRankingAndWorkColleagueReportsAndWorkStatus(int worksAmount, TimeSpan minWorkIntervalAfterFinished);
     }
 }

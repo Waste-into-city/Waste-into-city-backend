@@ -10,13 +10,12 @@ namespace WasteIntoCity.Application.Services
 {
     public class WorkApplicationsService : IWorkApplicationsService
     {
-        private const int RANKING_BASE_DECREASING = 2;
-        private const int NEGATIVE_SCORE_MULTIPLIER_INCREASING = 2;
+        private const int WORK_APPLICATION_RANKING_SUBSTRACTING = 2;
+        private const int WORK_APPLICATION_NEGATIVE_ADDING_MULTIPLIER = 2;
+        private const int WORK_APPLICATION_RANKING_ADDING = 1;
+        private const int WORK_APPLICATION_NEGATIVE_SUBSTRACTING = 2;
 
-        private const int USER_BAR_RANKING_AT_LEAST = -30;
-
-        private const int RANKING_BASE_INCREASING = 1;
-        private const int NEGATIVE_SCORE_DECREASING = 2;
+        private const int USER_BAN_RANKING_AT_LEAST = -30;
 
         private readonly IWorkApplicationsRepository _workApplicationsRepository;
         private readonly ICoordinatesRepository _coordinatesRepository;
@@ -68,17 +67,17 @@ namespace WasteIntoCity.Application.Services
             if (user.NegativeScore == 0)
             {
                 negativeScore = 1;
-                ranking = user.Ranking - 1;
+                ranking = user.Ranking - (WORK_APPLICATION_RANKING_SUBSTRACTING * user.NegativeScore);
             }
             else
             {
-                ranking = user.Ranking - (RANKING_BASE_DECREASING * user.NegativeScore);
-                negativeScore = user.NegativeScore * NEGATIVE_SCORE_MULTIPLIER_INCREASING;
+                ranking = user.Ranking - (WORK_APPLICATION_RANKING_SUBSTRACTING * user.NegativeScore);
+                negativeScore = user.NegativeScore * WORK_APPLICATION_NEGATIVE_ADDING_MULTIPLIER;
             }
 
             bool isBanned = false;
 
-            if (ranking <= USER_BAR_RANKING_AT_LEAST)
+            if (ranking <= USER_BAN_RANKING_AT_LEAST)
             {
                 isBanned = true;
 
@@ -104,14 +103,9 @@ namespace WasteIntoCity.Application.Services
 
             User user = await _usersRepository.FindByIdWithRolesAsync(workApplication.FromUsersId);
 
-            int ranking = user.Ranking + RANKING_BASE_INCREASING;
+            int ranking = user.Ranking + WORK_APPLICATION_RANKING_ADDING;
 
-            int negativeScore = user.NegativeScore - NEGATIVE_SCORE_DECREASING;
-
-            if (negativeScore < 0)
-            {
-                negativeScore = 0;
-            }
+            int negativeScore = Math.Max(user.NegativeScore - WORK_APPLICATION_NEGATIVE_SUBSTRACTING, 0);
 
             User updatedUser = User.Create(user.Id, user.Nickname, user.Email, user.Password, ranking, user.Roles, negativeScore, user.IsBanned);
 
@@ -123,7 +117,7 @@ namespace WasteIntoCity.Application.Services
 
             Work work = Work.Create(Guid.NewGuid(), workApplication.Title, workApplication.Description, startDateTime,
                 startDateTime.AddHours(workComplexityType.DurationHours), workApplication.WorkComplexityTypesId, WorkStatusEnum.Avaliable,
-                workApplication.CoordinatesId, null, null);
+                workApplication.CoordinatesId, null, null, null, null, null);
 
             await _worksRepository.AddAsync(work);
 

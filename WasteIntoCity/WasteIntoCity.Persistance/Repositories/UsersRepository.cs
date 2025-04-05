@@ -17,8 +17,13 @@ namespace WasteIntoCity.Persistance.Repositories
             _mainDbContext = mainDbContext;
         }
 
-        public async Task AddAsync(User user)
+        public async Task AddWithRolesAsync(User user)
         {
+            if (user.Roles == null)
+            {
+                throw new NullValueServerException("roles", null);
+            }
+
             List<int> roleIds = user.Roles.Select(r => (int)r.Id).ToList();
 
             List<UserAccordingRoleEntity> userRoles = roleIds.Select(roleId => new UserAccordingRoleEntity
@@ -91,10 +96,35 @@ namespace WasteIntoCity.Persistance.Repositories
                 );
         }
 
-        public async Task AddAllIfNotExistByEmail(List<User> users)
+        public async Task UpdateAllByIdAsync(List<User> users)
+        {
+            foreach (User user in users)
+            {
+                UserEntity? existingUser = await _mainDbContext.Users.FindAsync(user.Id);
+
+                if (existingUser != null)
+                {
+                    existingUser.Nickname = user.Nickname.Value;
+                    existingUser.Email = user.Nickname.Value;
+                    existingUser.Password = user.Password.Value;
+                    existingUser.Ranking = user.Ranking;
+                    existingUser.NegativeScore = user.NegativeScore;
+                    existingUser.IsBanned = user.IsBanned;
+                }
+            }
+
+            await _mainDbContext.SaveChangesAsync();
+        }
+
+        public async Task AddAllIfNotExistWithRolesByEmailAsync(List<User> users)
         {
             foreach (var user in users)
             {
+                if (user.Roles == null)
+                {
+                    throw new NullValueServerException("roles", null);
+                }
+
                 bool userExists = await _mainDbContext.Users.AnyAsync(u => u.Email == user.Email.Value);
 
                 if (!userExists)

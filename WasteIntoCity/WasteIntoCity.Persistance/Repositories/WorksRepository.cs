@@ -43,13 +43,13 @@ namespace WasteIntoCity.Persistance.Repositories
             {
                 return Work.Create(work.Id, Title.Create(work.Title), Description.Create(work.Description), work.StartedDatetime, work.FinishDatetime,
                     (WorkComplexityEnum)work.WorkComplexityTypesId, (WorkStatusEnum)work.WorkStatusTypesId, work.CoordinatesId, [],
-                    Coordinates.Create(work.Coordinates!.Id, work.Coordinates!.Lat, work.Coordinates!.Lng));
+                    Coordinates.Create(work.Coordinates!.Id, work.Coordinates!.Lat, work.Coordinates!.Lng), null, null, null);
             }).ToList();
 
             return works;
         }
 
-        public async Task<List<Work>> FindAllByParticipantIdAsync(Guid participantId)
+        public async Task<List<Work>> FindAllWithCoordinatesByParticipantIdAsync(Guid participantId)
         {
             List<Work> works = await _mainDbContext.WorkParticipants
                  .Where(wp => wp.ParticipantsId == participantId)
@@ -57,7 +57,8 @@ namespace WasteIntoCity.Persistance.Repositories
                      wp => wp.WorksId,
                      w => w.Id,
                      (wp, w) =>
-                         Work.Create(w.Id,
+                         Work.Create(
+                             w.Id,
                              Title.Create(w.Title),
                              Description.Create(w.Description),
                              w.StartedDatetime,
@@ -66,9 +67,12 @@ namespace WasteIntoCity.Persistance.Repositories
                              (WorkStatusEnum)w.WorkStatusTypesId,
                              w.CoordinatesId,
                              null,
-                             Coordinates.Create(w.Coordinates!.Id, w.Coordinates!.Lat, w.Coordinates!.Lng)
-                        )
-                    )
+                             Coordinates.Create(w.Coordinates!.Id, w.Coordinates!.Lat, w.Coordinates!.Lng),
+                             null,
+                             null,
+                             null
+                         )
+                 )
                 .ToListAsync();
 
             return works;
@@ -77,11 +81,11 @@ namespace WasteIntoCity.Persistance.Repositories
         public async Task<Work> FindByIdAsync(Guid id)
         {
             WorkEntity work = await _mainDbContext.Works.AsNoTracking().Include(w => w.Coordinates).FirstOrDefaultAsync(w => w.Id == id)
-                ?? throw new DbIsNotFoundException(nameof(User), null);
+                ?? throw new DbIsNotFoundException(nameof(Work), null);
 
             return Work.Create(work.Id, Title.Create(work.Title), Description.Create(work.Description), work.StartedDatetime, work.FinishDatetime,
                 (WorkComplexityEnum)work.WorkComplexityTypesId, (WorkStatusEnum)work.WorkStatusTypesId, work.CoordinatesId, [],
-                Coordinates.Create(work.Coordinates!.Id, work.Coordinates!.Lat, work.Coordinates!.Lng));
+                Coordinates.Create(work.Coordinates!.Id, work.Coordinates!.Lat, work.Coordinates!.Lng), null, null, null);
         }
 
         public async Task UpdateAsync(Work work)
@@ -115,6 +119,100 @@ namespace WasteIntoCity.Persistance.Repositories
             {
                 throw new DbUpdateCustomException(nameof(Work), null);
             }
+        }
+
+        public async Task<List<Work>> TakeFirstWorksByFinishedTimeWithParticipantsAndMultiplierRankingAndWorkColleagueReportsAndWorkStatus(
+            int worksAmount, TimeSpan minWorkIntervalAfterFinished)
+        {
+            DateTime minAppropriateFinishedWorkTime = DateTime.UtcNow.Add(minWorkIntervalAfterFinished);
+
+            List<WorkEntity> workEntities = await _mainDbContext.Works
+                .Where(w => w.FinishDatetime >= minAppropriateFinishedWorkTime)
+                .Include(w => w.WorkComplexityType)
+                .Include(w => w.Users)
+                .Include(w => w.WorkStatusType)
+                .Include(w => w.WorkColleagueReports)
+                .ThenInclude(wcr => wcr.WorkMarkType)
+                .Take(worksAmount)
+                .ToListAsync();
+
+            List<Work> works = workEntities.Select(w =>
+            {
+                if (w.WorkComplexityType is null)
+                {
+                    throw new DbIsNotFoundException(nameof(WorkComplexityType), null);
+                }
+
+                if (w.WorkStatusType is null)
+                {
+                    throw new DbIsNotFoundException(nameof(WorkStatusType), null);
+                }
+
+                List<User> participants = w.Users.Select(u =>
+                    User.Create(
+                        u.Id,
+                        Nickname.Create(u.Nickname),
+                        Email.Create(u.Email),
+                        Password.Create(u.Password),
+                        u.Ranking,
+                        null,
+                        u.NegativeScore,
+                        u.IsBanned
+                    )).ToList();
+
+                List<WorkColleagueReport> colleagueReports = w.WorkColleagueReports
+                .Select(wc =>
+                    {
+                        if (wc.WorkMarkType is null)
+                        {
+                            throw new DbIsNotFoundException(nameof(WorkComplexityType), null);
+                        }
+
+                        return WorkColleagueReport.Create(
+                            wc.Id,
+                            wc.FromParticipantId,
+                            wc.AboutColleagueId,
+                            wc.WorksId,
+                            (WorkMarkEnum)wc.WorkMarkTypesId,
+                            WorkMarkType.Create((WorkMarkEnum)wc.WorkMarkType.Id, MeanText.Create(wc.WorkMarkType.Name), wc.WorkMarkType.AdditionRanking)
+                        );
+                    }
+                ).ToList();
+
+                WorkComplexityType complexity = WorkComplexityType.Create(
+                    (WorkComplexityEnum)w.WorkComplexityType.Id,
+                    MeanText.Create(w.WorkComplexityType.Name),
+                    w.WorkComplexityType.ParticipantsMin,
+                    w.WorkComplexityType.ParticipantsMax,
+                    w.WorkComplexityType.DurationHours,
+                    w.WorkComplexityType.MultiplierRanking,
+                    w.WorkComplexityType.RadiusOnMap
+                );
+
+                WorkStatusType workStatusType = WorkStatusType.Create(
+                    (WorkStatusEnum)w.WorkStatusType.Id,
+                    MeanText.Create(w.WorkStatusType.Name),
+                    w.WorkStatusType.AddingRanking
+                );
+
+                return Work.Create(
+                    w.Id,
+                    Title.Create(w.Title),
+                    Description.Create(w.Description),
+                    w.StartedDatetime,
+                    w.FinishDatetime,
+                    (WorkComplexityEnum)w.WorkComplexityTypesId,
+                    (WorkStatusEnum)w.WorkStatusTypesId,
+                    w.CoordinatesId,
+                    participants,
+                    null,
+                    complexity,
+                    colleagueReports,
+                    workStatusType
+                );
+            }).ToList();
+
+            return works;
         }
 
         public Task<Work> FindFirstFilteredWithParticipantsByTimestampFinishedWork()

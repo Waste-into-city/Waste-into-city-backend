@@ -14,32 +14,32 @@ namespace WasteIntoCity.Core.Models
 
         public const int NAME_LENGTH_MAX = 100;
 
-        private WorkStatusType(WorkStatusEnum id, MeanText name, int multiplierRanking)
+        private WorkStatusType(WorkStatusEnum id, MeanText name, int addingRanking)
         {
             Id = id;
             Name = name;
-            MultiplierRanking = multiplierRanking;
+            AddingRanking = addingRanking;
         }
 
         public WorkStatusEnum Id { get; }
 
         public MeanText Name { get; }
 
-        public int MultiplierRanking { get; }
+        public int AddingRanking { get; }
 
-        public static WorkStatusType Create(WorkStatusEnum id, MeanText name, int multiplierRanking)
+        public static WorkStatusType Create(WorkStatusEnum id, MeanText name, int addingRanking)
         {
             if (name.Value.Length is < NAME_LENGTH_MIN or > NAME_LENGTH_MAX)
             {
                 throw new InvalidLengthException(nameof(name), NAME_LENGTH_MIN, NAME_LENGTH_MAX);
             }
 
-            if (multiplierRanking is < MULTIPLIER_RANKING_MIN or > MULTIPLIER_RANKING_MAX)
+            if (addingRanking is < MULTIPLIER_RANKING_MIN or > MULTIPLIER_RANKING_MAX)
             {
-                throw new ValueOutOfRangeException<int>(nameof(multiplierRanking), MULTIPLIER_RANKING_MIN, MULTIPLIER_RANKING_MAX);
+                throw new ValueOutOfRangeException<int>(nameof(addingRanking), MULTIPLIER_RANKING_MIN, MULTIPLIER_RANKING_MAX);
             }
 
-            return new WorkStatusType(id, name, multiplierRanking);
+            return new WorkStatusType(id, name, addingRanking);
         }
     }
 }
