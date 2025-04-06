@@ -23,7 +23,7 @@ namespace WasteIntoCity.Persistance
 
         public DbSet<RefreshTokenEntity> RefreshTokens { get; set; }
 
-        public DbSet<AdminSettingsEntity> AdminSettings { get; set; }
+        public DbSet<ScoreSettingsTypeEntity> ScoreSettingsTypes { get; set; }
 
         public DbSet<ImageEntity> Images { get; set; }
 

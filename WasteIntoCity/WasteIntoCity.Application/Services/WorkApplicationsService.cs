@@ -1,4 +1,5 @@
-﻿using WasteIntoCity.Core.Exceptions;
+﻿using WasteIntoCity.Core.Enums;
+using WasteIntoCity.Core.Exceptions;
 using WasteIntoCity.Core.Interfaces.Repositories;
 using WasteIntoCity.Core.Interfaces.Services;
 using WasteIntoCity.Core.Models;
@@ -17,16 +18,31 @@ namespace WasteIntoCity.Application.Services
 
         private const int USER_BAN_RANKING_AT_LEAST = -30;
 
+        private readonly List<ScoreSettingsEnum> _scoreSettingsIdsForReject = new List<ScoreSettingsEnum>
+        {
+            ScoreSettingsEnum.WorkApplicationRankingSubstracting,
+            ScoreSettingsEnum.WorkApplicationNegativeAddingMultiplier,
+            ScoreSettingsEnum.UserBanRankingAtLeast,
+        };
+
+        private readonly List<ScoreSettingsEnum> _scoreSettingsIdsForConfirm = new List<ScoreSettingsEnum>
+        {
+            ScoreSettingsEnum.WorkApplicationRankingAdding,
+            ScoreSettingsEnum.WorkApplicationNegativeSubstracting,
+        };
+
         private readonly IWorkApplicationsRepository _workApplicationsRepository;
         private readonly ICoordinatesRepository _coordinatesRepository;
         private readonly IUsersRepository _usersRepository;
         private readonly RefreshTokensRepository _refreshTokensRepository;
         private readonly IWorkComplexityTypesRepository _workComplexityTypesRepository;
         private readonly IWorksRepository _worksRepository;
+        private readonly IScoreSettingsTypeRepository _scoreSettingsTypeRepository;
 
 
         public WorkApplicationsService(IWorkApplicationsRepository workApplicationsRepository, ICoordinatesRepository coordinatesRepository,
-            IUsersRepository usersRepository, RefreshTokensRepository refreshTokensRepository, IWorkComplexityTypesRepository workComplexityTypesRepository, IWorksRepository worksRepository)
+            IUsersRepository usersRepository, RefreshTokensRepository refreshTokensRepository, IWorkComplexityTypesRepository workComplexityTypesRepository,
+            IWorksRepository worksRepository, IScoreSettingsTypeRepository scoreSettingsTypeRepository)
         {
             _workApplicationsRepository = workApplicationsRepository;
             _coordinatesRepository = coordinatesRepository;
@@ -34,6 +50,7 @@ namespace WasteIntoCity.Application.Services
             _refreshTokensRepository = refreshTokensRepository;
             _workComplexityTypesRepository = workComplexityTypesRepository;
             _worksRepository = worksRepository;
+            _scoreSettingsTypeRepository = scoreSettingsTypeRepository;
         }
 
         public async Task CreateOwnAsync(string title, string description, int workComplexityId, string lat, string lng,
@@ -51,6 +68,8 @@ namespace WasteIntoCity.Application.Services
 
         public async Task RejectAsync(Guid workApplicationsId)
         {
+            Dictionary<ScoreSettingsEnum, int> scoreSettingsValues = await _scoreSettingsTypeRepository.FindAllValuesByIdsAsync(_scoreSettingsIdsForReject);
+
             WorkApplication workApplication = await _workApplicationsRepository.FindById(workApplicationsId);
 
             if (workApplication.WorkReportStatusTypesId != WorkReportStatusEnum.Pending)
@@ -67,17 +86,17 @@ namespace WasteIntoCity.Application.Services
             if (user.NegativeScore == 0)
             {
                 negativeScore = 1;
-                ranking = user.Ranking - (WORK_APPLICATION_RANKING_SUBSTRACTING * user.NegativeScore);
+                ranking = user.Ranking - (scoreSettingsValues[ScoreSettingsEnum.WorkApplicationRankingSubstracting] * user.NegativeScore);
             }
             else
             {
-                ranking = user.Ranking - (WORK_APPLICATION_RANKING_SUBSTRACTING * user.NegativeScore);
-                negativeScore = user.NegativeScore * WORK_APPLICATION_NEGATIVE_ADDING_MULTIPLIER;
+                ranking = user.Ranking - (scoreSettingsValues[ScoreSettingsEnum.WorkApplicationRankingSubstracting] * user.NegativeScore);
+                negativeScore = user.NegativeScore * scoreSettingsValues[ScoreSettingsEnum.WorkNegativeAddingMultiplier];
             }
 
             bool isBanned = false;
 
-            if (ranking <= USER_BAN_RANKING_AT_LEAST)
+            if (ranking <= scoreSettingsValues[ScoreSettingsEnum.UserBanRankingAtLeast])
             {
                 isBanned = true;
 
@@ -93,6 +112,8 @@ namespace WasteIntoCity.Application.Services
 
         public async Task ConfirmAsync(Guid workApplicationsId)
         {
+            Dictionary<ScoreSettingsEnum, int> scoreSettingsValues = await _scoreSettingsTypeRepository.FindAllValuesByIdsAsync(_scoreSettingsIdsForConfirm);
+
             WorkApplication workApplication = await _workApplicationsRepository.FindById(workApplicationsId);
 
             if (workApplication.WorkReportStatusTypesId != WorkReportStatusEnum.Pending)
@@ -103,9 +124,9 @@ namespace WasteIntoCity.Application.Services
 
             User user = await _usersRepository.FindByIdWithRolesAsync(workApplication.FromUsersId);
 
-            int ranking = user.Ranking + WORK_APPLICATION_RANKING_ADDING;
+            int ranking = user.Ranking + scoreSettingsValues[ScoreSettingsEnum.WorkApplicationRankingAdding];
 
-            int negativeScore = Math.Max(user.NegativeScore - WORK_APPLICATION_NEGATIVE_SUBSTRACTING, 0);
+            int negativeScore = Math.Max(user.NegativeScore - scoreSettingsValues[ScoreSettingsEnum.WorkApplicationNegativeSubstracting], 0);
 
             User updatedUser = User.Create(user.Id, user.Nickname, user.Email, user.Password, ranking, user.Roles, negativeScore, user.IsBanned);
 
