@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WasteIntoCity.Persistance;
 
@@ -11,9 +12,11 @@ using WasteIntoCity.Persistance;
 namespace WasteIntoCity.Persistance.Migrations
 {
     [DbContext(typeof(MainDbContext))]
-    partial class MainDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250405225153_WorkStatusTypesAddingRanking")]
+    partial class WorkStatusTypesAddingRanking
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,6 +24,38 @@ namespace WasteIntoCity.Persistance.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("WasteIntoCity.Persistance.Entities.AdminSettingsEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<int>("AcceptableDifferenceReportTrashcanOccupancy")
+                        .HasColumnType("int")
+                        .HasColumnName("acceptable_difference_report_trashcan_occupancy");
+
+                    b.Property<int>("FalseComplaintFromAdditionRanking")
+                        .HasColumnType("int")
+                        .HasColumnName("false_complaint_from_addition_ranking");
+
+                    b.Property<int>("FalseReportTrashcansOccupancyAdditionRanking")
+                        .HasColumnType("int")
+                        .HasColumnName("false_report_trashcans_occupancy_addition_ranking");
+
+                    b.Property<int>("TrueComplaintFromAdditionRanking")
+                        .HasColumnType("int")
+                        .HasColumnName("true_complaint_from_addition_ranking");
+
+                    b.Property<int>("TrueComplaintToAdditionRanking")
+                        .HasColumnType("int")
+                        .HasColumnName("true_complaint_to_addition_ranking");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("admin_settings", (string)null);
+                });
 
             modelBuilder.Entity("WasteIntoCity.Persistance.Entities.CoordinatesEntity", b =>
                 {
@@ -179,30 +214,6 @@ namespace WasteIntoCity.Persistance.Migrations
                         .IsUnique();
 
                     b.ToTable("roles", (string)null);
-                });
-
-            modelBuilder.Entity("WasteIntoCity.Persistance.Entities.ScoreSettingsTypeEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("id");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
-                        .HasColumnName("name");
-
-                    b.Property<int>("Value")
-                        .HasColumnType("int")
-                        .HasColumnName("value");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("score_settings_types", (string)null);
                 });
 
             modelBuilder.Entity("WasteIntoCity.Persistance.Entities.TrashcanEntity", b =>
@@ -508,13 +519,13 @@ namespace WasteIntoCity.Persistance.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("AddingRanking")
+                        .HasColumnType("int")
+                        .HasColumnName("multiplier_ranking");
+
                     b.Property<int>("DurationHours")
                         .HasColumnType("int")
                         .HasColumnName("duration_hours");
-
-                    b.Property<int>("MultiplierRanking")
-                        .HasColumnType("int")
-                        .HasColumnName("multiplier_ranking");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -745,7 +756,7 @@ namespace WasteIntoCity.Persistance.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AddingRanking")
+                    b.Property<int>("MultiplierRanking")
                         .HasColumnType("int")
                         .HasColumnName("multiplier_ranking");
 

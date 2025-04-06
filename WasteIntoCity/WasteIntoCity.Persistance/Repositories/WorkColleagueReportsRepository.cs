@@ -2,13 +2,13 @@
 
 namespace WasteIntoCity.Persistance.Repositories
 {
-    public class WorkColleaguesRepository
+    public class WorkColleagueReportsRepository
     {
         private readonly MainDbContext _mainDbContext;
 
         private readonly IMapper _mapper;
 
-        public WorkColleaguesRepository(MainDbContext mainDbContext, IMapper mapper)
+        public WorkColleagueReportsRepository(MainDbContext mainDbContext, IMapper mapper)
         {
             _mainDbContext = mainDbContext;
             _mapper = mapper;

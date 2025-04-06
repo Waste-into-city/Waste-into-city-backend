@@ -6,7 +6,7 @@
 
         public string Name { get; set; } = string.Empty;
 
-        public int MultiplierRanking { get; set; }
+        public int AddingRanking { get; set; }
 
         public List<WorkEntity> Works { get; set; } = [];
 

@@ -47,6 +47,57 @@ namespace WasteIntoCity.Persistance.DefaultInitData
             WorkStatusType.Create(WorkStatusEnum.Closed, MeanText.Create(nameof(WorkStatusEnum.Closed)), 0),
         };
 
+        public static readonly ScoreSettingsType[] ScoreSettingsTypes = new ScoreSettingsType[]
+        {
+            ScoreSettingsType.Create(
+                ScoreSettingsEnum.WorkRankingDefaultReviewAdding,
+                MeanText.Create(nameof(ScoreSettingsEnum.WorkRankingDefaultReviewAdding)),
+                1
+            ),
+
+            ScoreSettingsType.Create(
+                ScoreSettingsEnum.WorkNegativeAddingMultiplier,
+                MeanText.Create(nameof(ScoreSettingsEnum.WorkNegativeAddingMultiplier)),
+                2
+            ),
+
+            ScoreSettingsType.Create(
+                ScoreSettingsEnum.WorkNegativeSubstracting,
+                MeanText.Create(nameof(ScoreSettingsEnum.WorkNegativeSubstracting)),
+                1
+            ),
+
+            ScoreSettingsType.Create(
+                ScoreSettingsEnum.WorkApplicationRankingSubstracting,
+                MeanText.Create(nameof(ScoreSettingsEnum.WorkApplicationRankingSubstracting)),
+                2
+            ),
+
+            ScoreSettingsType.Create(
+                ScoreSettingsEnum.WorkApplicationNegativeAddingMultiplier,
+                MeanText.Create(nameof(ScoreSettingsEnum.WorkApplicationNegativeAddingMultiplier)),
+                2
+            ),
+
+            ScoreSettingsType.Create(
+                ScoreSettingsEnum.WorkApplicationRankingAdding,
+                MeanText.Create(nameof(ScoreSettingsEnum.WorkApplicationRankingAdding)),
+                1
+            ),
+
+            ScoreSettingsType.Create(
+                ScoreSettingsEnum.WorkApplicationNegativeSubstracting,
+                MeanText.Create(nameof(ScoreSettingsEnum.WorkApplicationNegativeSubstracting)),
+                2
+            ),
+
+            ScoreSettingsType.Create(
+                ScoreSettingsEnum.UserBanRankingAtLeast,
+                MeanText.Create(nameof(ScoreSettingsEnum.UserBanRankingAtLeast)),
+                -30
+            ),
+        };
+
         public static readonly User[] Users = new User[]
         {
             User.Create(

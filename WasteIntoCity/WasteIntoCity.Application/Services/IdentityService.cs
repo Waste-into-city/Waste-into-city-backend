@@ -51,6 +51,11 @@ namespace WasteIntoCity.Application.Services
                 new Claim("id", user.Id.ToString()),
             };
 
+            if (user.Roles is null)
+            {
+                throw new NullValueServerException("roles", null);
+            }
+
             claims.AddRange(user.Roles.Select(role => new Claim(ClaimTypes.Role, role.Name)));
 
             SecurityTokenDescriptor securityAccessTokenDescriptor = new SecurityTokenDescriptor
@@ -100,7 +105,7 @@ namespace WasteIntoCity.Application.Services
 
             try
             {
-                await _userRepository.AddAsync(newUser);
+                await _userRepository.AddWithRolesAsync(newUser);
             }
             catch (Exception ex)
             {

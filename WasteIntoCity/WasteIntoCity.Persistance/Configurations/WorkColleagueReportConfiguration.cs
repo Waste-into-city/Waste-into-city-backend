@@ -24,6 +24,9 @@ namespace WasteIntoCity.Persistance.Configurations
 
             builder.HasKey(w => w.Id);
 
+            builder.HasIndex(w => new { w.FromParticipantId, w.AboutColleagueId, w.WorksId })
+               .IsUnique();
+
             builder.HasOne(w => w.UserFromParticipant)
                 .WithMany(u => u.WorkColleagueReportsFrom);
 

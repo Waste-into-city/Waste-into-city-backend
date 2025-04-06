@@ -4,7 +4,7 @@ namespace WasteIntoCity.Core.Interfaces.Repositories
 {
     public interface IUsersRepository
     {
-        Task AddAsync(User user);
+        Task AddWithRolesAsync(User user);
 
         Task<bool> IsExistByEmailAsync(string email);
 
@@ -14,6 +14,8 @@ namespace WasteIntoCity.Core.Interfaces.Repositories
 
         Task UpdateAsync(User user);
 
-        Task AddAllIfNotExistByEmail(List<User> users);
+        Task AddAllIfNotExistWithRolesByEmailAsync(List<User> users);
+
+        Task UpdateAllByIdAsync(List<User> users);
     }
 }

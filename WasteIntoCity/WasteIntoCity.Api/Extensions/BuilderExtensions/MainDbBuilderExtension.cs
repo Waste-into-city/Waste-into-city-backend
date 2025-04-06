@@ -14,8 +14,10 @@ namespace WasteIntoCity.Api.Extensions.BuilderExtensions
             await scope.ServiceProvider.GetRequiredService<IWorkMarkTypesRepository>().AddAllIfEachNotExist(DefaultData.WorkMarkTypes.ToList());
             await scope.ServiceProvider.GetRequiredService<IWorkReportStatusTypesRepository>().AddAllIfEachNotExist(DefaultData.WorkReportStatusTypes.ToList());
             await scope.ServiceProvider.GetRequiredService<IWorkStatusTypesRepository>().AddAllIfEachNotExist(DefaultData.WorkStatusTypes.ToList());
+            await scope.ServiceProvider.GetRequiredService<IScoreSettingsTypeRepository>().AddAllIfEachNotExist(DefaultData.ScoreSettingsTypes.ToList());
 
-            await scope.ServiceProvider.GetRequiredService<IUsersRepository>().AddAllIfNotExistByEmail(DefaultData.Users.ToList());
+            await scope.ServiceProvider.GetRequiredService<IUsersRepository>().AddAllIfNotExistWithRolesByEmailAsync(DefaultData.Users.ToList());
+
         }
 
         public static IApplicationBuilder UseCustomMainDbContext(this IApplicationBuilder app, IConfiguration configuration)

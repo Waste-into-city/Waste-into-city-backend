@@ -17,6 +17,8 @@ namespace WasteIntoCity.Api.BackgroundServices
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            await Task.Delay(_options.Value.IntervalTime, stoppingToken);
+
             while (!stoppingToken.IsCancellationRequested)
             {
                 using IServiceScope scope = _scopeFactory.CreateScope();
@@ -24,7 +26,7 @@ namespace WasteIntoCity.Api.BackgroundServices
 
                 await refreshTokensRepository.DeleteUsedAndInvalid(_options.Value.RecordsAtTimeAmount);
 
-                await Task.Delay(TimeSpan.FromHours(_options.Value.IntervalHours), stoppingToken);
+                await Task.Delay(_options.Value.IntervalTime, stoppingToken);
             }
         }
     }

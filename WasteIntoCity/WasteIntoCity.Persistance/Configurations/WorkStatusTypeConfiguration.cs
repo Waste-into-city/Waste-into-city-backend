@@ -17,7 +17,7 @@ namespace WasteIntoCity.Persistance.Configurations
 
             builder.Property(w => w.Name).HasColumnName("name").HasMaxLength(WorkStatusType.NAME_LENGTH_MAX);
 
-            builder.Property(w => w.MultiplierRanking).HasColumnName("multiplier_ranking");
+            builder.Property(w => w.AddingRanking).HasColumnName("multiplier_ranking");
 
             builder.HasKey(w => w.Id);
 

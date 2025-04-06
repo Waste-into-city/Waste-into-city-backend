@@ -28,7 +28,5 @@ namespace WasteIntoCity.Core.Models
 
             return new Role(id, name);
         }
-
-
     }
 }

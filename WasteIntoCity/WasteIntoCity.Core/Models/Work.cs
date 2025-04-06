@@ -15,7 +15,8 @@ namespace WasteIntoCity.Core.Models
         public const int DESCRIPTION_LENGTH_MAX = Description.VALUE_LENGTH_MAX;
 
         private Work(Guid id, Title title, Description description, DateTime startedDatetime, DateTime finishDatetime, WorkComplexityEnum workComplexityTypesId,
-            WorkStatusEnum workStatusTypesId, Guid coordinatesId, List<User>? participants, Coordinates? coordinates)
+            WorkStatusEnum workStatusTypesId, Guid coordinatesId, List<User>? participants, Coordinates? coordinates,
+            WorkComplexityType? workComplexityType, List<WorkColleagueReport>? workColleagueReports, WorkStatusType? workStatusType)
         {
             Id = id;
             Title = title;
@@ -27,6 +28,9 @@ namespace WasteIntoCity.Core.Models
             CoordinatesId = coordinatesId;
             Participants = participants;
             Coordinates = coordinates;
+            WorkComplexityType = workComplexityType;
+            WorkColleagueReports = workColleagueReports;
+            WorkStatusType = workStatusType;
         }
 
         public Guid Id { get; }
@@ -49,15 +53,23 @@ namespace WasteIntoCity.Core.Models
 
         public Coordinates? Coordinates { get; }
 
+        public WorkComplexityType? WorkComplexityType { get; }
+
+        public List<WorkColleagueReport>? WorkColleagueReports { get; }
+
+        public WorkStatusType? WorkStatusType { get; }
+
         public static Work Create(Guid id, Title title, Description description, DateTime startedDatetime, DateTime finishDatetime, WorkComplexityEnum workComplexityTypesId,
-            WorkStatusEnum workStatusTypesId, Guid coordinatesId, List<User>? participants, Coordinates? coordinates)
+            WorkStatusEnum workStatusTypesId, Guid coordinatesId, List<User>? participants, Coordinates? coordinates,
+            WorkComplexityType? workComplexityType, List<WorkColleagueReport>? workColleagueReports, WorkStatusType? workStatusType)
         {
             if (startedDatetime > finishDatetime)
             {
                 throw new ValueOutOfRangeException<DateTime>("startDatetime", DateTime.MinValue, finishDatetime);
             }
 
-            return new Work(id, title, description, startedDatetime, finishDatetime, workComplexityTypesId, workStatusTypesId, coordinatesId, participants, coordinates);
+            return new Work(id, title, description, startedDatetime, finishDatetime, workComplexityTypesId, workStatusTypesId, coordinatesId,
+                participants, coordinates, workComplexityType, workColleagueReports, workStatusType);
         }
     }
 }

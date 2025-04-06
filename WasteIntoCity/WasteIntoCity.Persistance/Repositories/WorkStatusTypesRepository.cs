@@ -22,7 +22,7 @@ namespace WasteIntoCity.Persistance.Repositories
                 {
                     Id = (int)w.Id,
                     Name = w.Name.Value,
-                    MultiplierRanking = w.MultiplierRanking,
+                    AddingRanking = w.AddingRanking,
                 }
             ).ToList();
 

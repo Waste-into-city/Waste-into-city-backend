@@ -4,13 +4,15 @@ namespace WasteIntoCity.Core.Models
 {
     public class WorkColleagueReport
     {
-        private WorkColleagueReport(Guid id, Guid fromParticipantId, Guid aboutColleagueId, Guid worksId, WorkMarkEnum workMarkTypesId)
+        private WorkColleagueReport(Guid id, Guid fromParticipantId, Guid aboutColleagueId, Guid worksId, WorkMarkEnum workMarkTypesId,
+            WorkMarkType? workMarkType)
         {
             Id = id;
             FromParticipantId = fromParticipantId;
             AboutColleagueId = aboutColleagueId;
             WorksId = worksId;
             WorkMarkTypesId = workMarkTypesId;
+            WorkMarkType = workMarkType;
         }
 
         public Guid Id { get; }
@@ -23,9 +25,12 @@ namespace WasteIntoCity.Core.Models
 
         public WorkMarkEnum WorkMarkTypesId { get; }
 
-        public static WorkColleagueReport Create(Guid id, Guid fromParticipantId, Guid aboutColleagueId, Guid worksId, WorkMarkEnum workMarkTypesId)
+        public WorkMarkType? WorkMarkType { get; }
+
+        public static WorkColleagueReport Create(Guid id, Guid fromParticipantId, Guid aboutColleagueId, Guid worksId, WorkMarkEnum workMarkTypesId,
+            WorkMarkType? workMarkType)
         {
-            return new WorkColleagueReport(id, fromParticipantId, aboutColleagueId, worksId, workMarkTypesId);
+            return new WorkColleagueReport(id, fromParticipantId, aboutColleagueId, worksId, workMarkTypesId, workMarkType);
         }
     }
 }
