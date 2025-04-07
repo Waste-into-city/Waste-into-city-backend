@@ -17,6 +17,8 @@ namespace WasteIntoCity.Core.Interfaces.Repositories
 
         Task UpdateStatusesIdByIdAsync(Guid id, WorkStatusEnum workStatusTypesId);
 
-        Task<List<Work>> TakeFirstWorksByFinishedTimeWithParticipantsAndMultiplierRankingAndWorkColleagueReportsAndWorkStatus(int worksAmount, TimeSpan minWorkIntervalAfterFinished);
+        Task<List<Work>> FindFirstByFinishedTimeWithParticipantsAndMultiplierRankingAndWorkColleagueReportsAndWorkStatus(int worksAmount, TimeSpan minWorkIntervalAfterFinished);
+
+        Task<List<Work>> FindWithParticipants(int worksAmount, TimeSpan minWorkIntervalAfterFinished);
     }
 }
