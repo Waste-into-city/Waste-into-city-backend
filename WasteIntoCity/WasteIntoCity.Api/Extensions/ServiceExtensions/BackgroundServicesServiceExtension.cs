@@ -13,6 +13,9 @@ namespace WasteIntoCity.Api.Extensions.ServiceExtensions
             services.Configure<FinishedWorksHandlerBackgroundServiceOptions>(configuration.GetSection(nameof(FinishedWorksHandlerBackgroundServiceOptions)));
             services.AddHostedService<FinishedWorksHandlerBackgroundService>();
 
+            services.Configure<ProcessedWorksHandlerBackgroundServiceOptions>(configuration.GetSection(nameof(ProcessedWorksHandlerBackgroundServiceOptions)));
+            services.AddHostedService<ProcessedWorksHandlerBackgroundService>();
+
             return services;
         }
     }

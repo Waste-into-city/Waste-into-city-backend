@@ -11,13 +11,6 @@ namespace WasteIntoCity.Application.Services
 {
     public class WorkApplicationsService : IWorkApplicationsService
     {
-        private const int WORK_APPLICATION_RANKING_SUBSTRACTING = 2;
-        private const int WORK_APPLICATION_NEGATIVE_ADDING_MULTIPLIER = 2;
-        private const int WORK_APPLICATION_RANKING_ADDING = 1;
-        private const int WORK_APPLICATION_NEGATIVE_SUBSTRACTING = 2;
-
-        private const int USER_BAN_RANKING_AT_LEAST = -30;
-
         private readonly List<ScoreSettingsEnum> _scoreSettingsIdsForReject = new List<ScoreSettingsEnum>
         {
             ScoreSettingsEnum.WorkApplicationRankingSubstracting,
@@ -138,7 +131,7 @@ namespace WasteIntoCity.Application.Services
 
             Work work = Work.Create(Guid.NewGuid(), workApplication.Title, workApplication.Description, startDateTime,
                 startDateTime.AddHours(workComplexityType.DurationHours), workApplication.WorkComplexityTypesId, WorkStatusEnum.Avaliable,
-                workApplication.CoordinatesId, null, null, null, null, null);
+                workApplication.CoordinatesId, null, null, null, null, null, null);
 
             await _worksRepository.AddAsync(work);
 

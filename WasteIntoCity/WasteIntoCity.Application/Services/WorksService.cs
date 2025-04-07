@@ -38,7 +38,7 @@ namespace WasteIntoCity.Application.Services
             EnumOperationsExtension.CheckEnumIntValue<WorkStatusEnum>(workStatusesId, "work status");
 
             Work work = Work.Create(id, Title.Create(title), Description.Create(description), startedDatetime, finishDatetime,
-                (WorkComplexityEnum)workComplexityTypesId, (WorkStatusEnum)workStatusesId, coordinatesId, null, null, null, null, null);
+                (WorkComplexityEnum)workComplexityTypesId, (WorkStatusEnum)workStatusesId, coordinatesId, null, null, null, null, null, null);
 
             await _worksRepository.UpdateAsync(work);
         }

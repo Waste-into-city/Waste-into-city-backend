@@ -1,6 +1,7 @@
 ﻿
 using Microsoft.Extensions.Options;
 using WasteIntoCity.Api.Options;
+using WasteIntoCity.Core.Enums;
 using WasteIntoCity.Core.Exceptions;
 using WasteIntoCity.Core.Interfaces.Repositories;
 using WasteIntoCity.Core.Models;
@@ -14,11 +15,12 @@ namespace WasteIntoCity.Api.BackgroundServices
         private readonly IServiceScopeFactory _scopeFactory;
         private readonly IOptions<FinishedWorksHandlerBackgroundServiceOptions> _options;
 
-        private const int WORK_RANKING_DEFAULT_REVIEW_ADDING = 1;
-        private const int WORK_NEGATIVE_ADDING_MULTIPLIER = 2;
-        private const int WORK_NEGATIVE_SUBSTRACTING = 1;
-
-        private const int USER_BAN_RANKING_AT_LEAST = -30;
+        private readonly List<ScoreSettingsEnum> _scoreSettingsIds = new List<ScoreSettingsEnum>
+        {
+            ScoreSettingsEnum.WorkApplicationRankingSubstracting,
+            ScoreSettingsEnum.WorkApplicationNegativeAddingMultiplier,
+            ScoreSettingsEnum.UserBanRankingAtLeast,
+        };
 
         public FinishedWorksHandlerBackgroundService(IServiceScopeFactory scopeFactory, IOptions<FinishedWorksHandlerBackgroundServiceOptions> options)
         {
@@ -26,8 +28,9 @@ namespace WasteIntoCity.Api.BackgroundServices
             _options = options;
         }
 
-        private async Task HandleFinishedWork(Work work, IWorksRepository worksRepository, IUsersRepository usersRepository,
-            RefreshTokensRepository refreshTokensRepository, CancellationToken stoppingToken)
+        private async Task HandleFinishedWorkAsync(Work work, Dictionary<ScoreSettingsEnum, int> scoreSettingsValues,
+            IWorksRepository worksRepository, IUsersRepository usersRepository, RefreshTokensRepository refreshTokensRepository,
+            CancellationToken stoppingToken)
         {
             if (work.Participants == null)
             {
@@ -69,7 +72,7 @@ namespace WasteIntoCity.Api.BackgroundServices
                     score = score + workAboutParticipantColleagueReport.WorkMarkType.AdditionRanking;
                 }
 
-                score = score + WORK_RANKING_DEFAULT_REVIEW_ADDING * (workParticipantsCount - work.WorkColleagueReports.Count);
+                score = score + scoreSettingsValues[ScoreSettingsEnum.WorkRankingDefaultReviewAdding] * (workParticipantsCount - work.WorkColleagueReports.Count);
 
                 int rankingAddingScore = (int)Math.Round((double)score / workParticipantsCount, MidpointRounding.AwayFromZero);
 
@@ -79,23 +82,25 @@ namespace WasteIntoCity.Api.BackgroundServices
 
                 if (rankingAddingScore > 0 && work.WorkStatusTypesId == WorkStatusEnum.FinishedSuccessfully)
                 {
-                    negativeScore = Math.Max(participant.NegativeScore - WORK_NEGATIVE_SUBSTRACTING, 0);
+                    negativeScore = Math.Max(participant.NegativeScore - scoreSettingsValues[ScoreSettingsEnum.WorkNegativeSubstracting], 0);
                     ranking = participant.Ranking + rankingAddingScore * work.WorkComplexityType.MultiplierRanking + work.WorkStatusType.AddingRanking;
                 }
                 else if (rankingAddingScore < 0)
                 {
                     if (participant.NegativeScore == 0)
                     {
-                        ranking = participant.Ranking + rankingAddingScore + work.WorkStatusType.AddingRanking;
+                        ranking = participant.Ranking + rankingAddingScore + work.WorkStatusType.AddingRanking - scoreSettingsValues
+                            [ScoreSettingsEnum.WorkApplicationRankingSubstracting];
                         negativeScore = 1;
                     }
                     else
                     {
-                        ranking = participant.Ranking + (rankingAddingScore + work.WorkStatusType.AddingRanking) * negativeScore;
-                        negativeScore = participant.NegativeScore * WORK_NEGATIVE_ADDING_MULTIPLIER;
+                        ranking = participant.Ranking + rankingAddingScore + work.WorkStatusType.AddingRanking - scoreSettingsValues
+                            [ScoreSettingsEnum.WorkApplicationRankingSubstracting] * negativeScore;
+                        negativeScore = participant.NegativeScore * scoreSettingsValues[ScoreSettingsEnum.WorkNegativeAddingMultiplier];
                     }
 
-                    if (ranking <= USER_BAN_RANKING_AT_LEAST)
+                    if (ranking <= scoreSettingsValues[ScoreSettingsEnum.UserBanRankingAtLeast])
                     {
                         isBanned = true;
 
@@ -111,18 +116,20 @@ namespace WasteIntoCity.Api.BackgroundServices
             await worksRepository.UpdateStatusesIdByIdAsync(work.Id, WorkStatusEnum.Closed);
         }
 
-        private async Task HandleFinishedWorks(IWorksRepository worksRepository, IUsersRepository usersRepository, RefreshTokensRepository refreshTokensRepository,
-            CancellationToken stoppingToken)
+        private async Task HandleFinishedWorksAsync(IWorksRepository worksRepository, IUsersRepository usersRepository, RefreshTokensRepository refreshTokensRepository,
+            IScoreSettingsTypeRepository scoreSettingsTypeRepository, CancellationToken stoppingToken)
         {
-            List<Work> works = await worksRepository.TakeFirstWorksByFinishedTimeWithParticipantsAndMultiplierRankingAndWorkColleagueReportsAndWorkStatus(
+            List<Work> works = await worksRepository.FindFirstByFinishedTimeWithParticipantsAndMultiplierRankingAndWorkColleagueReportsAndWorkStatus(
                 _options.Value.WorksAtTimeAmount,
                 _options.Value.MinWorkIntervalAfterFinished
             );
 
+            Dictionary<ScoreSettingsEnum, int> scoreSettingsValues = await scoreSettingsTypeRepository.FindAllValuesByIdsAsync(_scoreSettingsIds);
+
             int i = 0;
             while (i < works.Count && !stoppingToken.IsCancellationRequested)
             {
-                await HandleFinishedWork(works[i], worksRepository, usersRepository, refreshTokensRepository, stoppingToken);
+                await HandleFinishedWorkAsync(works[i], scoreSettingsValues, worksRepository, usersRepository, refreshTokensRepository, stoppingToken);
 
                 i++;
             }
@@ -139,8 +146,9 @@ namespace WasteIntoCity.Api.BackgroundServices
                 IWorksRepository worksRepository = scope.ServiceProvider.GetRequiredService<IWorksRepository>();
                 IUsersRepository usersRepository = scope.ServiceProvider.GetRequiredService<IUsersRepository>();
                 RefreshTokensRepository refreshTokensRepository = scope.ServiceProvider.GetRequiredService<RefreshTokensRepository>();
+                IScoreSettingsTypeRepository scoreSettingsTypeRepository = scope.ServiceProvider.GetRequiredService<IScoreSettingsTypeRepository>();
 
-                await HandleFinishedWorks(worksRepository, usersRepository, refreshTokensRepository, stoppingToken);
+                await HandleFinishedWorksAsync(worksRepository, usersRepository, refreshTokensRepository, scoreSettingsTypeRepository, stoppingToken);
 
                 await Task.Delay(_options.Value.IntervalTime, stoppingToken);
             }

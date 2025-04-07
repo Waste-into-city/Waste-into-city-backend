@@ -16,6 +16,10 @@
 
         WorkApplicationNegativeSubstracting = 7,
 
-        UserBanRankingAtLeast = 8
+        UserBanRankingAtLeast = 8,
+
+        ProcessedWorkRankingSubstracting = 9,
+
+        ProcessedWorkNegativeAdding = 10
     }
 }

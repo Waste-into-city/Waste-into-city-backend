@@ -43,7 +43,7 @@ namespace WasteIntoCity.Persistance.Repositories
             {
                 return Work.Create(work.Id, Title.Create(work.Title), Description.Create(work.Description), work.StartedDatetime, work.FinishDatetime,
                     (WorkComplexityEnum)work.WorkComplexityTypesId, (WorkStatusEnum)work.WorkStatusTypesId, work.CoordinatesId, [],
-                    Coordinates.Create(work.Coordinates!.Id, work.Coordinates!.Lat, work.Coordinates!.Lng), null, null, null);
+                    Coordinates.Create(work.Coordinates!.Id, work.Coordinates!.Lat, work.Coordinates!.Lng), null, null, null, null);
             }).ToList();
 
             return works;
@@ -70,6 +70,7 @@ namespace WasteIntoCity.Persistance.Repositories
                              Coordinates.Create(w.Coordinates!.Id, w.Coordinates!.Lat, w.Coordinates!.Lng),
                              null,
                              null,
+                             null,
                              null
                          )
                  )
@@ -85,7 +86,7 @@ namespace WasteIntoCity.Persistance.Repositories
 
             return Work.Create(work.Id, Title.Create(work.Title), Description.Create(work.Description), work.StartedDatetime, work.FinishDatetime,
                 (WorkComplexityEnum)work.WorkComplexityTypesId, (WorkStatusEnum)work.WorkStatusTypesId, work.CoordinatesId, [],
-                Coordinates.Create(work.Coordinates!.Id, work.Coordinates!.Lat, work.Coordinates!.Lng), null, null, null);
+                Coordinates.Create(work.Coordinates!.Id, work.Coordinates!.Lat, work.Coordinates!.Lng), null, null, null, null);
         }
 
         public async Task UpdateAsync(Work work)
@@ -121,7 +122,7 @@ namespace WasteIntoCity.Persistance.Repositories
             }
         }
 
-        public async Task<List<Work>> TakeFirstWorksByFinishedTimeWithParticipantsAndMultiplierRankingAndWorkColleagueReportsAndWorkStatus(
+        public async Task<List<Work>> FindFirstByFinishedTimeWithParticipantsAndMultiplierRankingAndWorkColleagueReportsAndWorkStatus(
             int worksAmount, TimeSpan minWorkIntervalAfterFinished)
         {
             DateTime minAppropriateFinishedWorkTime = DateTime.UtcNow.Add(minWorkIntervalAfterFinished);
@@ -208,16 +209,57 @@ namespace WasteIntoCity.Persistance.Repositories
                     null,
                     complexity,
                     colleagueReports,
-                    workStatusType
+                    workStatusType,
+                    null
                 );
             }).ToList();
 
             return works;
         }
 
-        public Task<Work> FindFirstFilteredWithParticipantsByTimestampFinishedWork()
+        public async Task<List<Work>> FindWithParticipants(int worksAmount, TimeSpan minWorkIntervalAfterFinished)
         {
-            throw new NotImplementedException();
+            DateTime minAppropriateFinishedWorkTime = DateTime.UtcNow.Add(minWorkIntervalAfterFinished);
+
+            List<WorkEntity> workEntities = await _mainDbContext.Works
+                .Where(w => w.FinishDatetime >= minAppropriateFinishedWorkTime)
+                .Include(w => w.Users)
+                .Take(worksAmount)
+                .ToListAsync();
+
+            List<Work> works = workEntities.Select(w =>
+            {
+                List<User> participants = w.Users.Select(u =>
+                    User.Create(
+                        u.Id,
+                        Nickname.Create(u.Nickname),
+                        Email.Create(u.Email),
+                        Password.Create(u.Password),
+                        u.Ranking,
+                        null,
+                        u.NegativeScore,
+                        u.IsBanned
+                    )).ToList();
+
+                return Work.Create(
+                    w.Id,
+                    Title.Create(w.Title),
+                    Description.Create(w.Description),
+                    w.StartedDatetime,
+                    w.FinishDatetime,
+                    (WorkComplexityEnum)w.WorkComplexityTypesId,
+                    (WorkStatusEnum)w.WorkStatusTypesId,
+                    w.CoordinatesId,
+                    participants,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+                );
+            }).ToList();
+
+            return works;
         }
     }
 }
