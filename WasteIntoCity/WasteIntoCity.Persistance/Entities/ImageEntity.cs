@@ -6,6 +6,8 @@
 
         public string Name { get; set; } = string.Empty;
 
+        public DateTime UploadedTime { get; set; }
+
         public Guid? WorkApplicationsId { get; set; }
 
         public Guid? WorkReportComplaintsId { get; set; }

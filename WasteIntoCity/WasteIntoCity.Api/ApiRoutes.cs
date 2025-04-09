@@ -51,9 +51,18 @@
 
             public const string CREATE = $"{BASE}/{CONTROLLER_NAME}/create";
 
-            public const string REJECT = $$"""{{BASE}}/{{CONTROLLER_NAME}}/reject/{workApplicationsId:Guid}""";
+            public const string REJECT = $$"""{{BASE}}/{{CONTROLLER_NAME}}/reject/{workApplicationsId}""";
 
-            public const string CONFIRM = $$"""{{BASE}}/{{CONTROLLER_NAME}}/confirm/{workApplicationsId:Guid}""";
+            public const string CONFIRM = $$"""{{BASE}}/{{CONTROLLER_NAME}}/confirm/{workApplicationsId}""";
+        }
+
+        public static class Images
+        {
+            private const string CONTROLLER_NAME = "images";
+
+            public const string UPLOAD = $"{BASE}/{CONTROLLER_NAME}/upload";
+
+            public const string GET_BY_NAME = $$"""{{BASE}}/{{CONTROLLER_NAME}}/get-by-name/{name}""";
         }
 
     }

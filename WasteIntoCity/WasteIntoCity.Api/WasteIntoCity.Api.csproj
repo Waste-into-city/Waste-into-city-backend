@@ -41,4 +41,8 @@
     <None Include="custom-swagger.json" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\uploads\" />
+  </ItemGroup>
+
 </Project>

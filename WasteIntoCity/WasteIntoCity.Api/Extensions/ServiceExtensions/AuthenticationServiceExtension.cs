@@ -6,7 +6,7 @@ using System.Security.Claims;
 using System.Text;
 using WasteIntoCity.Application.Extensions;
 using WasteIntoCity.Application.Options;
-using WasteIntoCity.Application.Types;
+using WasteIntoCity.Application.Enum;
 using WasteIntoCity.Core.Exceptions;
 using WasteIntoCity.Persistance.Entities;
 using WasteIntoCity.Persistance.Repositories;
@@ -67,7 +67,7 @@ namespace WasteIntoCity.Api.Extensions.ServiceExtensions
                                 return Task.CompletedTask;
                             }
 
-                            TokenType accessTokenType = TokenType.ACCESS;
+                            TokenEnum accessTokenType = TokenEnum.ACCESS;
                             string? accessTokenValue = null;
 
                             try

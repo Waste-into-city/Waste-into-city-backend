@@ -4,7 +4,7 @@ using WasteIntoCity.Api.Contracts.V1.Requests;
 using WasteIntoCity.Application.Contracts.V1.Requests;
 using WasteIntoCity.Application.Extensions;
 using WasteIntoCity.Application.Options;
-using WasteIntoCity.Application.Types;
+using WasteIntoCity.Application.Enum;
 using WasteIntoCity.Core.Enums;
 using WasteIntoCity.Core.Interfaces.Services;
 using WasteIntoCity.Core.Structs;
@@ -48,9 +48,9 @@ namespace WasteIntoCity.Application.Controllers.V1
         [HttpPost(ApiRoutes.Identity.REFRESH)]
         public async Task<IActionResult> RefreshTokenAsync()
         {
-            string accessTokenValue = HttpContext.TakeTokenValueByTokenType(TokenType.ACCESS);
+            string accessTokenValue = HttpContext.TakeTokenValueByTokenType(TokenEnum.ACCESS);
 
-            string refreshTokenValue = HttpContext.TakeTokenValueByTokenType(TokenType.REFRESH);
+            string refreshTokenValue = HttpContext.TakeTokenValueByTokenType(TokenEnum.REFRESH);
 
             UserPrepareTokensContextResponse userPrepareTokensContextResponse = await _identityService.RefreshAsync(accessTokenValue, refreshTokenValue);
 
