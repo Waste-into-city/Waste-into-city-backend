@@ -1,4 +1,6 @@
 ﻿
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using WasteIntoCity.Api.Options;
 using WasteIntoCity.Core.Enums;
@@ -75,9 +77,10 @@ namespace WasteIntoCity.Api.BackgroundServices
         private async Task HandleInProgressWorksAsync(IWorksRepository worksRepository, IScoreSettingsTypeRepository scoreSettingsTypeRepository,
             IUsersRepository usersRepository, RefreshTokensRepository refreshTokensRepository, CancellationToken stoppingToken)
         {
-            List<Work> works = await worksRepository.FindWithParticipants(
+            List<Work> works = await worksRepository.FindFirstByFinishedTimeAndStatusesWithParticipants(
                 _options.Value.WorksAtTimeAmount,
-                _options.Value.MinWorkIntervalAfterFinished
+                _options.Value.MinWorkIntervalAfterFinished,
+                [WorkStatusEnum.InProgress]
             );
 
             Dictionary<ScoreSettingsEnum, int> scoreSettingsValues = await scoreSettingsTypeRepository.FindAllValuesByIdsAsync(_scoreSettingsIds);

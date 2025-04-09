@@ -25,6 +25,7 @@ namespace WasteIntoCity.Api.Extensions.ServiceExtensions
             services.AddScoped<IWorkReportStatusTypesRepository, WorkReportStatusTypesRepository>();
             services.AddScoped<IWorkStatusTypesRepository, WorkStatusTypesRepository>();
             services.AddScoped<IScoreSettingsTypeRepository, ScoreSettingsTypeRepository>();
+            services.AddScoped<IImagesRepository, ImagesRepository>();
 
             return services;
         }

@@ -122,13 +122,13 @@ namespace WasteIntoCity.Persistance.Repositories
             }
         }
 
-        public async Task<List<Work>> FindFirstByFinishedTimeWithParticipantsAndMultiplierRankingAndWorkColleagueReportsAndWorkStatus(
-            int worksAmount, TimeSpan minWorkIntervalAfterFinished)
+        public async Task<List<Work>> FindFirstByFinishedTimeAndStatusesWithParticipantsAndMultiplierRankingAndWorkColleagueReportsAndWorkStatus(
+            int worksAmount, TimeSpan minWorkIntervalAfterFinished, WorkStatusEnum[] workStatuses)
         {
-            DateTime minAppropriateFinishedWorkTime = DateTime.UtcNow.Add(minWorkIntervalAfterFinished);
+            DateTime minAppropriateFinishedWorkTime = DateTime.UtcNow.Subtract(minWorkIntervalAfterFinished);
 
             List<WorkEntity> workEntities = await _mainDbContext.Works
-                .Where(w => w.FinishDatetime >= minAppropriateFinishedWorkTime)
+                .Where(w => w.FinishDatetime <= minAppropriateFinishedWorkTime && workStatuses.Contains((WorkStatusEnum)w.WorkStatusTypesId))
                 .Include(w => w.WorkComplexityType)
                 .Include(w => w.Users)
                 .Include(w => w.WorkStatusType)
@@ -217,12 +217,12 @@ namespace WasteIntoCity.Persistance.Repositories
             return works;
         }
 
-        public async Task<List<Work>> FindWithParticipants(int worksAmount, TimeSpan minWorkIntervalAfterFinished)
+        public async Task<List<Work>> FindFirstByFinishedTimeAndStatusesWithParticipants(int worksAmount, TimeSpan minWorkIntervalAfterFinished, WorkStatusEnum[] workStatuses)
         {
-            DateTime minAppropriateFinishedWorkTime = DateTime.UtcNow.Add(minWorkIntervalAfterFinished);
+            DateTime minAppropriateFinishedWorkTime = DateTime.UtcNow.Subtract(minWorkIntervalAfterFinished);
 
             List<WorkEntity> workEntities = await _mainDbContext.Works
-                .Where(w => w.FinishDatetime >= minAppropriateFinishedWorkTime)
+                .Where(w => w.FinishDatetime <= minAppropriateFinishedWorkTime && workStatuses.Contains((WorkStatusEnum)w.WorkStatusTypesId))
                 .Include(w => w.Users)
                 .Take(worksAmount)
                 .ToListAsync();

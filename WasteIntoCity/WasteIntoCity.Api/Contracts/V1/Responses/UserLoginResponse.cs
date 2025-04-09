@@ -6,4 +6,9 @@
 
         required public string RefreshTokenValue { get; init; }
     }
+
+    public record ImageUploadResponse
+    {
+        required public string FileName { get; init; }
+    }
 }

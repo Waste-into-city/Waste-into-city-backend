@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using WasteIntoCity.Application.Options;
-using WasteIntoCity.Application.Types;
+using WasteIntoCity.Application.Enum;
 using WasteIntoCity.Core.Exceptions;
 using WasteIntoCity.Core.Structs;
 
@@ -8,13 +8,13 @@ namespace WasteIntoCity.Application.Extensions
 {
     public static class HttpContextExtension
     {
-        public static readonly Dictionary<TokenType, string> TokenContextKeys = new Dictionary<TokenType, string>
+        public static readonly Dictionary<TokenEnum, string> TokenContextKeys = new Dictionary<TokenEnum, string>
         {
-            {TokenType.ACCESS, "AccessToken" },
-            {TokenType.REFRESH, "RefreshToken" },
+            {TokenEnum.ACCESS, "AccessToken" },
+            {TokenEnum.REFRESH, "RefreshToken" },
         };
 
-        public static string TakeTokenValueByTokenType(this HttpContext httpContext, TokenType tokenType)
+        public static string TakeTokenValueByTokenType(this HttpContext httpContext, TokenEnum tokenType)
         {
             string tokenContextKey = TokenContextKeys.GetValueOrDefault(tokenType)!;
 
@@ -52,7 +52,7 @@ namespace WasteIntoCity.Application.Extensions
         public static void AppendTokensContextResponse(this HttpContext httpContext, UserPrepareTokensContextResponse userPrepareTokensContextResponse,
             JwtOptions jwtOptions)
         {
-            httpContext.Response.Cookies.Append(TokenContextKeys.GetValueOrDefault(TokenType.ACCESS)!,
+            httpContext.Response.Cookies.Append(TokenContextKeys.GetValueOrDefault(TokenEnum.ACCESS)!,
                 userPrepareTokensContextResponse.AccessTokenValue, new CookieOptions
                 {
                     HttpOnly = true,
@@ -61,7 +61,7 @@ namespace WasteIntoCity.Application.Extensions
                     Expires = userPrepareTokensContextResponse.RefreshTokenExpiredTimestamp
                 });
 
-            httpContext.Response.Cookies.Append(TokenContextKeys.GetValueOrDefault(TokenType.REFRESH)!,
+            httpContext.Response.Cookies.Append(TokenContextKeys.GetValueOrDefault(TokenEnum.REFRESH)!,
                 userPrepareTokensContextResponse.RefreshTokenValue, new CookieOptions
                 {
                     HttpOnly = true,
@@ -73,8 +73,8 @@ namespace WasteIntoCity.Application.Extensions
 
         public static void DeleteTokensContextResponse(this HttpContext httpContext)
         {
-            httpContext.Response.Cookies.Delete(TokenContextKeys.GetValueOrDefault(TokenType.ACCESS)!);
-            httpContext.Response.Cookies.Delete(TokenContextKeys.GetValueOrDefault(TokenType.REFRESH)!);
+            httpContext.Response.Cookies.Delete(TokenContextKeys.GetValueOrDefault(TokenEnum.ACCESS)!);
+            httpContext.Response.Cookies.Delete(TokenContextKeys.GetValueOrDefault(TokenEnum.REFRESH)!);
         }
     }
 }

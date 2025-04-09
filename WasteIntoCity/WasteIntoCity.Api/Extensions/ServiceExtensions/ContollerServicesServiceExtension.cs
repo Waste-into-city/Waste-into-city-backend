@@ -10,6 +10,7 @@ namespace WasteIntoCity.Api.Extensions.ServiceExtensions
             services.AddScoped<IIdentityService, IdentityService>();
             services.AddScoped<IWorksService, WorksService>();
             services.AddScoped<IWorkApplicationsService, WorkApplicationsService>();
+            services.AddScoped<IImagesService, ImagesService>();
 
             return services;
         }

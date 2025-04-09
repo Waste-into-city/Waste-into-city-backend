@@ -1,17 +1,58 @@
-﻿using AutoMapper;
+﻿using Microsoft.EntityFrameworkCore;
+using WasteIntoCity.Core.Interfaces.Repositories;
+using WasteIntoCity.Core.Models;
+using WasteIntoCity.Core.ValueObjects;
+using WasteIntoCity.Persistance.Entities;
 
 namespace WasteIntoCity.Persistance.Repositories
 {
-    public class ImagesRepository
+    public class ImagesRepository : IImagesRepository
     {
         private readonly MainDbContext _mainDbContext;
 
-        private readonly IMapper _mapper;
-
-        public ImagesRepository(MainDbContext mainDbContext, IMapper mapper)
+        public ImagesRepository(MainDbContext mainDbContext)
         {
             _mainDbContext = mainDbContext;
-            _mapper = mapper;
+        }
+
+        public async Task Create(Image image)
+        {
+            ImageEntity imageEntity = new ImageEntity
+            {
+                Id = image.Id,
+                Name = image.Name.Value,
+                UploadedTime = image.UploadedTime,
+            };
+
+            await _mainDbContext.Images.AddAsync(imageEntity);
+            await _mainDbContext.SaveChangesAsync();
+        }
+
+        public async Task DeleteByNames(List<string> imageNames)
+        {
+            IQueryable<ImageEntity> images = _mainDbContext.Images.Where(img => imageNames.Contains(img.Name));
+            _mainDbContext.Images.RemoveRange(images);
+
+            await _mainDbContext.SaveChangesAsync();
+        }
+
+        public async Task<List<ImageName>> FindNamesFirstNotReferencedByFinished(int imagesAmount, TimeSpan minImageIntervalAfterUpdated)
+        {
+            DateTime minAppropriateUploadedWorkTime = DateTime.UtcNow.Subtract(minImageIntervalAfterUpdated);
+
+            List<ImageEntity> imageEntities = await _mainDbContext.Images
+                .Where(w => w.UploadedTime <= minAppropriateUploadedWorkTime && w.WorkApplicationsId == null && w.WorkReportComplaintsId == null
+                    && w.WorkReportResultsId == null)
+                .Take(imagesAmount)
+                .ToListAsync();
+
+            List<ImageName> imageNames = imageEntities.Select(w =>
+                ImageName.Create(
+                    w.Name
+                )
+            ).ToList();
+
+            return imageNames;
         }
     }
 }

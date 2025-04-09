@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using WasteIntoCity.Core.Models;
+using WasteIntoCity.Core.ValueObjects;
 using WasteIntoCity.Persistance.Entities;
 
 namespace WasteIntoCity.Persistance.Configurations
@@ -15,7 +15,9 @@ namespace WasteIntoCity.Persistance.Configurations
 
             builder.Property(i => i.Id).HasColumnName("id");
 
-            builder.Property(i => i.Name).IsRequired().HasColumnName("name").HasMaxLength(Image.NAME_LENGTH_MAX);
+            builder.Property(i => i.Name).IsRequired().HasColumnName("name").HasMaxLength(ImageName.VALUE_LENGTH_MAX);
+
+            builder.Property(i => i.UploadedTime).IsRequired().HasColumnName("uploaded_time");
 
             builder.Property(i => i.WorkApplicationsId).HasColumnName("work_applications_id");
 
@@ -24,6 +26,8 @@ namespace WasteIntoCity.Persistance.Configurations
             builder.Property(i => i.WorkReportResultsId).HasColumnName("work_report_results_id");
 
             builder.HasKey(i => i.Id);
+
+            builder.HasIndex(i => i.Name).IsUnique();
 
             builder.HasOne(i => i.WorkApplication)
                 .WithMany(wa => wa.Images);

@@ -1,4 +1,5 @@
 ﻿using WasteIntoCity.Core.Models;
+using WasteIntoCity.Core.ValueObjects;
 
 namespace WasteIntoCity.Core.Interfaces.Repositories
 {
@@ -6,12 +7,8 @@ namespace WasteIntoCity.Core.Interfaces.Repositories
     {
         Task Create(Image image);
 
-        Task Delete(Guid id);
+        Task<List<ImageName>> FindNamesFirstNotReferencedByFinished(int imagesAmount, TimeSpan minImageIntervalAfterFinished);
 
-        Task<List<Image>> Get();
-
-        Task<Image> GetById(Guid id);
-
-        Task Update(Image image);
+        Task DeleteByNames(List<string> imageNames);
     }
 }

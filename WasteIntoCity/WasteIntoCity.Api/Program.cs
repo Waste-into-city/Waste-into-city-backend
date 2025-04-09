@@ -18,7 +18,11 @@ services.AddCors(options =>
     });
 });
 
+services.AddCustomValueObjects(configuration);
+
 services.AddCustomMainDbContext(configuration);
+
+services.AddCustomAdapters(configuration);
 
 services.AddCustomBackgroundServices(configuration);
 
