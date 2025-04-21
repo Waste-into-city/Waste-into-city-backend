@@ -5,3 +5,5 @@ bin
 obj
 packages
 .vs
+/WasteIntoCity/WasteIntoCity.Api/wwwroot/uploads/*
+!/WasteIntoCity/WasteIntoCity.Api/wwwroot/uploads/.gitkeep
