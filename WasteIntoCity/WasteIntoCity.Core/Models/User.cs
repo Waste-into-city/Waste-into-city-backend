@@ -1,4 +1,4 @@
-﻿using WasteIntoCity.Core.Exceptions;
+﻿using WasteIntoCity.Core.Exceptions.BadRequest400Exceptions;
 using WasteIntoCity.Core.ValueObjects;
 
 namespace WasteIntoCity.Core.Models
@@ -59,12 +59,12 @@ namespace WasteIntoCity.Core.Models
         {
             if (ranking is < RANKING_MIN or > RANKING_MAX)
             {
-                throw new ValueOutOfRangeException<int>(nameof(ranking), RANKING_MIN, RANKING_MAX);
+                throw new ValueOutOfRangeException<int>(nameof(ranking), RANKING_MIN, RANKING_MAX, 44);
             }
 
             if (negativeScore is < NEGATIVE_SCORE_MIN or > NEGATIVE_SCORE_MAX)
             {
-                throw new ValueOutOfRangeException<int>(nameof(negativeScore), NEGATIVE_SCORE_MIN, NEGATIVE_SCORE_MAX);
+                throw new ValueOutOfRangeException<int>(nameof(negativeScore), NEGATIVE_SCORE_MIN, NEGATIVE_SCORE_MAX, 45);
             }
 
             return new User(id, nickname, email, password, ranking, roles, negativeScore, isBanned);

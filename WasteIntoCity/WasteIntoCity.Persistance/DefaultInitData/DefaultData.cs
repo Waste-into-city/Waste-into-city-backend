@@ -40,8 +40,7 @@ namespace WasteIntoCity.Persistance.DefaultInitData
 
         public static readonly WorkStatusType[] WorkStatusTypes = new WorkStatusType[]
         {
-            WorkStatusType.Create(WorkStatusEnum.Avaliable, MeanText.Create(nameof(WorkStatusEnum.Avaliable)), 0),
-            WorkStatusType.Create(WorkStatusEnum.InProgress, MeanText.Create(nameof(WorkStatusEnum.InProgress)), 0),
+            WorkStatusType.Create(WorkStatusEnum.NotFinished, MeanText.Create(nameof(WorkStatusEnum.NotFinished)), 0),
             WorkStatusType.Create(WorkStatusEnum.FinishedSuccessfully, MeanText.Create(nameof(WorkStatusEnum.FinishedSuccessfully)), 0),
             WorkStatusType.Create(WorkStatusEnum.FinishedFailed, MeanText.Create(nameof(WorkStatusEnum.FinishedFailed)), 0),
             WorkStatusType.Create(WorkStatusEnum.Closed, MeanText.Create(nameof(WorkStatusEnum.Closed)), 0),

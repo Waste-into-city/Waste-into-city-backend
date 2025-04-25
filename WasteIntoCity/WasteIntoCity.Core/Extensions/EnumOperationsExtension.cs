@@ -1,5 +1,7 @@
-﻿using WasteIntoCity.Core.Exceptions;
+﻿using WasteIntoCity.Core.Enums;
+using WasteIntoCity.Core.Exceptions.BadRequest400Exceptions;
 using WasteIntoCity.Core.Models;
+using WasteIntoCity.Core.Types;
 
 namespace WasteIntoCity.Core.Extensions
 {
@@ -17,8 +19,48 @@ namespace WasteIntoCity.Core.Extensions
             if (!Enum.IsDefined(typeof(TEnum), valueInt))
             {
                 throw new InvalidValueFormatException(nameof(WorkMarkType),
-                    $"The {valueIntParamName} should be an enum ({EnumOperationsExtension.ToStringAllValidValuesThroughComma<TEnum>()})");
+                    $"The {valueIntParamName} should be an enum ({EnumOperationsExtension.ToStringAllValidValuesThroughComma<TEnum>()})", 24);
             }
+        }
+
+        public static WorkStatusForClientEnum TakeWorkStatusForClientEnum(DateTime? startedDatetime, DateTime? finishDatetime,
+           WorkStatusEnum workStatusTypesId)
+        {
+            WorkStatusForClientEnum workStatusForClient;
+            DateTime currentDateTime = DateTime.UtcNow;
+            if (startedDatetime is null)
+            {
+                workStatusForClient = WorkStatusForClientEnum.Avaliable;
+            }
+            else
+            {
+                if (workStatusTypesId == WorkStatusEnum.FinishedSuccessfully)
+                {
+                    workStatusForClient = WorkStatusForClientEnum.FinishedSuccessfully;
+                }
+                else if (workStatusTypesId == WorkStatusEnum.FinishedFailed)
+                {
+                    workStatusForClient = WorkStatusForClientEnum.FinishedFailed;
+                }
+                else if (workStatusTypesId == WorkStatusEnum.Closed)
+                {
+                    workStatusForClient = WorkStatusForClientEnum.Closed;
+                }
+                else if (startedDatetime > currentDateTime)
+                {
+                    workStatusForClient = WorkStatusForClientEnum.Preparing;
+                }
+                else if (startedDatetime < currentDateTime && finishDatetime > currentDateTime)
+                {
+                    workStatusForClient = WorkStatusForClientEnum.InProgress;
+                }
+                else
+                {
+                    workStatusForClient = WorkStatusForClientEnum.PendingFinalization;
+                }
+            }
+
+            return workStatusForClient;
         }
     }
 }

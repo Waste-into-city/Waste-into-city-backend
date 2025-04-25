@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
-using WasteIntoCity.Core.Exceptions;
+using WasteIntoCity.Core.Exceptions.BadRequest400Exceptions;
+using WasteIntoCity.Core.Exceptions.InternalServer500Exceptions;
 using WasteIntoCity.Core.Interfaces.Adapters;
 using WasteIntoCity.Core.Interfaces.Repositories;
 using WasteIntoCity.Core.Interfaces.Services;
@@ -28,7 +29,7 @@ namespace WasteIntoCity.Application.Services
                 }
                 catch
                 {
-                    throw new FolderCreateException(imageOptions.Value.FolderPathFromRoute, null);
+                    throw new FolderCreateException(10, imageOptions.Value.FolderPathFromRoute, null);
                 }
             }
 
@@ -43,7 +44,7 @@ namespace WasteIntoCity.Application.Services
 
             return _mimeTypes.TryGetValue(extension, out string? mime)
                 ? mime
-                : throw new FileInvalidExtensionException(fileName, _mimeTypes.Keys.ToList(), null);
+                : throw new FileInvalidExtensionException(3, fileName, _mimeTypes.Keys.ToList(), null);
         }
 
         public async Task<string> SaveImageAsync(IFormFile file)
@@ -55,19 +56,19 @@ namespace WasteIntoCity.Application.Services
 
             if (file.Length > _maxFileSize)
             {
-                throw new FileTooLargeException(file.FileName, _maxFileSize, null);
+                throw new FileTooLargeException(7, file.FileName, _maxFileSize, null);
             }
 
             string extension = Path.GetExtension(file.FileName).ToLowerInvariant();
             if (!_mimeTypes.ContainsKey(extension))
             {
-                throw new FileInvalidExtensionException(file.FileName, _mimeTypes.Keys.ToList(), null);
+                throw new FileInvalidExtensionException(4, file.FileName, _mimeTypes.Keys.ToList(), null);
             }
 
             string expectedMimeType = _mimeTypes[extension];
             if (!string.Equals(file.ContentType, expectedMimeType, StringComparison.OrdinalIgnoreCase))
             {
-                throw new FileMimeTypeException(file.FileName, _mimeTypes, file.ContentType, null);
+                throw new FileMimeTypeException(6, file.FileName, _mimeTypes, file.ContentType, null);
             }
 
             try
@@ -77,7 +78,7 @@ namespace WasteIntoCity.Application.Services
             }
             catch (SixLabors.ImageSharp.UnknownImageFormatException)
             {
-                throw new FIleContentIsNotImageException(file.FileName, null);
+                throw new FIleContentIsNotImageException(file.FileName, null, 2);
             }
 
             string fileName = Path.GetRandomFileName() + extension;
@@ -90,7 +91,7 @@ namespace WasteIntoCity.Application.Services
             }
             catch
             {
-                throw new FileCopyException(fileName, null);
+                throw new FileCopyException(8, fileName, null);
             }
 
             Core.Models.Image imageEntity = Core.Models.Image.Create(
@@ -111,7 +112,7 @@ namespace WasteIntoCity.Application.Services
             string filePath = Path.Combine(_uploadPath, fileName);
 
             if (!File.Exists(filePath))
-                throw new FileNotFoundCustomException(fileName, null);
+                throw new FileNotFoundCustomException(fileName, null, 9);
 
             return (new FileStream(filePath, FileMode.Open, FileAccess.Read), GetMimeType(fileName));
         }

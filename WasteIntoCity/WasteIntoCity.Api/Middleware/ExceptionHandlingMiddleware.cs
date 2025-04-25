@@ -1,5 +1,9 @@
 ﻿using WasteIntoCity.Api.Contracts.V1.Responses;
-using WasteIntoCity.Core.Exceptions;
+using WasteIntoCity.Core.Exceptions.BadRequest400Exceptions;
+using WasteIntoCity.Core.Exceptions.ForbiddenAccessResource403Exceptions;
+using WasteIntoCity.Core.Exceptions.InternalServer500Exceptions;
+using WasteIntoCity.Core.Exceptions.NotFound404Exceptions;
+using WasteIntoCity.Core.Exceptions.Unauthorized401Exceptions;
 
 namespace WasteIntoCity.Api.Middleware
 {
@@ -38,6 +42,7 @@ namespace WasteIntoCity.Api.Middleware
 
                 errorResponse = new ErrorResponse
                 {
+                    Code = ex.Code,
                     Message = ex.Message
                 };
             }
@@ -49,6 +54,7 @@ namespace WasteIntoCity.Api.Middleware
 
                 errorResponse = new ErrorResponse
                 {
+                    Code = ex.Code,
                     Message = ex.Message
                 };
             }
@@ -60,6 +66,7 @@ namespace WasteIntoCity.Api.Middleware
 
                 errorResponse = new ErrorResponse
                 {
+                    Code = ex.Code,
                     Message = ex.Message
                 };
             }
@@ -71,6 +78,7 @@ namespace WasteIntoCity.Api.Middleware
 
                 errorResponse = new ErrorResponse
                 {
+                    Code = ex.Code,
                     Message = ex.Message
                 };
             }
@@ -82,6 +90,7 @@ namespace WasteIntoCity.Api.Middleware
 
                 errorResponse = new ErrorResponse
                 {
+                    Code = ex.Code,
                     Message = ex.Message
                 };
             }
@@ -93,6 +102,7 @@ namespace WasteIntoCity.Api.Middleware
 
                 errorResponse = new ErrorResponse
                 {
+                    Code = InternalServer500Exception.STATUS_CODE * 1000 + 997,
                     Message = "Error: Unexpected server exception."
                 };
             }
@@ -107,6 +117,7 @@ namespace WasteIntoCity.Api.Middleware
                 {
                     errorResponse = new ErrorResponse
                     {
+                        Code = context.Response.StatusCode * 1000 + 998,
                         Message = message
                     };
                 }
@@ -114,6 +125,7 @@ namespace WasteIntoCity.Api.Middleware
                 {
                     errorResponse = new ErrorResponse
                     {
+                        Code = context.Response.StatusCode * 1000 + 999,
                         Message = "Error: Unexpected server exception."
                     };
                 }

@@ -4,7 +4,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using WasteIntoCity.Api.Options;
 using WasteIntoCity.Core.Enums;
-using WasteIntoCity.Core.Exceptions;
+using WasteIntoCity.Core.Exceptions.InternalServer500Exceptions;
 using WasteIntoCity.Core.Interfaces.Repositories;
 using WasteIntoCity.Core.Models;
 using WasteIntoCity.Core.Types;
@@ -36,22 +36,22 @@ namespace WasteIntoCity.Api.BackgroundServices
         {
             if (work.Participants == null)
             {
-                throw new NullValueServerException("participants", null);
+                throw new NullValueServerException(15, "participants", null);
             }
 
             if (work.WorkColleagueReports == null)
             {
-                throw new NullValueServerException("work colleague reports", null);
+                throw new NullValueServerException(16, "work colleague reports", null);
             }
 
             if (work.WorkComplexityType == null)
             {
-                throw new NullValueServerException("work complexity type", null);
+                throw new NullValueServerException(17, "work complexity type", null);
             }
 
             if (work.WorkStatusType == null)
             {
-                throw new NullValueServerException("work status type", null);
+                throw new NullValueServerException(18, "work status type", null);
             }
 
             int workParticipantsCount = work.Participants.Count;
@@ -68,7 +68,7 @@ namespace WasteIntoCity.Api.BackgroundServices
                 {
                     if (workAboutParticipantColleagueReport.WorkMarkType == null)
                     {
-                        throw new NullValueServerException("work mark type", null);
+                        throw new NullValueServerException(19, "work mark type", null);
                     }
 
                     score = score + workAboutParticipantColleagueReport.WorkMarkType.AdditionRanking;

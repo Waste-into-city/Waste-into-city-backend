@@ -1,5 +1,6 @@
 ﻿using System.Text.RegularExpressions;
-using WasteIntoCity.Core.Exceptions;
+using WasteIntoCity.Core.Exceptions.BadRequest400Exceptions;
+using WasteIntoCity.Core.Exceptions.InternalServer500Exceptions;
 using WasteIntoCity.Core.Options;
 
 namespace WasteIntoCity.Core.ValueObjects
@@ -32,16 +33,16 @@ namespace WasteIntoCity.Core.ValueObjects
         public static ImageName Create(string value)
         {
             if (_pattern == null)
-                throw new NullValueServerException(nameof(ImageName), "ImageName is not configured. Call Configure(options) first.");
+                throw new NullValueServerException(23, nameof(ImageName), "ImageName is not configured. Call Configure(options) first.");
 
             if (value.Length is < VALUE_LENGTH_MIN or > VALUE_LENGTH_MAX)
             {
-                throw new InvalidLengthException(nameof(ImageName).ToLower(), VALUE_LENGTH_MIN, VALUE_LENGTH_MAX);
+                throw new InvalidLengthException(21, nameof(ImageName).ToLower(), VALUE_LENGTH_MIN, VALUE_LENGTH_MAX);
             }
 
             if (!Regex.IsMatch(value, _pattern, RegexOptions.IgnoreCase))
             {
-                throw new InvalidValueFormatException(nameof(ImageName).ToLower(), null);
+                throw new InvalidValueFormatException(nameof(ImageName).ToLower(), null, 26);
             }
 
             return new ImageName(value);

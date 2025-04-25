@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
-using WasteIntoCity.Application.Options;
 using WasteIntoCity.Application.Enum;
-using WasteIntoCity.Core.Exceptions;
+using WasteIntoCity.Application.Options;
+using WasteIntoCity.Core.Exceptions.InternalServer500Exceptions;
+using WasteIntoCity.Core.Exceptions.Unauthorized401Exceptions;
 using WasteIntoCity.Core.Structs;
 
 namespace WasteIntoCity.Application.Extensions
@@ -26,12 +27,12 @@ namespace WasteIntoCity.Application.Extensions
             }
             catch
             {
-                throw new NullOrEmptyTokenException(tokenContextKey, null);
+                throw new NullOrEmptyTokenException(tokenContextKey, null, 3);
             }
 
             if (accessTokenValue == string.Empty)
             {
-                throw new NullOrEmptyTokenException(tokenContextKey, null);
+                throw new NullOrEmptyTokenException(tokenContextKey, null, 4);
             }
 
             return accessTokenValue;
@@ -41,7 +42,7 @@ namespace WasteIntoCity.Application.Extensions
         {
             if (httpContext.User is null)
             {
-                throw new NullValueServerException(nameof(HttpContext), "User field in httpContext of accessToken was not found ");
+                throw new NullValueServerException(21, nameof(HttpContext), "User field in httpContext of accessToken was not found ");
             }
 
             Guid userId = Guid.Parse(httpContext.User.Claims.Single(x => x.Type == "id").Value);

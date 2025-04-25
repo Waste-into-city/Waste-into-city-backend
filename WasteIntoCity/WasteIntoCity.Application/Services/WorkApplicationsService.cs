@@ -1,5 +1,5 @@
 ﻿using WasteIntoCity.Core.Enums;
-using WasteIntoCity.Core.Exceptions;
+using WasteIntoCity.Core.Exceptions.BadRequest400Exceptions;
 using WasteIntoCity.Core.Interfaces.Repositories;
 using WasteIntoCity.Core.Interfaces.Services;
 using WasteIntoCity.Core.Models;
@@ -68,7 +68,7 @@ namespace WasteIntoCity.Application.Services
             if (workApplication.WorkReportStatusTypesId != WorkReportStatusEnum.Pending)
             {
                 throw new ValueOutOfRangeException<WorkReportStatusEnum>(
-                    nameof(WorkApplication), $"Application is not in {nameof(WorkReportStatusEnum.Pending)} state");
+                    nameof(WorkApplication), $"Application is not in {nameof(WorkReportStatusEnum.Pending)} state", 39);
             }
 
             User user = await _usersRepository.FindByIdWithRolesAsync(workApplication.FromUsersId);
@@ -112,7 +112,7 @@ namespace WasteIntoCity.Application.Services
             if (workApplication.WorkReportStatusTypesId != WorkReportStatusEnum.Pending)
             {
                 throw new ValueOutOfRangeException<WorkReportStatusEnum>(
-                    nameof(WorkApplication), $"Application is not in {nameof(WorkReportStatusEnum.Pending)} state");
+                    nameof(WorkApplication), $"Application is not in {nameof(WorkReportStatusEnum.Pending)} state", 40);
             }
 
             User user = await _usersRepository.FindByIdWithRolesAsync(workApplication.FromUsersId);

@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using WasteIntoCity.Api.Options;
-using WasteIntoCity.Core.Exceptions;
+using WasteIntoCity.Core.Exceptions.InternalServer500Exceptions;
 using WasteIntoCity.Core.Interfaces.Adapters;
 using WasteIntoCity.Core.Interfaces.Repositories;
 using WasteIntoCity.Core.ValueObjects;
@@ -27,7 +27,7 @@ namespace WasteIntoCity.Api.BackgroundServices
         {
             if (!Directory.Exists(IMAGES_PATH))
             {
-                throw new FolderCreateException(IMAGES_PATH, null);
+                throw new FolderCreateException(9, IMAGES_PATH, null);
             }
 
             string uploadPath = Path.Combine(appEnvironmentAdapter.GetRootPath(), IMAGES_PATH);

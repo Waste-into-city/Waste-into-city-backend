@@ -4,7 +4,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using WasteIntoCity.Api.Options;
 using WasteIntoCity.Core.Enums;
-using WasteIntoCity.Core.Exceptions;
+using WasteIntoCity.Core.Exceptions.InternalServer500Exceptions;
 using WasteIntoCity.Core.Interfaces.Repositories;
 using WasteIntoCity.Core.Models;
 using WasteIntoCity.Core.Types;
@@ -30,12 +30,12 @@ namespace WasteIntoCity.Api.BackgroundServices
             _options = options;
         }
 
-        private async Task HandleInProgressWorkAsync(Work work, Dictionary<ScoreSettingsEnum, int> scoreSettingsValues, IWorksRepository worksRepository,
+        private async Task HandlePendingFinalizationWorkAsync(Work work, Dictionary<ScoreSettingsEnum, int> scoreSettingsValues, IWorksRepository worksRepository,
             IUsersRepository usersRepository, RefreshTokensRepository refreshTokensRepository, CancellationToken stoppingToken)
         {
             if (work.Participants == null)
             {
-                throw new NullValueServerException("participants", null);
+                throw new NullValueServerException(20, "participants", null);
             }
 
             List<User> updatedParticipants = new List<User>();
@@ -74,13 +74,13 @@ namespace WasteIntoCity.Api.BackgroundServices
             await worksRepository.UpdateStatusesIdByIdAsync(work.Id, WorkStatusEnum.Closed);
         }
 
-        private async Task HandleInProgressWorksAsync(IWorksRepository worksRepository, IScoreSettingsTypeRepository scoreSettingsTypeRepository,
+        private async Task HandlePendingFinalizationWorksAsync(IWorksRepository worksRepository, IScoreSettingsTypeRepository scoreSettingsTypeRepository,
             IUsersRepository usersRepository, RefreshTokensRepository refreshTokensRepository, CancellationToken stoppingToken)
         {
             List<Work> works = await worksRepository.FindFirstByFinishedTimeAndStatusesWithParticipants(
                 _options.Value.WorksAtTimeAmount,
                 _options.Value.MinWorkIntervalAfterFinished,
-                [WorkStatusEnum.InProgress]
+                [WorkStatusForClientEnum.PendingFinalization]
             );
 
             Dictionary<ScoreSettingsEnum, int> scoreSettingsValues = await scoreSettingsTypeRepository.FindAllValuesByIdsAsync(_scoreSettingsIds);
@@ -88,7 +88,7 @@ namespace WasteIntoCity.Api.BackgroundServices
             int i = 0;
             while (i < works.Count && !stoppingToken.IsCancellationRequested)
             {
-                await HandleInProgressWorkAsync(works[i], scoreSettingsValues, worksRepository, usersRepository, refreshTokensRepository, stoppingToken);
+                await HandlePendingFinalizationWorkAsync(works[i], scoreSettingsValues, worksRepository, usersRepository, refreshTokensRepository, stoppingToken);
 
                 i++;
             }

@@ -2,7 +2,8 @@
 using System.Security.Claims;
 using WasteIntoCity.Api.AuthorizationPolicies.Requirements;
 using WasteIntoCity.Core.Enums;
-using WasteIntoCity.Core.Exceptions;
+using WasteIntoCity.Core.Exceptions.ForbiddenAccessResource403Exceptions;
+using WasteIntoCity.Core.Exceptions.Unauthorized401Exceptions;
 using WasteIntoCity.Core.Interfaces.Repositories;
 using WasteIntoCity.Core.Models;
 

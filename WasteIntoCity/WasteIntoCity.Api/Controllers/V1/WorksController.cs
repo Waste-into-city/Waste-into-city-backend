@@ -4,7 +4,7 @@ using WasteIntoCity.Api.Contracts.V1.Responses;
 using WasteIntoCity.Application;
 using WasteIntoCity.Application.Extensions;
 using WasteIntoCity.Core.Enums;
-using WasteIntoCity.Core.Exceptions;
+using WasteIntoCity.Core.Exceptions.InternalServer500Exceptions;
 using WasteIntoCity.Core.Interfaces.Services;
 using WasteIntoCity.Core.Models;
 
@@ -30,7 +30,7 @@ namespace WasteIntoCity.Api.Controllers.V1
                 {
                     if (work.Coordinates is null)
                     {
-                        throw new NullValueServerException(nameof(work.Coordinates), null);
+                        throw new NullValueServerException(11, nameof(work.Coordinates), null);
                     }
 
                     return new WorkGetAllResponse
@@ -59,7 +59,7 @@ namespace WasteIntoCity.Api.Controllers.V1
 
             if (work.Coordinates is null)
             {
-                throw new NullValueServerException(nameof(work.Coordinates), null);
+                throw new NullValueServerException(12, nameof(work.Coordinates), null);
             }
 
             WorkGetByIdResponse workGetByIdResponse = new WorkGetByIdResponse
@@ -91,7 +91,7 @@ namespace WasteIntoCity.Api.Controllers.V1
                 {
                     if (work.Coordinates is null)
                     {
-                        throw new NullValueServerException(nameof(work.Coordinates), null);
+                        throw new NullValueServerException(13, nameof(work.Coordinates), null);
                     }
 
                     return new WorkGetAllOwnTakePartInResponse
