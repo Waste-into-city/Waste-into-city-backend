@@ -12,7 +12,7 @@ namespace WasteIntoCity.Api.Filters
                 throw new IncorrectRequestFormatException(context.ModelState.Values
                     .SelectMany(v => v.Errors)
                     .Select(e => e.ErrorMessage).ToList(),
-                    8);
+                    18);
             }
         }
 

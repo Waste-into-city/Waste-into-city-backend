@@ -32,14 +32,14 @@ namespace WasteIntoCity.Core.ValueObjects
         {
             if (string.IsNullOrWhiteSpace(value))
             {
-                throw new NullOrWhiteSpaceException(nameof(WorkMarkTypeName).ToLower(), null, 37);
+                throw new NullOrWhiteSpaceException(nameof(WorkMarkTypeName).ToLower(), null, 48);
             }
 
             string convertedValue = value.Trim().ToLower();
 
             if (!_allValidValues.Any(t => t.Value.ToLower() == convertedValue))
             {
-                throw new InvalidValueFormatException(nameof(WorkMarkTypeName).ToLower(), $"The value should be enum ({ToStringAllValidValuesThrowComma()})", 30);
+                throw new InvalidValueFormatException(nameof(WorkMarkTypeName).ToLower(), $"The value should be enum ({ToStringAllValidValuesThrowComma()})", 41);
             }
 
             return new WorkMarkTypeName(value);

@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using WasteIntoCity.Core.Exceptions;
+using WasteIntoCity.Core.Exceptions.NotFound404Exceptions;
 using WasteIntoCity.Core.Interfaces.Repositories;
 using WasteIntoCity.Core.Models;
 using WasteIntoCity.Core.Types;
@@ -22,7 +22,7 @@ namespace WasteIntoCity.Persistance.Repositories
         public async Task<WorkComplexityType> FindById(int id)
         {
             WorkComplexityTypeEntity workComplexityTypeEntity = await _mainDbContext.WorkComplexityTypes.AsNoTracking().
-                            FirstOrDefaultAsync(u => u.Id == id) ?? throw new DbIsNotFoundException(nameof(WorkComplexityType), null);
+                            FirstOrDefaultAsync(u => u.Id == id) ?? throw new DbIsNotFoundException(nameof(WorkComplexityType), 7, null);
 
             return WorkComplexityType.Create((WorkComplexityEnum)workComplexityTypeEntity.Id, MeanText.Create(workComplexityTypeEntity.Name), workComplexityTypeEntity.ParticipantsMin,
                 workComplexityTypeEntity.ParticipantsMax, workComplexityTypeEntity.DurationHours, workComplexityTypeEntity.MultiplierRanking,

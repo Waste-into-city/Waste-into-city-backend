@@ -15,7 +15,7 @@ namespace WasteIntoCity.Core.ValueObjects
         {
             if (string.IsNullOrWhiteSpace(value))
             {
-                throw new NullOrWhiteSpaceException(nameof(MeanText).ToLower(), null, 34);
+                throw new NullOrWhiteSpaceException(nameof(MeanText).ToLower(), null, 45);
             }
 
             return new MeanText(value);

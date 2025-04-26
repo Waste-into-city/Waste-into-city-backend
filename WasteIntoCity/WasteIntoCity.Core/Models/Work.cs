@@ -80,13 +80,13 @@ namespace WasteIntoCity.Core.Models
         {
             if (startedDatetime > finishDatetime)
             {
-                throw new ValueOutOfRangeException<DateTime>("startDatetime", DateTime.MinValue, (DateTime)finishDatetime, 46);
+                throw new ValueOutOfRangeException<DateTime>("startDatetime", DateTime.MinValue, (DateTime)finishDatetime, 57);
             }
 
             if ((startedDatetime is null && finishDatetime is not null) || (startedDatetime is not null && finishDatetime is null))
             {
                 throw new NullOrWhiteSpaceException(nameof(Work),
-                    "finish datetime and startedDatetime should be null or both should be not null", 33);
+                    "finish datetime and startedDatetime should be null or both should be not null", 44);
             }
 
             return new Work(id, title, description, startedDatetime, finishDatetime, workComplexityTypesId, workStatusTypesId, coordinatesId,

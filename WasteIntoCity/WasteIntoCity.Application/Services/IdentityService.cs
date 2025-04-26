@@ -146,7 +146,7 @@ namespace WasteIntoCity.Application.Services
 
             if (expiryDateTimeUtc > DateTime.UtcNow)
             {
-                throw new NotExpiredAccessTokenException(32);
+                throw new NotExpiredAccessTokenException(43);
             }
 
             string jti = accessTokenClaimsPrincipal.Claims.Single(x => x.Type == JwtRegisteredClaimNames.Jti).Value;

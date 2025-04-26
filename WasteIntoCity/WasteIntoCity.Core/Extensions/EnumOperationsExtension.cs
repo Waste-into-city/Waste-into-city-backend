@@ -19,7 +19,7 @@ namespace WasteIntoCity.Core.Extensions
             if (!Enum.IsDefined(typeof(TEnum), valueInt))
             {
                 throw new InvalidValueFormatException(nameof(WorkMarkType),
-                    $"The {valueIntParamName} should be an enum ({EnumOperationsExtension.ToStringAllValidValuesThroughComma<TEnum>()})", 24);
+                    $"The {valueIntParamName} should be an enum ({EnumOperationsExtension.ToStringAllValidValuesThroughComma<TEnum>()})", 35);
             }
         }
 

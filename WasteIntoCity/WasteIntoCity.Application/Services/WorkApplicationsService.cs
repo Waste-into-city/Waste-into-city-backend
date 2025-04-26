@@ -68,7 +68,7 @@ namespace WasteIntoCity.Application.Services
             if (workApplication.WorkReportStatusTypesId != WorkReportStatusEnum.Pending)
             {
                 throw new ValueOutOfRangeException<WorkReportStatusEnum>(
-                    nameof(WorkApplication), $"Application is not in {nameof(WorkReportStatusEnum.Pending)} state", 39);
+                    nameof(WorkApplication), $"Application is not in {nameof(WorkReportStatusEnum.Pending)} state", 50);
             }
 
             User user = await _usersRepository.FindByIdWithRolesAsync(workApplication.FromUsersId);
@@ -112,7 +112,7 @@ namespace WasteIntoCity.Application.Services
             if (workApplication.WorkReportStatusTypesId != WorkReportStatusEnum.Pending)
             {
                 throw new ValueOutOfRangeException<WorkReportStatusEnum>(
-                    nameof(WorkApplication), $"Application is not in {nameof(WorkReportStatusEnum.Pending)} state", 40);
+                    nameof(WorkApplication), $"Application is not in {nameof(WorkReportStatusEnum.Pending)} state", 51);
             }
 
             User user = await _usersRepository.FindByIdWithRolesAsync(workApplication.FromUsersId);
@@ -127,10 +127,8 @@ namespace WasteIntoCity.Application.Services
 
             WorkComplexityType workComplexityType = await _workComplexityTypesRepository.FindById((int)workApplication.WorkComplexityTypesId);
 
-            DateTime startDateTime = DateTime.UtcNow;
-
-            Work work = Work.Create(Guid.NewGuid(), workApplication.Title, workApplication.Description, startDateTime,
-                startDateTime.AddHours(workComplexityType.DurationHours), workApplication.WorkComplexityTypesId, WorkStatusEnum.Avaliable,
+            Work work = Work.Create(Guid.NewGuid(), workApplication.Title, workApplication.Description, null,
+                null, workApplication.WorkComplexityTypesId, WorkStatusEnum.NotFinished,
                 workApplication.CoordinatesId, null, null, null, null, null, null);
 
             await _worksRepository.AddAsync(work);

@@ -37,12 +37,12 @@ namespace WasteIntoCity.Core.ValueObjects
 
             if (value.Length is < VALUE_LENGTH_MIN or > VALUE_LENGTH_MAX)
             {
-                throw new InvalidLengthException(21, nameof(ImageName).ToLower(), VALUE_LENGTH_MIN, VALUE_LENGTH_MAX);
+                throw new InvalidLengthException(31, nameof(ImageName).ToLower(), VALUE_LENGTH_MIN, VALUE_LENGTH_MAX);
             }
 
             if (!Regex.IsMatch(value, _pattern, RegexOptions.IgnoreCase))
             {
-                throw new InvalidValueFormatException(nameof(ImageName).ToLower(), null, 26);
+                throw new InvalidValueFormatException(nameof(ImageName).ToLower(), null, 37);
             }
 
             return new ImageName(value);

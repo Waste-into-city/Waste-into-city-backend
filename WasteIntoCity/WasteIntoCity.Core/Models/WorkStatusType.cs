@@ -31,12 +31,12 @@ namespace WasteIntoCity.Core.Models
         {
             if (name.Value.Length is < NAME_LENGTH_MIN or > NAME_LENGTH_MAX)
             {
-                throw new InvalidLengthException(18, nameof(name), NAME_LENGTH_MIN, NAME_LENGTH_MAX);
+                throw new InvalidLengthException(28, nameof(name), NAME_LENGTH_MIN, NAME_LENGTH_MAX);
             }
 
             if (addingRanking is < MULTIPLIER_RANKING_MIN or > MULTIPLIER_RANKING_MAX)
             {
-                throw new ValueOutOfRangeException<int>(nameof(addingRanking), MULTIPLIER_RANKING_MIN, MULTIPLIER_RANKING_MAX, 53);
+                throw new ValueOutOfRangeException<int>(nameof(addingRanking), MULTIPLIER_RANKING_MIN, MULTIPLIER_RANKING_MAX, 64);
             }
 
             return new WorkStatusType(id, name, addingRanking);

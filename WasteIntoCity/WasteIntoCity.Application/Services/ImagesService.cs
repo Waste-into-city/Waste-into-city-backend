@@ -44,7 +44,7 @@ namespace WasteIntoCity.Application.Services
 
             return _mimeTypes.TryGetValue(extension, out string? mime)
                 ? mime
-                : throw new FileInvalidExtensionException(3, fileName, _mimeTypes.Keys.ToList(), null);
+                : throw new FileInvalidExtensionException(13, fileName, _mimeTypes.Keys.ToList(), null);
         }
 
         public async Task<string> SaveImageAsync(IFormFile file)
@@ -56,19 +56,19 @@ namespace WasteIntoCity.Application.Services
 
             if (file.Length > _maxFileSize)
             {
-                throw new FileTooLargeException(7, file.FileName, _maxFileSize, null);
+                throw new FileTooLargeException(17, file.FileName, _maxFileSize, null);
             }
 
             string extension = Path.GetExtension(file.FileName).ToLowerInvariant();
             if (!_mimeTypes.ContainsKey(extension))
             {
-                throw new FileInvalidExtensionException(4, file.FileName, _mimeTypes.Keys.ToList(), null);
+                throw new FileInvalidExtensionException(14, file.FileName, _mimeTypes.Keys.ToList(), null);
             }
 
             string expectedMimeType = _mimeTypes[extension];
             if (!string.Equals(file.ContentType, expectedMimeType, StringComparison.OrdinalIgnoreCase))
             {
-                throw new FileMimeTypeException(6, file.FileName, _mimeTypes, file.ContentType, null);
+                throw new FileMimeTypeException(15, file.FileName, _mimeTypes, file.ContentType, null);
             }
 
             try
@@ -78,7 +78,7 @@ namespace WasteIntoCity.Application.Services
             }
             catch (SixLabors.ImageSharp.UnknownImageFormatException)
             {
-                throw new FIleContentIsNotImageException(file.FileName, null, 2);
+                throw new FIleContentIsNotImageException(file.FileName, null, 12);
             }
 
             string fileName = Path.GetRandomFileName() + extension;
@@ -112,7 +112,7 @@ namespace WasteIntoCity.Application.Services
             string filePath = Path.Combine(_uploadPath, fileName);
 
             if (!File.Exists(filePath))
-                throw new FileNotFoundCustomException(fileName, null, 9);
+                throw new FileNotFoundCustomException(fileName, null, 16);
 
             return (new FileStream(filePath, FileMode.Open, FileAccess.Read), GetMimeType(fileName));
         }

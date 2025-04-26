@@ -19,7 +19,7 @@ namespace WasteIntoCity.Core.ValueObjects
         {
             if (value.Length is < VALUE_LENGTH_MIN or > VALUE_LENGTH_MAX)
             {
-                throw new InvalidLengthException(19, nameof(Description).ToLower(), VALUE_LENGTH_MIN, VALUE_LENGTH_MAX);
+                throw new InvalidLengthException(29, nameof(Description).ToLower(), VALUE_LENGTH_MIN, VALUE_LENGTH_MAX);
             }
 
             return new Description(value);

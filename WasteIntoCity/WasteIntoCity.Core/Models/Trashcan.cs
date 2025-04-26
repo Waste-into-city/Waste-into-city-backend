@@ -31,7 +31,7 @@ namespace WasteIntoCity.Core.Models
         {
             if (volume is < VOLUME_MIN or > VOLUME_MAX)
             {
-                throw new ValueOutOfRangeException<int>("volume", VOLUME_MIN, VOLUME_MAX, 42);
+                throw new ValueOutOfRangeException<int>("volume", VOLUME_MIN, VOLUME_MAX, 53);
             }
 
             return new Trashcan(id, volume, coordinatesId, trashcanTypesId, averageTrashcanOccupancyTypesId);

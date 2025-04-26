@@ -24,12 +24,12 @@ namespace WasteIntoCity.Core.ValueObjects
         {
             if (!Regex.IsMatch(value, VALUE_PATTERN))
             {
-                throw new InvalidValueFormatException(nameof(Email).ToLower(), null, 25);
+                throw new InvalidValueFormatException(nameof(Email).ToLower(), null, 36);
             }
 
             if (value.Length is < VALUE_LENGTH_MIN or > VALUE_LENGTH_MAX)
             {
-                throw new InvalidLengthException(20, nameof(Email).ToLower(), VALUE_LENGTH_MIN, VALUE_LENGTH_MAX);
+                throw new InvalidLengthException(30, nameof(Email).ToLower(), VALUE_LENGTH_MIN, VALUE_LENGTH_MAX);
             }
 
             return new Email(value);

@@ -23,7 +23,7 @@ namespace WasteIntoCity.Core.Models
         {
             if (name.Length is < NAME_LENGTH_MIN or > NAME_LENGTH_MAX)
             {
-                throw new InvalidLengthException(11, nameof(name), NAME_LENGTH_MIN, NAME_LENGTH_MAX);
+                throw new InvalidLengthException(21, nameof(name), NAME_LENGTH_MIN, NAME_LENGTH_MAX);
             }
 
             return new Role(id, name);

@@ -56,32 +56,32 @@ namespace WasteIntoCity.Core.Models
         {
             if (name.Value.Length is < NAME_LENGTH_MIN or > NAME_LENGTH_MAX)
             {
-                throw new InvalidLengthException(15, nameof(name), NAME_LENGTH_MIN, NAME_LENGTH_MAX);
+                throw new InvalidLengthException(25, nameof(name), NAME_LENGTH_MIN, NAME_LENGTH_MAX);
             }
 
             if (participantsMin < PARTICIPANTS_MIN_VALUE_MIN || participantsMin > participantsMax)
             {
-                throw new ValueOutOfRangeException<int>(nameof(participantsMin), PARTICIPANTS_MIN_VALUE_MIN, participantsMax, 47);
+                throw new ValueOutOfRangeException<int>(nameof(participantsMin), PARTICIPANTS_MIN_VALUE_MIN, participantsMax, 58);
             }
 
             if (participantsMax > PARTICIPANTS_MAX_VALUE_MAX)
             {
-                throw new ValueOutOfRangeException<int>(nameof(participantsMax), participantsMin, PARTICIPANTS_MAX_VALUE_MAX, 48);
+                throw new ValueOutOfRangeException<int>(nameof(participantsMax), participantsMin, PARTICIPANTS_MAX_VALUE_MAX, 59);
             }
 
             if (durationHours is < DURATION_HOURS_MIN or > DURATION_HOURS_MAX)
             {
-                throw new ValueOutOfRangeException<int>(nameof(durationHours), DURATION_HOURS_MIN, DURATION_HOURS_MAX, 49);
+                throw new ValueOutOfRangeException<int>(nameof(durationHours), DURATION_HOURS_MIN, DURATION_HOURS_MAX, 60);
             }
 
             if (multiplierRanking is < RATING_CHANGING_MIN or > RATING_CHANGING_MAX)
             {
-                throw new ValueOutOfRangeException<int>(nameof(multiplierRanking), RATING_CHANGING_MIN, RATING_CHANGING_MAX, 50);
+                throw new ValueOutOfRangeException<int>(nameof(multiplierRanking), RATING_CHANGING_MIN, RATING_CHANGING_MAX, 61);
             }
 
             if (radiusOnMap is < RADIUS_ON_MAP_MIN or > RADIUS_ON_MAP_MAX)
             {
-                throw new ValueOutOfRangeException<int>(nameof(radiusOnMap), RADIUS_ON_MAP_MIN, RADIUS_ON_MAP_MAX, 51);
+                throw new ValueOutOfRangeException<int>(nameof(radiusOnMap), RADIUS_ON_MAP_MIN, RADIUS_ON_MAP_MAX, 62);
             }
 
             return new WorkComplexityType(id, name, participantsMin, participantsMax, durationHours, multiplierRanking, radiusOnMap);

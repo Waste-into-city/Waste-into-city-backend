@@ -1,8 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using WasteIntoCity.Core.Enums;
 using WasteIntoCity.Core.Exceptions.InternalServer500Exceptions;
 using WasteIntoCity.Core.Exceptions.NotFound404Exceptions;
-using WasteIntoCity.Core.Extensions;
 using WasteIntoCity.Core.Interfaces.Repositories;
 using WasteIntoCity.Core.Models;
 using WasteIntoCity.Core.Types;
@@ -85,7 +83,7 @@ namespace WasteIntoCity.Persistance.Repositories
         public async Task<Work> FindByIdAsync(Guid id)
         {
             WorkEntity work = await _mainDbContext.Works.AsNoTracking().Include(w => w.Coordinates).FirstOrDefaultAsync(w => w.Id == id)
-                ?? throw new DbIsNotFoundException(nameof(Work), 3, null);
+                ?? throw new DbIsNotFoundException(nameof(Work), 8, null);
 
             return Work.Create(work.Id, Title.Create(work.Title), Description.Create(work.Description), work.StartedDatetime, work.FinishDatetime,
                 (WorkComplexityEnum)work.WorkComplexityTypesId, (WorkStatusEnum)work.WorkStatusTypesId, work.CoordinatesId, [],
@@ -144,12 +142,12 @@ namespace WasteIntoCity.Persistance.Repositories
             {
                 if (w.WorkComplexityType is null)
                 {
-                    throw new DbIsNotFoundException(nameof(WorkComplexityType), 4, null);
+                    throw new DbIsNotFoundException(nameof(WorkComplexityType), 9, null);
                 }
 
                 if (w.WorkStatusType is null)
                 {
-                    throw new DbIsNotFoundException(nameof(WorkStatusType), 5, null);
+                    throw new DbIsNotFoundException(nameof(WorkStatusType), 10, null);
                 }
 
                 List<User> participants = w.Users.Select(u =>
@@ -169,7 +167,7 @@ namespace WasteIntoCity.Persistance.Repositories
                     {
                         if (wc.WorkMarkType is null)
                         {
-                            throw new DbIsNotFoundException(nameof(WorkComplexityType), 6, null);
+                            throw new DbIsNotFoundException(nameof(WorkComplexityType), 11, null);
                         }
 
                         return WorkColleagueReport.Create(
@@ -220,12 +218,12 @@ namespace WasteIntoCity.Persistance.Repositories
             return works;
         }
 
-        public async Task<List<Work>> FindFirstByFinishedTimeAndStatusesWithParticipants(int worksAmount, TimeSpan minWorkIntervalAfterFinished, WorkStatusForClientEnum[] workStatusesForClient)
+        public async Task<List<Work>> FindFirstByFinishedTimeAndStatusesWithParticipants(int worksAmount, TimeSpan minWorkIntervalAfterFinished, WorkStatusEnum[] workStatuses)
         {
             DateTime minAppropriateFinishedWorkTime = DateTime.UtcNow.Subtract(minWorkIntervalAfterFinished);
 
             List<WorkEntity> workEntities = await _mainDbContext.Works
-                .Where(w => w.FinishDatetime <= minAppropriateFinishedWorkTime && EnumOperationsExtension.TakeWorkStatusForClientEnum(w.StartedDatetime, w, FinishDatetime, workStatusTypesId))
+                .Where(w => w.FinishDatetime <= minAppropriateFinishedWorkTime && workStatuses.Contains((WorkStatusEnum)w.WorkStatusTypesId))
                 .Include(w => w.Users)
                 .Take(worksAmount)
                 .ToListAsync();

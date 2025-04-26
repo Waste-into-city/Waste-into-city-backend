@@ -32,7 +32,7 @@ namespace WasteIntoCity.Core.ValueObjects
         {
             if (string.IsNullOrWhiteSpace(value))
             {
-                throw new NullOrWhiteSpaceException(nameof(WorkStatusTypeName).ToLower(), null, 38);
+                throw new NullOrWhiteSpaceException(nameof(WorkStatusTypeName).ToLower(), null, 49);
             }
 
             string convertedValue = value.Trim().ToLower();
@@ -40,7 +40,7 @@ namespace WasteIntoCity.Core.ValueObjects
             if (!_allValidValues.Any(t => t.Value.ToLower() == convertedValue))
             {
                 throw new InvalidValueFormatException(nameof(WorkStatusTypeName).ToLower(),
-                    $"The value should be enum ({ToStringAllValidValuesThrowComma()})", 31);
+                    $"The value should be enum ({ToStringAllValidValuesThrowComma()})", 42);
             }
 
             return new WorkStatusTypeName(value);

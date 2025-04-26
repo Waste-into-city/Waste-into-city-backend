@@ -30,7 +30,7 @@ namespace WasteIntoCity.Api.BackgroundServices
             _options = options;
         }
 
-        private async Task HandlePendingFinalizationWorkAsync(Work work, Dictionary<ScoreSettingsEnum, int> scoreSettingsValues, IWorksRepository worksRepository,
+        private async Task CloseFinishedWorkAsync(Work work, Dictionary<ScoreSettingsEnum, int> scoreSettingsValues, IWorksRepository worksRepository,
             IUsersRepository usersRepository, RefreshTokensRepository refreshTokensRepository, CancellationToken stoppingToken)
         {
             if (work.Participants == null)
@@ -74,13 +74,13 @@ namespace WasteIntoCity.Api.BackgroundServices
             await worksRepository.UpdateStatusesIdByIdAsync(work.Id, WorkStatusEnum.Closed);
         }
 
-        private async Task HandlePendingFinalizationWorksAsync(IWorksRepository worksRepository, IScoreSettingsTypeRepository scoreSettingsTypeRepository,
+        private async Task CloseFinishedWorksAsync(IWorksRepository worksRepository, IScoreSettingsTypeRepository scoreSettingsTypeRepository,
             IUsersRepository usersRepository, RefreshTokensRepository refreshTokensRepository, CancellationToken stoppingToken)
         {
             List<Work> works = await worksRepository.FindFirstByFinishedTimeAndStatusesWithParticipants(
                 _options.Value.WorksAtTimeAmount,
                 _options.Value.MinWorkIntervalAfterFinished,
-                [WorkStatusForClientEnum.PendingFinalization]
+                [WorkStatusEnum.FinishedSuccessfully, WorkStatusEnum.FinishedFailed]
             );
 
             Dictionary<ScoreSettingsEnum, int> scoreSettingsValues = await scoreSettingsTypeRepository.FindAllValuesByIdsAsync(_scoreSettingsIds);
@@ -88,7 +88,7 @@ namespace WasteIntoCity.Api.BackgroundServices
             int i = 0;
             while (i < works.Count && !stoppingToken.IsCancellationRequested)
             {
-                await HandlePendingFinalizationWorkAsync(works[i], scoreSettingsValues, worksRepository, usersRepository, refreshTokensRepository, stoppingToken);
+                await CloseFinishedWorkAsync(works[i], scoreSettingsValues, worksRepository, usersRepository, refreshTokensRepository, stoppingToken);
 
                 i++;
             }
@@ -107,7 +107,7 @@ namespace WasteIntoCity.Api.BackgroundServices
                 IUsersRepository usersRepository = scope.ServiceProvider.GetRequiredService<IUsersRepository>();
                 RefreshTokensRepository refreshTokensRepository = scope.ServiceProvider.GetRequiredService<RefreshTokensRepository>();
 
-                await HandleInProgressWorksAsync(worksRepository, scoreSettingsTypeRepository, usersRepository, refreshTokensRepository, stoppingToken);
+                await CloseFinishedWorksAsync(worksRepository, scoreSettingsTypeRepository, usersRepository, refreshTokensRepository, stoppingToken);
 
                 await Task.Delay(_options.Value.IntervalTime, stoppingToken);
             }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WasteIntoCity.Core.Enums;
-using WasteIntoCity.Core.Exceptions;
+using WasteIntoCity.Core.Exceptions.InternalServer500Exceptions;
+using WasteIntoCity.Core.Exceptions.NotFound404Exceptions;
 using WasteIntoCity.Core.Interfaces.Repositories;
 using WasteIntoCity.Core.Models;
 using WasteIntoCity.Core.ValueObjects;
@@ -21,7 +22,7 @@ namespace WasteIntoCity.Persistance.Repositories
         {
             if (user.Roles == null)
             {
-                throw new NullValueServerException("roles", null);
+                throw new NullValueServerException(24, "roles", null);
             }
 
             List<int> roleIds = user.Roles.Select(r => (int)r.Id).ToList();
@@ -64,7 +65,7 @@ namespace WasteIntoCity.Persistance.Repositories
         public async Task<User> FindByEmailWithRolesAsync(string email)
         {
             UserEntity userEntity = await _mainDbContext.Users.AsNoTracking().Include(u => u.Roles).FirstOrDefaultAsync(u => u.Email == email)
-                ?? throw new DbIsNotFoundException(nameof(User), null);
+                ?? throw new DbIsNotFoundException(nameof(User), 4, null);
 
             List<Role> roles = userEntity.Roles.Select(r => Role.Create((RoleEnum)r.Id, r.Name)).ToList();
 
@@ -75,7 +76,7 @@ namespace WasteIntoCity.Persistance.Repositories
         public async Task<User> FindByIdWithRolesAsync(Guid id)
         {
             UserEntity userEntity = await _mainDbContext.Users.AsNoTracking().Include(u => u.Roles).FirstOrDefaultAsync(u => u.Id == id)
-                ?? throw new DbIsNotFoundException(nameof(User), null);
+                ?? throw new DbIsNotFoundException(nameof(User), 5, null);
 
             List<Role> roles = userEntity.Roles.Select(r => Role.Create((RoleEnum)r.Id, r.Name)).ToList();
 
@@ -122,7 +123,7 @@ namespace WasteIntoCity.Persistance.Repositories
             {
                 if (user.Roles == null)
                 {
-                    throw new NullValueServerException("roles", null);
+                    throw new NullValueServerException(25, "roles", null);
                 }
 
                 bool userExists = await _mainDbContext.Users.AnyAsync(u => u.Email == user.Email.Value);
