@@ -46,7 +46,7 @@ namespace WasteIntoCity.Application.Services
             _scoreSettingsTypeRepository = scoreSettingsTypeRepository;
         }
 
-        public async Task CreateOwnAsync(string title, string description, int workComplexityId, string lat, string lng,
+        public async Task CreateOwnAsync(string title, string description, int workComplexityId, double lat, double lng,
             Guid userId)
         {
             Coordinates coordinates = Coordinates.Create(Guid.NewGuid(), lat, lng);

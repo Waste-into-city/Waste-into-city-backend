@@ -8,8 +8,8 @@
 
         required public int WorkComplexityId { get; init; }
 
-        required public string Lat { get; init; }
+        required public double Lat { get; init; }
 
-        required public string Lng { get; init; }
+        required public double Lng { get; init; }
     }
 }

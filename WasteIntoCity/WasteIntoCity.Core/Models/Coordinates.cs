@@ -4,15 +4,15 @@ namespace WasteIntoCity.Core.Models
 {
     public class Coordinates
     {
-        public const int LAT_LEGTH_MIN = 1;
+        public const int LAT_MIN = -9999999;
 
-        public const int LAT_LEGTH_MAX = 255;
+        public const int LAT_MAX = 9999999;
 
-        public const int LNG_LEGTH_MIN = 1;
+        public const int LNG_MIN = -9999999;
 
-        public const int LNG_LEGTH_MAX = 255;
+        public const int LNG_MAX = 9999999;
 
-        private Coordinates(Guid id, string lat, string lng)
+        private Coordinates(Guid id, double lat, double lng)
         {
             Id = id;
             Lat = lat;
@@ -21,20 +21,20 @@ namespace WasteIntoCity.Core.Models
 
         public Guid Id { get; }
 
-        public string Lat { get; }
+        public double Lat { get; }
 
-        public string Lng { get; }
+        public double Lng { get; }
 
-        public static Coordinates Create(Guid id, string lat, string lng)
+        public static Coordinates Create(Guid id, double lat, double lng)
         {
-            if (lat.Length is < LAT_LEGTH_MIN or > LAT_LEGTH_MAX)
+            if (lat is < LAT_MIN or > LAT_MAX)
             {
-                throw new InvalidLengthException(19, nameof(lat), LAT_LEGTH_MIN, LAT_LEGTH_MAX);
+                throw new ValueOutOfRangeException<double>($"{nameof(lat)} of {nameof(Coordinates)}", LAT_MIN, LAT_MAX, 19);
             }
 
-            if (lng.Length is < LNG_LEGTH_MIN or > LNG_LEGTH_MAX)
+            if (lng is < LNG_MIN or > LNG_MAX)
             {
-                throw new InvalidLengthException(20, nameof(lng), LNG_LEGTH_MIN, LNG_LEGTH_MAX);
+                throw new ValueOutOfRangeException<double>($"{nameof(lng)} of {nameof(Coordinates)}", LNG_MIN, LNG_MAX, 20);
             }
 
             return new Coordinates(id, lat, lng);
