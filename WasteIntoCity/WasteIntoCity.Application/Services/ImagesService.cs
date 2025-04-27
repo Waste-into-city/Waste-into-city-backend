@@ -98,7 +98,7 @@ namespace WasteIntoCity.Application.Services
                 Guid.NewGuid(),
                 ImageName.Create(fileName),
                 DateTime.UtcNow,
-                null, null, null
+                null, null, null, null
             );
 
             await _imagesRepository.Create(imageEntity);

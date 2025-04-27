@@ -46,6 +46,15 @@ namespace WasteIntoCity.Persistance.DefaultInitData
             WorkStatusType.Create(WorkStatusEnum.Closed, MeanText.Create(nameof(WorkStatusEnum.Closed)), 0),
         };
 
+        public static readonly TrashType[] TrashTypes = new TrashType[]
+        {
+            TrashType.Create(TrashEnum.Mixed, MeanText.Create(nameof(TrashEnum.Mixed))),
+            TrashType.Create(TrashEnum.Plastic, MeanText.Create(nameof(TrashEnum.Plastic))),
+            TrashType.Create(TrashEnum.Electronic, MeanText.Create(nameof(TrashEnum.Electronic))),
+            TrashType.Create(TrashEnum.Glass, MeanText.Create(nameof(TrashEnum.Glass))),
+            TrashType.Create(TrashEnum.Batteries, MeanText.Create(nameof(TrashEnum.Batteries))),
+        };
+
         public static readonly ScoreSettingsType[] ScoreSettingsTypes = new ScoreSettingsType[]
         {
             ScoreSettingsType.Create(

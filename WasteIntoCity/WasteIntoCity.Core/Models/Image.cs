@@ -4,7 +4,7 @@ namespace WasteIntoCity.Core.Models
 {
     public class Image
     {
-        private Image(Guid id, ImageName name, DateTime uploadedTime, Guid? workApplicationsId, Guid? workReportComplaintsId, Guid? workReportResultsId)
+        private Image(Guid id, ImageName name, DateTime uploadedTime, Guid? workApplicationsId, Guid? workReportComplaintsId, Guid? workReportResultsId, Guid? usersId)
         {
             Id = id;
             Name = name;
@@ -12,6 +12,7 @@ namespace WasteIntoCity.Core.Models
             WorkApplicationsId = workApplicationsId;
             WorkReportComplaintsId = workReportComplaintsId;
             WorkReportResultsId = workReportResultsId;
+            UsersId = usersId;
         }
 
         public Guid Id { get; }
@@ -26,16 +27,19 @@ namespace WasteIntoCity.Core.Models
 
         public Guid? WorkReportResultsId { get; }
 
+        public Guid? UsersId { get; }
+
         public static Image Create(
             Guid id,
             ImageName name,
             DateTime uploadedTime,
             Guid? workApplicationsId,
             Guid? workReportComplaintsId,
-            Guid? workReportResultsId
+            Guid? workReportResultsId,
+            Guid? usersId
         )
         {
-            return new Image(id, name, uploadedTime, workApplicationsId, workReportComplaintsId, workReportResultsId);
+            return new Image(id, name, uploadedTime, workApplicationsId, workReportComplaintsId, workReportResultsId, usersId);
         }
     }
 }

@@ -37,6 +37,9 @@ namespace WasteIntoCity.Persistance.Configurations
 
             builder.HasOne(i => i.WorkReportResult)
                 .WithMany(wa => wa.Images);
+
+            builder.HasOne(i => i.User)
+                .WithMany(u => u.Images);
         }
     }
 }
