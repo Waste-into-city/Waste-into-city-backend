@@ -78,7 +78,7 @@ namespace WasteIntoCity.Api.Controllers.V1
             return Ok(workGetByIdResponse);
         }
 
-        [Authorize(Roles = $"{nameof(RoleEnum.SuperAdmin)},{nameof(RoleEnum.Moderator)},{nameof(RoleEnum.User)}")]
+        [Authorize(Roles = $"{nameof(RoleEnum.Admin)},{nameof(RoleEnum.Moderator)},{nameof(RoleEnum.User)}")]
         [HttpGet(ApiRoutes.Works.GET_ALL_OWN_TAKE_PART_IN)]
         public async Task<IActionResult> GetAllOwnTakePartInAsync()
         {

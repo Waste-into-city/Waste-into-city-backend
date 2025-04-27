@@ -12,7 +12,7 @@ namespace WasteIntoCity.Persistance.DefaultInitData
         {
             Role.Create(RoleEnum.User, nameof(RoleEnum.User)),
             Role.Create(RoleEnum.Moderator, nameof(RoleEnum.Moderator)),
-            Role.Create(RoleEnum.SuperAdmin, nameof(RoleEnum.SuperAdmin)),
+            Role.Create(RoleEnum.Admin, nameof(RoleEnum.Admin)),
         };
 
         public static readonly WorkComplexityType[] WorkComplexityTypes = new WorkComplexityType[]
@@ -120,7 +120,7 @@ namespace WasteIntoCity.Persistance.DefaultInitData
                 0,
                 new List<Role>
                 {
-                    Role.Create(RoleEnum.SuperAdmin, Roles.SingleOrDefault(w => w.Id == RoleEnum.SuperAdmin)!.Name)
+                    Role.Create(RoleEnum.Admin, Roles.SingleOrDefault(w => w.Id == RoleEnum.Admin)!.Name)
                 },
                 0,
                 false

@@ -60,7 +60,7 @@ namespace WasteIntoCity.Application.Controllers.V1
         }
 
         //[Authorize(Policy = PolicyType.HONEST_USER)]
-        [Authorize(Roles = $"{nameof(RoleEnum.User)},{nameof(RoleEnum.Moderator)},{nameof(RoleEnum.SuperAdmin)}")]
+        [Authorize(Roles = $"{nameof(RoleEnum.User)},{nameof(RoleEnum.Moderator)},{nameof(RoleEnum.Admin)}")]
         [HttpPost(ApiRoutes.Identity.LOGOUT)]
         public async Task<IActionResult> Logout()
         {

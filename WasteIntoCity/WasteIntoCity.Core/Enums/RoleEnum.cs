@@ -6,6 +6,6 @@
 
         Moderator = 2,
 
-        SuperAdmin = 3
+        Admin = 3
     }
 }

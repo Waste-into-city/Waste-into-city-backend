@@ -14,7 +14,7 @@ namespace WasteIntoCity.Api.Extensions.ServiceExtensions
             {
                 options.AddPolicy(PolicyType.HONEST_USER, policy =>
                 {
-                    policy.RequireRole([nameof(RoleEnum.SuperAdmin), nameof(RoleEnum.User), nameof(RoleEnum.Moderator)]);
+                    policy.RequireRole([nameof(RoleEnum.Admin), nameof(RoleEnum.User), nameof(RoleEnum.Moderator)]);
                     policy.AddRequirements(new HonestUserRequirement(1));
                 });
             });

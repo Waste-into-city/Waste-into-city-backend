@@ -31,7 +31,7 @@ namespace WasteIntoCity.Api.Controllers.V1
             return Created();
         }
 
-        [Authorize(Roles = $"{nameof(RoleEnum.Moderator)},{nameof(RoleEnum.SuperAdmin)}")]
+        [Authorize(Roles = $"{nameof(RoleEnum.Moderator)},{nameof(RoleEnum.Admin)}")]
         [HttpPost(ApiRoutes.WorkApplications.REJECT)]
         public async Task<IActionResult> RejectAsync([FromRoute] Guid workApplicationsId)
         {
@@ -40,7 +40,7 @@ namespace WasteIntoCity.Api.Controllers.V1
             return Ok();
         }
 
-        [Authorize(Roles = $"{nameof(RoleEnum.Moderator)},{nameof(RoleEnum.SuperAdmin)}")]
+        [Authorize(Roles = $"{nameof(RoleEnum.Moderator)},{nameof(RoleEnum.Admin)}")]
         [HttpPost(ApiRoutes.WorkApplications.CONFIRM)]
         public async Task<IActionResult> ConfirmAsync([FromRoute] Guid workApplicationsId)
         {
