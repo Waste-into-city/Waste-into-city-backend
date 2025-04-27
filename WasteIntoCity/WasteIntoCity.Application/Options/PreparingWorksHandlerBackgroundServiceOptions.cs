@@ -1,6 +1,6 @@
 ﻿namespace WasteIntoCity.Api.Options
 {
-    public class FinishedWorksHandlerBackgroundServiceOptions
+    public class PreparingWorksHandlerBackgroundServiceOptions
     {
         public TimeSpan StartServiceWaitingTime { get; set; }
 
@@ -8,6 +8,6 @@
 
         public int WorksAtTimeAmount { get; set; }
 
-        public TimeSpan MinWorkIntervalAfterFinished { get; set; }
+        public TimeSpan MinWorkIntervalBeforeStart { get; set; }
     }
 }

@@ -10,7 +10,7 @@ using WasteIntoCity.Core.Models;
 using WasteIntoCity.Core.Types;
 using WasteIntoCity.Persistance.Repositories;
 
-namespace WasteIntoCity.Api.BackgroundServices
+namespace WasteIntoCity.Application.BackgroundServices
 {
     public class FinishedWorksHandlerBackgroundService : BackgroundService
     {
@@ -30,7 +30,7 @@ namespace WasteIntoCity.Api.BackgroundServices
             _options = options;
         }
 
-        private async Task HandleFinishedWorkAsync(Work work, Dictionary<ScoreSettingsEnum, int> scoreSettingsValues,
+        private async Task CloseFinishedWorkAsync(Work work, Dictionary<ScoreSettingsEnum, int> scoreSettingsValues,
             IWorksRepository worksRepository, IUsersRepository usersRepository, RefreshTokensRepository refreshTokensRepository,
             CancellationToken stoppingToken)
         {
@@ -115,16 +115,15 @@ namespace WasteIntoCity.Api.BackgroundServices
             }
 
             await usersRepository.UpdateAllByIdAsync(updatedParticipants);
-            await worksRepository.UpdateStatusesIdByIdAsync(work.Id, WorkStatusEnum.Closed);
+            await worksRepository.UpdateStatusIdByIdAsync(work.Id, WorkStatusEnum.Closed);
         }
 
-        private async Task HandleFinishedWorksAsync(IWorksRepository worksRepository, IUsersRepository usersRepository, RefreshTokensRepository refreshTokensRepository,
+        private async Task CloseFinishedWorksAsync(IWorksRepository worksRepository, IUsersRepository usersRepository, RefreshTokensRepository refreshTokensRepository,
             IScoreSettingsTypeRepository scoreSettingsTypeRepository, CancellationToken stoppingToken)
         {
-            List<Work> works = await worksRepository.FindFirstByFinishedTimeAndStatusesWithParticipantsAndMultiplierRankingAndWorkColleagueReportsAndWorkStatus(
+            List<Work> works = await worksRepository.FindFirstFinishedWithParticipantsAndMultiplierRankingAndWorkColleagueReportsByFinishedTimeAndClientStatuses(
                 _options.Value.WorksAtTimeAmount,
-                _options.Value.MinWorkIntervalAfterFinished,
-                [WorkStatusEnum.FinishedSuccessfully, WorkStatusEnum.FinishedFailed]
+                _options.Value.MinWorkIntervalAfterFinished
             );
 
             Dictionary<ScoreSettingsEnum, int> scoreSettingsValues = await scoreSettingsTypeRepository.FindAllValuesByIdsAsync(_scoreSettingsIds);
@@ -132,7 +131,7 @@ namespace WasteIntoCity.Api.BackgroundServices
             int i = 0;
             while (i < works.Count && !stoppingToken.IsCancellationRequested)
             {
-                await HandleFinishedWorkAsync(works[i], scoreSettingsValues, worksRepository, usersRepository, refreshTokensRepository, stoppingToken);
+                await CloseFinishedWorkAsync(works[i], scoreSettingsValues, worksRepository, usersRepository, refreshTokensRepository, stoppingToken);
 
                 i++;
             }
@@ -140,7 +139,7 @@ namespace WasteIntoCity.Api.BackgroundServices
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            await Task.Delay(_options.Value.IntervalTime, stoppingToken);
+            await Task.Delay(_options.Value.StartServiceWaitingTime, stoppingToken);
 
             while (!stoppingToken.IsCancellationRequested)
             {
@@ -151,7 +150,7 @@ namespace WasteIntoCity.Api.BackgroundServices
                 RefreshTokensRepository refreshTokensRepository = scope.ServiceProvider.GetRequiredService<RefreshTokensRepository>();
                 IScoreSettingsTypeRepository scoreSettingsTypeRepository = scope.ServiceProvider.GetRequiredService<IScoreSettingsTypeRepository>();
 
-                await HandleFinishedWorksAsync(worksRepository, usersRepository, refreshTokensRepository, scoreSettingsTypeRepository, stoppingToken);
+                await CloseFinishedWorksAsync(worksRepository, usersRepository, refreshTokensRepository, scoreSettingsTypeRepository, stoppingToken);
 
                 await Task.Delay(_options.Value.IntervalTime, stoppingToken);
             }

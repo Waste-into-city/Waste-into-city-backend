@@ -47,7 +47,7 @@ namespace WasteIntoCity.Application.Services
         {
             EnumOperationsExtension.CheckEnumIntValue<WorkStatusEnum>(workStatusesId, "work status");
 
-            await _worksRepository.UpdateStatusesIdByIdAsync(id, (WorkStatusEnum)workStatusesId);
+            await _worksRepository.UpdateStatusIdByIdAsync(id, (WorkStatusEnum)workStatusesId);
         }
     }
 }

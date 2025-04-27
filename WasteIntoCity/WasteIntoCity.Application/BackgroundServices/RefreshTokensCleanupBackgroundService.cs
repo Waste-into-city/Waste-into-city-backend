@@ -4,7 +4,7 @@ using Microsoft.Extensions.Options;
 using WasteIntoCity.Api.Options;
 using WasteIntoCity.Persistance.Repositories;
 
-namespace WasteIntoCity.Api.BackgroundServices
+namespace WasteIntoCity.Application.BackgroundServices
 {
     public class RefreshTokensCleanupBackgroundService : BackgroundService
     {
@@ -19,7 +19,7 @@ namespace WasteIntoCity.Api.BackgroundServices
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            await Task.Delay(_options.Value.IntervalTime, stoppingToken);
+            await Task.Delay(_options.Value.StartServiceWaitingTime, stoppingToken);
 
             while (!stoppingToken.IsCancellationRequested)
             {
