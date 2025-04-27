@@ -15,10 +15,14 @@ namespace WasteIntoCity.Core.Interfaces.Repositories
 
         Task UpdateAsync(Work work);
 
-        Task UpdateStatusesIdByIdAsync(Guid id, WorkStatusEnum workStatusTypesId);
+        Task UpdateStatusIdByIdAsync(Guid id, WorkStatusEnum workStatusTypesId);
 
-        Task<List<Work>> FindFirstByFinishedTimeAndStatusesWithParticipantsAndMultiplierRankingAndWorkColleagueReportsAndWorkStatus(int worksAmount, TimeSpan minWorkIntervalAfterFinished, WorkStatusEnum[] workStatuses);
+        Task UpdateToAvailableWorksByIds(List<Guid> ids);
 
-        Task<List<Work>> FindFirstByFinishedTimeAndStatusesWithParticipants(int worksAmount, TimeSpan minWorkIntervalAfterFinished, WorkStatusEnum[] workStatuses);
+        Task<List<Work>> FindFirstFinishedWithParticipantsAndMultiplierRankingAndWorkColleagueReportsByFinishedTimeAndClientStatuses(int worksAmount, TimeSpan minWorkIntervalAfterFinished);
+
+        Task<List<Work>> FindFirstPendingFinalizationWorksWithParticipantsByFinishedTimeAndClientStatuses(int worksAmount, TimeSpan minWorkIntervalAfterFinished);
+
+        Task<List<Guid>> FindFirstPreparingWorksIdsByBeforeStartedTime(int worksAmount, TimeSpan minWorkIntervalBeforeStart);
     }
 }

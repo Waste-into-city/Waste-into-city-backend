@@ -1,4 +1,4 @@
-﻿using WasteIntoCity.Core.Exceptions;
+﻿using WasteIntoCity.Core.Exceptions.BadRequest400Exceptions;
 
 namespace WasteIntoCity.Core.ValueObjects
 {
@@ -15,7 +15,7 @@ namespace WasteIntoCity.Core.ValueObjects
         {
             if (string.IsNullOrWhiteSpace(value))
             {
-                throw new NullOrWhiteSpaceException(nameof(MeanText).ToLower(), null);
+                throw new NullOrWhiteSpaceException(nameof(MeanText).ToLower(), null, 45);
             }
 
             return new MeanText(value);

@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
-using WasteIntoCity.Core.Exceptions;
+using WasteIntoCity.Core.Exceptions.BadRequest400Exceptions;
 
 namespace WasteIntoCity.Api.Filters
 {
@@ -11,7 +11,8 @@ namespace WasteIntoCity.Api.Filters
             {
                 throw new IncorrectRequestFormatException(context.ModelState.Values
                     .SelectMany(v => v.Errors)
-                    .Select(e => e.ErrorMessage).ToList());
+                    .Select(e => e.ErrorMessage).ToList(),
+                    18);
             }
         }
 

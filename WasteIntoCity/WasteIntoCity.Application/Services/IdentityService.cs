@@ -4,7 +4,9 @@ using System.Security.Claims;
 using System.Text;
 using WasteIntoCity.Application.Options;
 using WasteIntoCity.Core.Enums;
-using WasteIntoCity.Core.Exceptions;
+using WasteIntoCity.Core.Exceptions.BadRequest400Exceptions;
+using WasteIntoCity.Core.Exceptions.InternalServer500Exceptions;
+using WasteIntoCity.Core.Exceptions.Unauthorized401Exceptions;
 using WasteIntoCity.Core.Interfaces.Repositories;
 using WasteIntoCity.Core.Interfaces.Services;
 using WasteIntoCity.Core.Models;
@@ -53,7 +55,7 @@ namespace WasteIntoCity.Application.Services
 
             if (user.Roles is null)
             {
-                throw new NullValueServerException("roles", null);
+                throw new NullValueServerException(22, "roles", null);
             }
 
             claims.AddRange(user.Roles.Select(role => new Claim(ClaimTypes.Role, role.Name)));
@@ -93,7 +95,7 @@ namespace WasteIntoCity.Application.Services
         {
             if (await _userRepository.IsExistByEmailAsync(email))
             {
-                throw new DbIsFoundException(nameof(User), "User with this email exists");
+                throw new DbIsFoundException(nameof(User), "User with this email exists", 1);
             }
 
             string hashedPassword = BCrypt.Net.BCrypt.EnhancedHashPassword(password);
@@ -109,7 +111,7 @@ namespace WasteIntoCity.Application.Services
             }
             catch (Exception ex)
             {
-                throw new DbAddException(nameof(User), null, ex.Message);
+                throw new DbAddException(nameof(User), 1, null, ex.Message);
             }
         }
 
@@ -119,12 +121,12 @@ namespace WasteIntoCity.Application.Services
 
             if (!BCrypt.Net.BCrypt.EnhancedVerify(password, user.Password.Value))
             {
-                throw new LoginException();
+                throw new LoginException(2);
             }
 
             if (user.IsBanned)
             {
-                throw new UserWasBannedException();
+                throw new UserWasBannedException(5);
             }
 
             return await CreateTokens(user);
@@ -144,7 +146,7 @@ namespace WasteIntoCity.Application.Services
 
             if (expiryDateTimeUtc > DateTime.UtcNow)
             {
-                throw new NotExpiredAccessTokenException();
+                throw new NotExpiredAccessTokenException(43);
             }
 
             string jti = accessTokenClaimsPrincipal.Claims.Single(x => x.Type == JwtRegisteredClaimNames.Jti).Value;
@@ -153,7 +155,7 @@ namespace WasteIntoCity.Application.Services
 
             if (DateTime.UtcNow > refreshToken.ExpirationTimestamp || refreshToken.Invalidated || refreshToken.Used || refreshToken.JwtId != jti)
             {
-                throw new InvalidTokenException();
+                throw new InvalidTokenException(5);
             }
 
             refreshToken.Used = true;
@@ -167,12 +169,12 @@ namespace WasteIntoCity.Application.Services
             }
             else
             {
-                throw new InvalidTokenException();
+                throw new InvalidTokenException(6);
             }
 
             if (user.IsBanned)
             {
-                throw new UserWasBannedException();
+                throw new UserWasBannedException(6);
             }
 
             return await CreateTokens(user);
@@ -193,14 +195,14 @@ namespace WasteIntoCity.Application.Services
 
                 if (!IsJwtWithValidSecurityAlgorithm(validatedToken))
                 {
-                    throw new InvalidTokenException();
+                    throw new InvalidTokenException(7);
                 }
 
                 return principal;
             }
             catch
             {
-                throw new InvalidTokenException();
+                throw new InvalidTokenException(8);
             }
         }
 

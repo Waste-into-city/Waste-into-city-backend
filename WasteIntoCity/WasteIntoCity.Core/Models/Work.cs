@@ -1,4 +1,6 @@
-﻿using WasteIntoCity.Core.Exceptions;
+﻿using WasteIntoCity.Core.Enums;
+using WasteIntoCity.Core.Exceptions.BadRequest400Exceptions;
+using WasteIntoCity.Core.Extensions;
 using WasteIntoCity.Core.Types;
 using WasteIntoCity.Core.ValueObjects;
 
@@ -14,7 +16,7 @@ namespace WasteIntoCity.Core.Models
 
         public const int DESCRIPTION_LENGTH_MAX = Description.VALUE_LENGTH_MAX;
 
-        private Work(Guid id, Title title, Description description, DateTime startedDatetime, DateTime finishDatetime, WorkComplexityEnum workComplexityTypesId,
+        private Work(Guid id, Title title, Description description, DateTime? startedDatetime, DateTime? finishDatetime, WorkComplexityEnum workComplexityTypesId,
             WorkStatusEnum workStatusTypesId, Guid coordinatesId, List<User>? participants, Coordinates? coordinates,
             WorkComplexityType? workComplexityType, List<WorkColleagueReport>? workColleagueReports, WorkStatusType? workStatusType,
             WorkReportResult? workReportResult)
@@ -33,6 +35,7 @@ namespace WasteIntoCity.Core.Models
             WorkColleagueReports = workColleagueReports;
             WorkStatusType = workStatusType;
             WorkReportResult = workReportResult;
+            WorkStatusForClient = null;
         }
 
         public Guid Id { get; }
@@ -41,9 +44,9 @@ namespace WasteIntoCity.Core.Models
 
         public Description Description { get; }
 
-        public DateTime StartedDatetime { get; }
+        public DateTime? StartedDatetime { get; }
 
-        public DateTime FinishDatetime { get; }
+        public DateTime? FinishDatetime { get; }
 
         public WorkComplexityEnum WorkComplexityTypesId { get; }
 
@@ -63,14 +66,27 @@ namespace WasteIntoCity.Core.Models
 
         public WorkReportResult? WorkReportResult { get; }
 
-        public static Work Create(Guid id, Title title, Description description, DateTime startedDatetime, DateTime finishDatetime,
+        public WorkStatusForClientEnum? WorkStatusForClient { get; }
+
+        public WorkStatusForClientEnum TakeStatusForClientEnum()
+        {
+            return EnumOperationsExtension.TakeWorkStatusForClientEnum(StartedDatetime, FinishDatetime, WorkStatusTypesId);
+        }
+
+        public static Work Create(Guid id, Title title, Description description, DateTime? startedDatetime, DateTime? finishDatetime,
             WorkComplexityEnum workComplexityTypesId, WorkStatusEnum workStatusTypesId, Guid coordinatesId, List<User>? participants,
             Coordinates? coordinates, WorkComplexityType? workComplexityType, List<WorkColleagueReport>? workColleagueReports, WorkStatusType? workStatusType,
             WorkReportResult? workReportResult)
         {
             if (startedDatetime > finishDatetime)
             {
-                throw new ValueOutOfRangeException<DateTime>("startDatetime", DateTime.MinValue, finishDatetime);
+                throw new ValueOutOfRangeException<DateTime>("startDatetime", DateTime.MinValue, (DateTime)finishDatetime, 57);
+            }
+
+            if ((startedDatetime is null && finishDatetime is not null) || (startedDatetime is not null && finishDatetime is null))
+            {
+                throw new NullOrWhiteSpaceException(nameof(Work),
+                    "finish datetime and startedDatetime should be null or both should be not null", 44);
             }
 
             return new Work(id, title, description, startedDatetime, finishDatetime, workComplexityTypesId, workStatusTypesId, coordinatesId,

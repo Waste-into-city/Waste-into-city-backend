@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using WasteIntoCity.Core.Exceptions;
+using WasteIntoCity.Core.Exceptions.NotFound404Exceptions;
 using WasteIntoCity.Core.Interfaces.Repositories;
 using WasteIntoCity.Core.Models;
 using WasteIntoCity.Core.Types;
@@ -38,7 +38,7 @@ namespace WasteIntoCity.Persistance.Repositories
         public async Task<WorkApplication> FindById(Guid id)
         {
             WorkApplicationEntity workApplicationEntity = await _mainDbContext.WorkApplications.AsNoTracking().
-                FirstOrDefaultAsync(u => u.Id == id) ?? throw new DbIsNotFoundException(nameof(WorkApplication), null);
+                FirstOrDefaultAsync(u => u.Id == id) ?? throw new DbIsNotFoundException(nameof(WorkApplication), 6, null);
 
             return WorkApplication.Create(workApplicationEntity.Id, Title.Create(workApplicationEntity.Title),
                 Description.Create(workApplicationEntity.Description), (WorkComplexityEnum)workApplicationEntity.WorkComplexityTypesId,

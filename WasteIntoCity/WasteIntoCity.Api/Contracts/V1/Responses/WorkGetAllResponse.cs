@@ -8,9 +8,9 @@
 
         required public string Description { get; init; }
 
-        required public DateTime StartedDatetime { get; init; }
+        required public DateTime? StartedDatetime { get; init; }
 
-        required public DateTime FinishDatetime { get; init; }
+        required public DateTime? FinishDatetime { get; init; }
 
         required public int WorkComplexityTypesId { get; init; }
 

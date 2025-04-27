@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using WasteIntoCity.Core.Exceptions;
+using WasteIntoCity.Core.Exceptions.InternalServer500Exceptions;
 
 namespace WasteIntoCity.Persistance.Extensions
 {
@@ -28,7 +28,7 @@ namespace WasteIntoCity.Persistance.Extensions
 
             List<TEntity> missingEntities = entities
                 .Where(entity => !existingIds.Contains(entity.GetType().GetProperty("Id")?.GetValue(entity) as int? ??
-                        throw new DbAddException(nameof(TEntity), "Init db error")))
+                        throw new DbAddException(nameof(TEntity), 5, "Init db error")))
                 .ToList();
 
             if (missingEntities.Any())

@@ -1,4 +1,4 @@
-﻿using WasteIntoCity.Core.Exceptions;
+﻿using WasteIntoCity.Core.Exceptions.BadRequest400Exceptions;
 using WasteIntoCity.Core.ValueObjects;
 
 namespace WasteIntoCity.Core.Models
@@ -23,7 +23,7 @@ namespace WasteIntoCity.Core.Models
         {
             if (name.Value.Length is < NAME_LENGTH_MIN or > NAME_LENGTH_MAX)
             {
-                throw new InvalidLengthException(nameof(name), NAME_LENGTH_MIN, NAME_LENGTH_MAX);
+                throw new InvalidLengthException(24, nameof(name), NAME_LENGTH_MIN, NAME_LENGTH_MAX);
             }
 
             return new TrashcanType(id, name);

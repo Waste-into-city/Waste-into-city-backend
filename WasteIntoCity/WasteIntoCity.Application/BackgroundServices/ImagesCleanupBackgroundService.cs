@@ -2,37 +2,40 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using WasteIntoCity.Api.Options;
-using WasteIntoCity.Core.Exceptions;
+using WasteIntoCity.Core.Exceptions.InternalServer500Exceptions;
 using WasteIntoCity.Core.Interfaces.Adapters;
 using WasteIntoCity.Core.Interfaces.Repositories;
+using WasteIntoCity.Core.Options;
 using WasteIntoCity.Core.ValueObjects;
 
-namespace WasteIntoCity.Api.BackgroundServices
+namespace WasteIntoCity.Application.BackgroundServices
 {
     public class ImagesCleanupBackgroundService : BackgroundService
     {
         private readonly IServiceScopeFactory _scopeFactory;
-        private readonly IOptions<ImagesCleanupBackgroundServiceOptions> _options;
+        private readonly IOptions<ImageOptions> _imageOptions;
+        private readonly IOptions<ImagesCleanupBackgroundServiceOptions> _serviceOptions;
 
-        private const string IMAGES_PATH = "uploads";
-
-        public ImagesCleanupBackgroundService(IServiceScopeFactory scopeFactory, IOptions<ImagesCleanupBackgroundServiceOptions> options)
+        public ImagesCleanupBackgroundService(IServiceScopeFactory scopeFactory, IOptions<ImageOptions> imageOptions,
+            IOptions<ImagesCleanupBackgroundServiceOptions> serviceOptions)
         {
             _scopeFactory = scopeFactory;
-            _options = options;
+            _imageOptions = imageOptions;
+            _serviceOptions = serviceOptions;
         }
 
         private async Task HandleImagesAsync(IImagesRepository imagesRepository, IAppEnvironmentAdapter appEnvironmentAdapter,
              CancellationToken stoppingToken)
         {
-            if (!Directory.Exists(IMAGES_PATH))
+            string uploadPath = Path.Combine(appEnvironmentAdapter.GetRootPath(), _imageOptions.Value.FolderPathFromRoute);
+
+            if (!Directory.Exists(uploadPath))
             {
-                throw new FolderCreateException(IMAGES_PATH, null);
+                throw new FolderCreateException(9, _imageOptions.Value.FolderPathFromRoute, null);
             }
 
-            string uploadPath = Path.Combine(appEnvironmentAdapter.GetRootPath(), IMAGES_PATH);
-
-            List<ImageName> imageNames = await imagesRepository.FindNamesFirstNotReferencedByFinished(_options.Value.ImagesAtTimeAmount, _options.Value.MinImageIntervalAfterUploaded);
+            List<ImageName> imageNames = await imagesRepository.
+                FindNamesFirstNotReferencedByFinished(_serviceOptions.Value.ImagesAtTimeAmount, _serviceOptions.Value.MinImageIntervalAfterUploaded);
 
             List<string> imagesForDelete = new List<string>(imageNames.Count);
 
@@ -64,7 +67,7 @@ namespace WasteIntoCity.Api.BackgroundServices
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            await Task.Delay(_options.Value.IntervalTime, stoppingToken);
+            await Task.Delay(_serviceOptions.Value.StartServiceWaitingTime, stoppingToken);
 
             while (!stoppingToken.IsCancellationRequested)
             {
@@ -75,7 +78,7 @@ namespace WasteIntoCity.Api.BackgroundServices
 
                 await HandleImagesAsync(imagesRepository, appEnvironmentAdapter, stoppingToken);
 
-                await Task.Delay(_options.Value.IntervalTime, stoppingToken);
+                await Task.Delay(_serviceOptions.Value.IntervalTime, stoppingToken);
             }
         }
     }

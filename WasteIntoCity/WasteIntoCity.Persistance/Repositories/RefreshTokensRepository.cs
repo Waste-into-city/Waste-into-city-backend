@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using WasteIntoCity.Core.Exceptions;
+using WasteIntoCity.Core.Exceptions.InternalServer500Exceptions;
+using WasteIntoCity.Core.Exceptions.NotFound404Exceptions;
 using WasteIntoCity.Persistance.Entities;
 
 namespace WasteIntoCity.Persistance.Repositories
@@ -16,7 +17,7 @@ namespace WasteIntoCity.Persistance.Repositories
         public async Task<RefreshTokenEntity> FindByValueAsync(string value)
         {
             RefreshTokenEntity refreshTokenEntity = await _mainDbContext.RefreshTokens.AsNoTracking().FirstOrDefaultAsync(r => r.Value.ToString() == value)
-                ?? throw new DbIsNotFoundException(nameof(RefreshTokenEntity), null);
+                ?? throw new DbIsNotFoundException(nameof(RefreshTokenEntity), 1, null);
 
             return refreshTokenEntity;
         }
@@ -24,7 +25,7 @@ namespace WasteIntoCity.Persistance.Repositories
         public async Task<RefreshTokenEntity> FindByJwtIdAsync(string jwtId)
         {
             RefreshTokenEntity refreshTokenEntity = await _mainDbContext.RefreshTokens.AsNoTracking().FirstOrDefaultAsync(r => r.JwtId == jwtId)
-                ?? throw new DbIsNotFoundException(nameof(RefreshTokenEntity), null);
+                ?? throw new DbIsNotFoundException(nameof(RefreshTokenEntity), 2, null);
 
             return refreshTokenEntity;
         }
@@ -36,7 +37,7 @@ namespace WasteIntoCity.Persistance.Repositories
 
             if (addedRows == 0)
             {
-                throw new DbAddException(nameof(RefreshTokenEntity), null);
+                throw new DbAddException(nameof(RefreshTokenEntity), 2, null);
             }
         }
 
@@ -55,7 +56,7 @@ namespace WasteIntoCity.Persistance.Repositories
 
             if (updatedRows == 0)
             {
-                throw new DbUpdateCustomException(nameof(RefreshTokenEntity), null);
+                throw new DbUpdateCustomException(nameof(RefreshTokenEntity), 3, null);
             }
         }
 
@@ -69,7 +70,7 @@ namespace WasteIntoCity.Persistance.Repositories
 
             if (updatedRows == 0)
             {
-                throw new DbUpdateCustomException(nameof(RefreshTokenEntity), null);
+                throw new DbUpdateCustomException(nameof(RefreshTokenEntity), 4, null);
             }
         }
 
@@ -83,7 +84,7 @@ namespace WasteIntoCity.Persistance.Repositories
 
             if (updatedRows == 0)
             {
-                throw new DbUpdateCustomException(nameof(RefreshTokenEntity), null);
+                throw new DbUpdateCustomException(nameof(RefreshTokenEntity), 5, null);
             }
         }
 

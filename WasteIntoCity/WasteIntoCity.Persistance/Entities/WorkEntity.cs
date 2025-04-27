@@ -8,9 +8,9 @@
 
         public string Description { get; set; } = string.Empty;
 
-        public DateTime StartedDatetime { get; set; }
+        public DateTime? StartedDatetime { get; set; }
 
-        public DateTime FinishDatetime { get; set; }
+        public DateTime? FinishDatetime { get; set; }
 
         public int WorkComplexityTypesId { get; set; }
 

@@ -2,6 +2,8 @@
 {
     public class FinishedWorksHandlerBackgroundServiceOptions
     {
+        public TimeSpan StartServiceWaitingTime { get; set; }
+
         public TimeSpan IntervalTime { get; set; }
 
         public int WorksAtTimeAmount { get; set; }

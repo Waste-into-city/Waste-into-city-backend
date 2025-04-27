@@ -2,14 +2,12 @@
 {
     public enum WorkStatusEnum
     {
-        Avaliable = 1,
+        NotFinished = 1,
 
-        InProgress = 2,
+        FinishedSuccessfully = 2,
 
-        FinishedSuccessfully = 3,
+        FinishedFailed = 3,
 
-        FinishedFailed = 4,
-
-        Closed = 5
+        Closed = 4
     }
 }

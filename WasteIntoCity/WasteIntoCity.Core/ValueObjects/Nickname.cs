@@ -1,5 +1,5 @@
 ﻿using System.Text.RegularExpressions;
-using WasteIntoCity.Core.Exceptions;
+using WasteIntoCity.Core.Exceptions.BadRequest400Exceptions;
 
 namespace WasteIntoCity.Core.ValueObjects
 {
@@ -23,12 +23,12 @@ namespace WasteIntoCity.Core.ValueObjects
         {
             if (!Regex.IsMatch(value, VALUE_PATTERN))
             {
-                throw new InvalidValueFormatException(nameof(Nickname).ToLower(), null);
+                throw new InvalidValueFormatException(nameof(Nickname).ToLower(), null, 38);
             }
 
             if (value.Length is < VALUE_LENGTH_MIN or > VALUE_LENGTH_MAX)
             {
-                throw new InvalidLengthException(nameof(Nickname).ToLower(), VALUE_LENGTH_MIN, VALUE_LENGTH_MAX);
+                throw new InvalidLengthException(32, nameof(Nickname).ToLower(), VALUE_LENGTH_MIN, VALUE_LENGTH_MAX);
             }
 
             return new Nickname(value);

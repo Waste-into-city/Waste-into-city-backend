@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WasteIntoCity.Core.Enums;
-using WasteIntoCity.Core.Exceptions;
+using WasteIntoCity.Core.Exceptions.NotFound404Exceptions;
 using WasteIntoCity.Core.Interfaces.Repositories;
 using WasteIntoCity.Core.Models;
 using WasteIntoCity.Persistance.Configurations;
@@ -34,7 +34,7 @@ namespace WasteIntoCity.Persistance.Repositories
         public async Task<Role> FindById(int id)
         {
             RoleEntity roleEntity = await _mainDbContext.Roles.AsNoTracking().FirstOrDefaultAsync(r => r.Id == id)
-                 ?? throw new DbIsNotFoundException(nameof(Role), null);
+                 ?? throw new DbIsNotFoundException(nameof(Role), 3, null);
 
             return Role.Create((RoleEnum)roleEntity.Id, roleEntity.Name);
         }

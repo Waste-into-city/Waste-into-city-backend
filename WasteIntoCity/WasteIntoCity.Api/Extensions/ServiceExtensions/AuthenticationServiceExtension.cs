@@ -4,10 +4,10 @@ using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.Text;
+using WasteIntoCity.Application.Enum;
 using WasteIntoCity.Application.Extensions;
 using WasteIntoCity.Application.Options;
-using WasteIntoCity.Application.Enum;
-using WasteIntoCity.Core.Exceptions;
+using WasteIntoCity.Core.Exceptions.Unauthorized401Exceptions;
 using WasteIntoCity.Persistance.Entities;
 using WasteIntoCity.Persistance.Repositories;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
@@ -133,7 +133,7 @@ namespace WasteIntoCity.Api.Extensions.ServiceExtensions
                         {
                             if (context.Exception is not null)
                             {
-                                throw new InvalidTokenException();
+                                throw new InvalidTokenException(1);
                             }
                             else
                             {

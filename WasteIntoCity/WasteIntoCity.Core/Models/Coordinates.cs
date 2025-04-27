@@ -1,6 +1,4 @@
-﻿
-
-using WasteIntoCity.Core.Exceptions;
+﻿using WasteIntoCity.Core.Exceptions.BadRequest400Exceptions;
 
 namespace WasteIntoCity.Core.Models
 {
@@ -31,12 +29,12 @@ namespace WasteIntoCity.Core.Models
         {
             if (lat.Length is < LAT_LEGTH_MIN or > LAT_LEGTH_MAX)
             {
-                throw new InvalidLengthException(nameof(lat), LAT_LEGTH_MIN, LAT_LEGTH_MAX);
+                throw new InvalidLengthException(19, nameof(lat), LAT_LEGTH_MIN, LAT_LEGTH_MAX);
             }
 
             if (lng.Length is < LNG_LEGTH_MIN or > LNG_LEGTH_MAX)
             {
-                throw new InvalidLengthException(nameof(lng), LNG_LEGTH_MIN, LNG_LEGTH_MAX);
+                throw new InvalidLengthException(20, nameof(lng), LNG_LEGTH_MIN, LNG_LEGTH_MAX);
             }
 
             return new Coordinates(id, lat, lng);

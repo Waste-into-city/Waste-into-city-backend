@@ -1,4 +1,4 @@
-﻿using WasteIntoCity.Core.Exceptions;
+﻿using WasteIntoCity.Core.Exceptions.InternalServer500Exceptions;
 using WasteIntoCity.Core.Options;
 using WasteIntoCity.Core.ValueObjects;
 
@@ -12,7 +12,7 @@ namespace WasteIntoCity.Api.Extensions.ServiceExtensions
 
             services.Configure<ImageOptions>(configurationSection);
 
-            ImageOptions imageOptions = configurationSection.Get<ImageOptions>() ?? throw new NullValueServerException(nameof(ImageOptions),
+            ImageOptions imageOptions = configurationSection.Get<ImageOptions>() ?? throw new NullValueServerException(14, nameof(ImageOptions),
                 "Image options are null or empty");
 
             ImageName.Configure(imageOptions);

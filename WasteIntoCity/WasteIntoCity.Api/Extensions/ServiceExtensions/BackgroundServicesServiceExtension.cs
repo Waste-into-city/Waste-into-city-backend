@@ -1,5 +1,5 @@
-﻿using WasteIntoCity.Api.BackgroundServices;
-using WasteIntoCity.Api.Options;
+﻿using WasteIntoCity.Api.Options;
+using WasteIntoCity.Application.BackgroundServices;
 
 namespace WasteIntoCity.Api.Extensions.ServiceExtensions
 {
@@ -7,14 +7,25 @@ namespace WasteIntoCity.Api.Extensions.ServiceExtensions
     {
         public static IServiceCollection AddCustomBackgroundServices(this IServiceCollection services, IConfiguration configuration)
         {
-            services.Configure<RefreshTokensCleanupBackgroundServiceOptions>(configuration.GetSection(nameof(RefreshTokensCleanupBackgroundServiceOptions)));
-            services.AddHostedService<RefreshTokensCleanupBackgroundService>();
-
-            services.Configure<FinishedWorksHandlerBackgroundServiceOptions>(configuration.GetSection(nameof(FinishedWorksHandlerBackgroundServiceOptions)));
+            services.Configure<FinishedWorksHandlerBackgroundServiceOptions>(configuration.GetSection(
+                nameof(FinishedWorksHandlerBackgroundServiceOptions)));
             services.AddHostedService<FinishedWorksHandlerBackgroundService>();
 
-            services.Configure<ProcessedWorksHandlerBackgroundServiceOptions>(configuration.GetSection(nameof(ProcessedWorksHandlerBackgroundServiceOptions)));
-            services.AddHostedService<ProcessedWorksHandlerBackgroundService>();
+            services.Configure<ImagesCleanupBackgroundServiceOptions>(configuration.GetSection(
+                nameof(ImagesCleanupBackgroundServiceOptions)));
+            services.AddHostedService<ImagesCleanupBackgroundService>();
+
+            services.Configure<PendingFinalizationWorksHandlerBackgroundServiceOptions>(configuration.GetSection(
+                nameof(PendingFinalizationWorksHandlerBackgroundServiceOptions)));
+            services.AddHostedService<PendingFinalizationWorksHandlerBackgroundService>();
+
+            services.Configure<PreparingWorksHandlerBackgroundServiceOptions>(configuration.GetSection(
+                nameof(PreparingWorksHandlerBackgroundServiceOptions)));
+            services.AddHostedService<PreparingWorksHandlerBackgroundService>();
+
+            services.Configure<RefreshTokensCleanupBackgroundServiceOptions>(configuration.GetSection(
+                nameof(RefreshTokensCleanupBackgroundServiceOptions)));
+            services.AddHostedService<RefreshTokensCleanupBackgroundService>();
 
             return services;
         }
