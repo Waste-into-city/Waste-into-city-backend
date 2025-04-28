@@ -46,7 +46,7 @@ namespace WasteIntoCity.Application.Services
             _scoreSettingsTypeRepository = scoreSettingsTypeRepository;
         }
 
-        public async Task CreateOwnAsync(string title, string description, int workComplexityId, double lat, double lng,
+        public async Task CreateOwnAsync(string title, string description, int workComplexityId, decimal lat, decimal lng,
             Guid userId)
         {
             Coordinates coordinates = Coordinates.Create(Guid.NewGuid(), lat, lng);
@@ -96,7 +96,8 @@ namespace WasteIntoCity.Application.Services
                 await _refreshTokensRepository.UpdateInvalidatedByUserIdTokensAsync(true, user.Id);
             }
 
-            User updatedUser = User.Create(user.Id, user.Nickname, user.Email, user.Password, ranking, user.Roles, negativeScore, isBanned);
+            User updatedUser = User.Create(user.Id, user.Nickname, user.Email, user.Password, ranking, user.Roles, negativeScore, isBanned,
+                null, null);
 
             await _usersRepository.UpdateAsync(updatedUser);
 
@@ -121,7 +122,8 @@ namespace WasteIntoCity.Application.Services
 
             int negativeScore = Math.Max(user.NegativeScore - scoreSettingsValues[ScoreSettingsEnum.WorkApplicationNegativeSubstracting], 0);
 
-            User updatedUser = User.Create(user.Id, user.Nickname, user.Email, user.Password, ranking, user.Roles, negativeScore, user.IsBanned);
+            User updatedUser = User.Create(user.Id, user.Nickname, user.Email, user.Password, ranking, user.Roles, negativeScore, user.IsBanned,
+                null, null);
 
             await _usersRepository.UpdateAsync(updatedUser);
 

@@ -183,7 +183,9 @@ namespace WasteIntoCity.Persistance.Repositories
                         u.Ranking,
                         null,
                         u.NegativeScore,
-                        u.IsBanned
+                        u.IsBanned,
+                        null,
+                        null
                     )).ToList();
 
                 List<WorkColleagueReport> colleagueReports = w.WorkColleagueReports
@@ -264,7 +266,9 @@ namespace WasteIntoCity.Persistance.Repositories
                         u.Ranking,
                         null,
                         u.NegativeScore,
-                        u.IsBanned
+                        u.IsBanned,
+                        null,
+                        null
                     )).ToList();
 
                 return Work.Create(

@@ -39,7 +39,8 @@ namespace WasteIntoCity.Persistance.Configurations
                 .WithMany(wa => wa.Images);
 
             builder.HasOne(i => i.User)
-                .WithMany(u => u.Images);
+                .WithOne(u => u.Image)
+                .HasForeignKey<ImageEntity>(u => u.UsersId);
         }
     }
 }

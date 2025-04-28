@@ -4,9 +4,9 @@
     {
         public Guid Id { get; set; }
 
-        public double Lat { get; set; }
+        public decimal Lat { get; set; }
 
-        public double Lng { get; set; }
+        public decimal Lng { get; set; }
 
         public List<TrashcanEntity> Trashcans { get; set; } = [];
 

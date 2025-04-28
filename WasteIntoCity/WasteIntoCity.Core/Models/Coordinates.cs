@@ -4,15 +4,15 @@ namespace WasteIntoCity.Core.Models
 {
     public class Coordinates
     {
-        public const int LAT_MIN = -9999999;
+        public const int LAT_PRECISION = 12;
 
-        public const int LAT_MAX = 9999999;
+        public const int LAT_SCALE = 9;
 
-        public const int LNG_MIN = -9999999;
+        public const int LNG_PRECISION = 12;
 
-        public const int LNG_MAX = 9999999;
+        public const int LNG_SCALE = 9;
 
-        private Coordinates(Guid id, double lat, double lng)
+        private Coordinates(Guid id, decimal lat, decimal lng)
         {
             Id = id;
             Lat = lat;
@@ -21,20 +21,38 @@ namespace WasteIntoCity.Core.Models
 
         public Guid Id { get; }
 
-        public double Lat { get; }
+        public decimal Lat { get; }
 
-        public double Lng { get; }
+        public decimal Lng { get; }
 
-        public static Coordinates Create(Guid id, double lat, double lng)
+        private static bool IsValidDecimal(decimal value, int precision, int scale)
         {
-            if (lat is < LAT_MIN or > LAT_MAX)
+            // Absolute value to handle negative numbers
+            value = Math.Abs(value);
+
+            // Split integer and fractional parts
+            decimal integerPart = Math.Truncate(value);
+            decimal fractionalPart = value - integerPart;
+
+            // Count digits
+            int integerDigits = integerPart == 0 ? 1 : (int)Math.Floor(Math.Log10((double)integerPart) + 1);
+            int fractionalDigits = fractionalPart.ToString().TrimEnd('0').Length - 2; // Remove "0."
+
+            return (integerDigits + fractionalDigits) <= precision && fractionalDigits <= scale;
+        }
+
+        public static Coordinates Create(Guid id, decimal lat, decimal lng)
+        {
+            if (IsValidDecimal(lat, LAT_PRECISION, LAT_SCALE))
             {
-                throw new ValueOutOfRangeException<double>($"{nameof(lat)} of {nameof(Coordinates)}", LAT_MIN, LAT_MAX, 19);
+                throw new ValueOutOfRangeException<decimal>($"{nameof(lat)} of {nameof(Coordinates)}",
+                    $"precision = {LAT_PRECISION}, scale = {LAT_SCALE}", 19);
             }
 
-            if (lng is < LNG_MIN or > LNG_MAX)
+            if (IsValidDecimal(lng, LNG_PRECISION, LNG_SCALE))
             {
-                throw new ValueOutOfRangeException<double>($"{nameof(lng)} of {nameof(Coordinates)}", LNG_MIN, LNG_MAX, 20);
+                throw new ValueOutOfRangeException<decimal>($"{nameof(lng)} of {nameof(Coordinates)}",
+                    $"precision = {LNG_PRECISION}, scale = {LNG_SCALE}", 20);
             }
 
             return new Coordinates(id, lat, lng);

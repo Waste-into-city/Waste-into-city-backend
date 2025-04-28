@@ -12,28 +12,12 @@ namespace WasteIntoCity.Persistance.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "admin_settings",
-                columns: table => new
-                {
-                    id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    true_complaint_to_addition_ranking = table.Column<int>(type: "int", nullable: false),
-                    false_complaint_from_addition_ranking = table.Column<int>(type: "int", nullable: false),
-                    true_complaint_from_addition_ranking = table.Column<int>(type: "int", nullable: false),
-                    acceptable_difference_report_trashcan_occupancy = table.Column<int>(type: "int", nullable: false),
-                    false_report_trashcans_occupancy_addition_ranking = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_admin_settings", x => x.id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "coordinates",
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    lat = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    lng = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false)
+                    lat = table.Column<decimal>(type: "decimal(12,9)", nullable: false),
+                    lng = table.Column<decimal>(type: "decimal(12,9)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -51,6 +35,33 @@ namespace WasteIntoCity.Persistance.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_roles", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "score_settings_types",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    value = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_score_settings_types", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "trash_types",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_trash_types", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -76,23 +87,6 @@ namespace WasteIntoCity.Persistance.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_trashcan_types", x => x.id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "users",
-                columns: table => new
-                {
-                    id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    nickname = table.Column<string>(type: "nvarchar(45)", maxLength: 45, nullable: false),
-                    email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    password = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    ranking = table.Column<int>(type: "int", nullable: false),
-                    negative_score = table.Column<int>(type: "int", nullable: false),
-                    is_banned = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_users", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -181,6 +175,100 @@ namespace WasteIntoCity.Persistance.Migrations
                         name: "FK_trashcans_trashcan_types_trashcan_types_id",
                         column: x => x.trashcan_types_id,
                         principalTable: "trashcan_types",
+                        principalColumn: "id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "works",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
+                    start_datetime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    finish_datetime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    work_complexity_id = table.Column<int>(type: "int", nullable: false),
+                    work_statuses_id = table.Column<int>(type: "int", nullable: false),
+                    CoordinatesId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_works", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_works_coordinates_CoordinatesId",
+                        column: x => x.CoordinatesId,
+                        principalTable: "coordinates",
+                        principalColumn: "id");
+                    table.ForeignKey(
+                        name: "FK_works_work_complexity_types_work_complexity_id",
+                        column: x => x.work_complexity_id,
+                        principalTable: "work_complexity_types",
+                        principalColumn: "id");
+                    table.ForeignKey(
+                        name: "FK_works_work_status_types_work_statuses_id",
+                        column: x => x.work_statuses_id,
+                        principalTable: "work_status_types",
+                        principalColumn: "id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "works_trash_types",
+                columns: table => new
+                {
+                    works_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    trash_types_id = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_works_trash_types", x => new { x.works_id, x.trash_types_id });
+                    table.ForeignKey(
+                        name: "FK_works_trash_types_trash_types_trash_types_id",
+                        column: x => x.trash_types_id,
+                        principalTable: "trash_types",
+                        principalColumn: "id");
+                    table.ForeignKey(
+                        name: "FK_works_trash_types_works_works_id",
+                        column: x => x.works_id,
+                        principalTable: "works",
+                        principalColumn: "id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "images",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    uploaded_time = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    work_applications_id = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    workReport_complaints_id = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    work_report_results_id = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    UsersId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_images", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "users",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    nickname = table.Column<string>(type: "nvarchar(45)", maxLength: 45, nullable: false),
+                    email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    password = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    ranking = table.Column<int>(type: "int", nullable: false),
+                    negative_score = table.Column<int>(type: "int", nullable: false),
+                    is_banned = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_users", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_users_images_id",
+                        column: x => x.id,
+                        principalTable: "images",
                         principalColumn: "id");
                 });
 
@@ -317,93 +405,6 @@ namespace WasteIntoCity.Persistance.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "work_report_results",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    title = table.Column<string>(type: "nvarchar(1)", maxLength: 1, nullable: false),
-                    description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
-                    from_participant_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    work_statuses_id = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_work_report_results", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_work_report_results_users_from_participant_id",
-                        column: x => x.from_participant_id,
-                        principalTable: "users",
-                        principalColumn: "id");
-                    table.ForeignKey(
-                        name: "FK_work_report_results_work_status_types_work_statuses_id",
-                        column: x => x.work_statuses_id,
-                        principalTable: "work_status_types",
-                        principalColumn: "id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "works",
-                columns: table => new
-                {
-                    id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
-                    start_datetime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    finish_datetime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    work_complexity_id = table.Column<int>(type: "int", nullable: false),
-                    work_statuses_id = table.Column<int>(type: "int", nullable: false),
-                    CoordinatesId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_works", x => x.id);
-                    table.ForeignKey(
-                        name: "FK_works_coordinates_CoordinatesId",
-                        column: x => x.CoordinatesId,
-                        principalTable: "coordinates",
-                        principalColumn: "id");
-                    table.ForeignKey(
-                        name: "FK_works_work_complexity_types_work_complexity_id",
-                        column: x => x.work_complexity_id,
-                        principalTable: "work_complexity_types",
-                        principalColumn: "id");
-                    table.ForeignKey(
-                        name: "FK_works_work_status_types_work_statuses_id",
-                        column: x => x.work_statuses_id,
-                        principalTable: "work_status_types",
-                        principalColumn: "id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "trashcan_point_report_each_mark",
-                columns: table => new
-                {
-                    id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    trashcan_point_reports_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    trashcans_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    trashcan_occupancy_types_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_trashcan_point_report_each_mark", x => x.id);
-                    table.ForeignKey(
-                        name: "FK_trashcan_point_report_each_mark_trashcan_occupancy_types_trashcan_occupancy_types_id",
-                        column: x => x.trashcan_occupancy_types_id,
-                        principalTable: "trashcan_occupancy_types",
-                        principalColumn: "id");
-                    table.ForeignKey(
-                        name: "FK_trashcan_point_report_each_mark_trashcan_point_reports_trashcan_point_reports_id",
-                        column: x => x.trashcan_point_reports_id,
-                        principalTable: "trashcan_point_reports",
-                        principalColumn: "id");
-                    table.ForeignKey(
-                        name: "FK_trashcan_point_report_each_mark_trashcans_trashcans_id",
-                        column: x => x.trashcans_id,
-                        principalTable: "trashcans",
-                        principalColumn: "id");
-                });
-
-            migrationBuilder.CreateTable(
                 name: "work_colleague_reports",
                 columns: table => new
                 {
@@ -493,34 +494,64 @@ namespace WasteIntoCity.Persistance.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "images",
+                name: "work_report_results",
                 columns: table => new
                 {
-                    id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    work_applications_id = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    workReport_complaints_id = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    work_report_results_id = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    title = table.Column<string>(type: "nvarchar(1)", maxLength: 1, nullable: false),
+                    description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
+                    from_participant_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    work_statuses_id = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_images", x => x.id);
+                    table.PrimaryKey("PK_work_report_results", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_images_work_applications_work_applications_id",
-                        column: x => x.work_applications_id,
-                        principalTable: "work_applications",
+                        name: "FK_work_report_results_users_from_participant_id",
+                        column: x => x.from_participant_id,
+                        principalTable: "users",
                         principalColumn: "id");
                     table.ForeignKey(
-                        name: "FK_images_work_report_complaints_workReport_complaints_id",
-                        column: x => x.workReport_complaints_id,
-                        principalTable: "work_report_complaints",
+                        name: "FK_work_report_results_work_status_types_work_statuses_id",
+                        column: x => x.work_statuses_id,
+                        principalTable: "work_status_types",
                         principalColumn: "id");
-                    table.ForeignKey(
-                        name: "FK_images_work_report_results_work_report_results_id",
-                        column: x => x.work_report_results_id,
-                        principalTable: "work_report_results",
-                        principalColumn: "Id");
                 });
+
+            migrationBuilder.CreateTable(
+                name: "trashcan_point_report_each_mark",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    trashcan_point_reports_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    trashcans_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    trashcan_occupancy_types_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_trashcan_point_report_each_mark", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_trashcan_point_report_each_mark_trashcan_occupancy_types_trashcan_occupancy_types_id",
+                        column: x => x.trashcan_occupancy_types_id,
+                        principalTable: "trashcan_occupancy_types",
+                        principalColumn: "id");
+                    table.ForeignKey(
+                        name: "FK_trashcan_point_report_each_mark_trashcan_point_reports_trashcan_point_reports_id",
+                        column: x => x.trashcan_point_reports_id,
+                        principalTable: "trashcan_point_reports",
+                        principalColumn: "id");
+                    table.ForeignKey(
+                        name: "FK_trashcan_point_report_each_mark_trashcans_trashcans_id",
+                        column: x => x.trashcans_id,
+                        principalTable: "trashcans",
+                        principalColumn: "id");
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_images_name",
+                table: "images",
+                column: "name",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_images_work_applications_id",
@@ -555,6 +586,12 @@ namespace WasteIntoCity.Persistance.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_roles_name",
                 table: "roles",
+                column: "name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_trash_types_name",
+                table: "trash_types",
                 column: "name",
                 unique: true);
 
@@ -648,9 +685,10 @@ namespace WasteIntoCity.Persistance.Migrations
                 column: "about_colleague_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_work_colleague_reports_from_participant_id",
+                name: "IX_work_colleague_reports_from_participant_id_about_colleague_id_works_id",
                 table: "work_colleague_reports",
-                column: "from_participant_id");
+                columns: new[] { "from_participant_id", "about_colleague_id", "works_id" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_work_colleague_reports_work_mark_types_id",
@@ -724,22 +762,57 @@ namespace WasteIntoCity.Persistance.Migrations
                 name: "IX_works_work_statuses_id",
                 table: "works",
                 column: "work_statuses_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_works_trash_types_trash_types_id",
+                table: "works_trash_types",
+                column: "trash_types_id");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_images_work_applications_work_applications_id",
+                table: "images",
+                column: "work_applications_id",
+                principalTable: "work_applications",
+                principalColumn: "id");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_images_work_report_complaints_workReport_complaints_id",
+                table: "images",
+                column: "workReport_complaints_id",
+                principalTable: "work_report_complaints",
+                principalColumn: "id");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_images_work_report_results_work_report_results_id",
+                table: "images",
+                column: "work_report_results_id",
+                principalTable: "work_report_results",
+                principalColumn: "Id");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "admin_settings");
+            migrationBuilder.DropForeignKey(
+                name: "FK_images_work_applications_work_applications_id",
+                table: "images");
 
-            migrationBuilder.DropTable(
-                name: "images");
+            migrationBuilder.DropForeignKey(
+                name: "FK_images_work_report_complaints_workReport_complaints_id",
+                table: "images");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_images_work_report_results_work_report_results_id",
+                table: "images");
 
             migrationBuilder.DropTable(
                 name: "notifications");
 
             migrationBuilder.DropTable(
                 name: "refresh_tokens");
+
+            migrationBuilder.DropTable(
+                name: "score_settings_types");
 
             migrationBuilder.DropTable(
                 name: "trashcan_point_report_each_mark");
@@ -754,13 +827,7 @@ namespace WasteIntoCity.Persistance.Migrations
                 name: "work_participants");
 
             migrationBuilder.DropTable(
-                name: "work_applications");
-
-            migrationBuilder.DropTable(
-                name: "work_report_complaints");
-
-            migrationBuilder.DropTable(
-                name: "work_report_results");
+                name: "works_trash_types");
 
             migrationBuilder.DropTable(
                 name: "trashcan_point_reports");
@@ -775,13 +842,7 @@ namespace WasteIntoCity.Persistance.Migrations
                 name: "work_mark_types");
 
             migrationBuilder.DropTable(
-                name: "work_report_status_types");
-
-            migrationBuilder.DropTable(
-                name: "works");
-
-            migrationBuilder.DropTable(
-                name: "users");
+                name: "trash_types");
 
             migrationBuilder.DropTable(
                 name: "trashcan_occupancy_types");
@@ -790,13 +851,34 @@ namespace WasteIntoCity.Persistance.Migrations
                 name: "trashcan_types");
 
             migrationBuilder.DropTable(
+                name: "work_applications");
+
+            migrationBuilder.DropTable(
+                name: "work_report_complaints");
+
+            migrationBuilder.DropTable(
+                name: "work_report_status_types");
+
+            migrationBuilder.DropTable(
+                name: "works");
+
+            migrationBuilder.DropTable(
                 name: "coordinates");
 
             migrationBuilder.DropTable(
                 name: "work_complexity_types");
 
             migrationBuilder.DropTable(
+                name: "work_report_results");
+
+            migrationBuilder.DropTable(
+                name: "users");
+
+            migrationBuilder.DropTable(
                 name: "work_status_types");
+
+            migrationBuilder.DropTable(
+                name: "images");
         }
     }
 }

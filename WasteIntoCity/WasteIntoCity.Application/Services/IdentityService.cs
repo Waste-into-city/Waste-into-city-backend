@@ -103,7 +103,7 @@ namespace WasteIntoCity.Application.Services
             Role role = await _rolesRepository.FindById((int)RoleEnum.User);
 
             User newUser = User.Create(Guid.NewGuid(), Nickname.Create(nickname), Email.Create(email),
-                Password.Create(hashedPassword), USER_START_RANKING, [role], USER_START_NEGATIVE_SCORE, false);
+                Password.Create(hashedPassword), USER_START_RANKING, [role], USER_START_NEGATIVE_SCORE, false, null, null);
 
             try
             {
@@ -183,6 +183,21 @@ namespace WasteIntoCity.Application.Services
         public async Task LogoutAsync(Guid userId)
         {
             await _refreshTokensRepository.UpdateUsedByUserIdTokensAsync(true, userId);
+        }
+
+        public async Task<User> GetUserInfo(Guid userId)
+        {
+            return await _userRepository.FindWithImagesById(userId);
+        }
+
+        public async Task<User> GetSelfUserInfo(Guid userId)
+        {
+            return await _userRepository.FindWithImagesById(userId);
+        }
+
+        public async Task<User> GetUserInfoForAdmin(Guid userId)
+        {
+            return await _userRepository.FindWithImagesById(userId);
         }
 
         private static ClaimsPrincipal GetPrincipalFromAccessToken(string accessTokenValue, TokenValidationParameters tokenValidationParameters)

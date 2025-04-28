@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using WasteIntoCity.Core.Models;
 using WasteIntoCity.Persistance.Entities;
 
 namespace WasteIntoCity.Persistance.Configurations
@@ -14,9 +15,9 @@ namespace WasteIntoCity.Persistance.Configurations
 
             builder.Property(c => c.Id).HasColumnName("id");
 
-            builder.Property(c => c.Lat).IsRequired().HasColumnName("lat");
+            builder.Property(c => c.Lat).IsRequired().HasColumnName("lat").HasColumnType($"decimal({Coordinates.LAT_PRECISION},{Coordinates.LAT_SCALE})"); ;
 
-            builder.Property(c => c.Lng).IsRequired().HasColumnName("lng");
+            builder.Property(c => c.Lng).IsRequired().HasColumnName("lng").HasColumnType($"decimal({Coordinates.LNG_PRECISION},{Coordinates.LNG_SCALE})"); ;
 
             builder.HasKey(c => c.Id);
 

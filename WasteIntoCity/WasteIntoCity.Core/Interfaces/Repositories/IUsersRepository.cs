@@ -12,6 +12,8 @@ namespace WasteIntoCity.Core.Interfaces.Repositories
 
         Task<User> FindByEmailWithRolesAsync(string email);
 
+        Task<User> FindWithImagesById(Guid id);
+
         Task UpdateAsync(User user);
 
         Task AddAllIfNotExistWithRolesByEmailAsync(List<User> users);

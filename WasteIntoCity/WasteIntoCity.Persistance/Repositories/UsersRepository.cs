@@ -70,7 +70,7 @@ namespace WasteIntoCity.Persistance.Repositories
             List<Role> roles = userEntity.Roles.Select(r => Role.Create((RoleEnum)r.Id, r.Name)).ToList();
 
             return User.Create(userEntity.Id, Nickname.Create(userEntity.Nickname), Email.Create(userEntity.Email), Password.Create(userEntity.Password),
-                userEntity.Ranking, roles, userEntity.NegativeScore, userEntity.IsBanned);
+                userEntity.Ranking, roles, userEntity.NegativeScore, userEntity.IsBanned, null, null);
         }
 
         public async Task<User> FindByIdWithRolesAsync(Guid id)
@@ -81,7 +81,20 @@ namespace WasteIntoCity.Persistance.Repositories
             List<Role> roles = userEntity.Roles.Select(r => Role.Create((RoleEnum)r.Id, r.Name)).ToList();
 
             return User.Create(userEntity.Id, Nickname.Create(userEntity.Nickname), Email.Create(userEntity.Email), Password.Create(userEntity.Password),
-                userEntity.Ranking, roles, userEntity.NegativeScore, userEntity.IsBanned);
+                userEntity.Ranking, roles, userEntity.NegativeScore, userEntity.IsBanned, null, null);
+        }
+
+        public async Task<User> FindWithImagesById(Guid id)
+        {
+            UserEntity userEntity = await _mainDbContext.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Id == id)
+                ?? throw new DbIsNotFoundException(nameof(User), 65, null);
+
+            ImageEntity imageEntity = await _mainDbContext.Images.AsNoTracking().FirstOrDefaultAsync(i => i.UsersId == id)
+                ?? throw new DbIsNotFoundException(nameof(User), 66, null);
+
+            return User.Create(userEntity.Id, Nickname.Create(userEntity.Nickname), Email.Create(userEntity.Email),
+                Password.Create(userEntity.Password), userEntity.Ranking, null, userEntity.NegativeScore, userEntity.IsBanned,
+                ImageName.Create(imageEntity.Name), null);
         }
 
         public async Task UpdateAsync(User user)
@@ -143,11 +156,15 @@ namespace WasteIntoCity.Persistance.Repositories
 
                     await _mainDbContext.Users.AddAsync(newUser);
 
+                    await _mainDbContext.SaveChangesAsync();
+
                     await _mainDbContext.UserAccordingRoles.AddRangeAsync(user.Roles.Select(role => new UserAccordingRoleEntity
                     {
                         UsersId = newUser.Id,
                         RolesId = (int)role.Id
                     }));
+
+                    await _mainDbContext.SaveChangesAsync();
                 }
             }
 

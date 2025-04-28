@@ -1,26 +1,25 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace WasteIntoCity.Persistance.Migrations
 {
     /// <inheritdoc />
-    public partial class Image_users_id : Migration
+    public partial class RemoveForeignKeyInUsersForImages : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<Guid>(
-                name: "UsersId",
-                table: "images",
-                type: "uniqueidentifier",
-                nullable: true);
+            migrationBuilder.DropForeignKey(
+                name: "FK_users_images_id",
+                table: "users");
 
             migrationBuilder.CreateIndex(
                 name: "IX_images_UsersId",
                 table: "images",
-                column: "UsersId");
+                column: "UsersId",
+                unique: true,
+                filter: "[UsersId] IS NOT NULL");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_images_users_UsersId",
@@ -41,9 +40,12 @@ namespace WasteIntoCity.Persistance.Migrations
                 name: "IX_images_UsersId",
                 table: "images");
 
-            migrationBuilder.DropColumn(
-                name: "UsersId",
-                table: "images");
+            migrationBuilder.AddForeignKey(
+                name: "FK_users_images_id",
+                table: "users",
+                column: "id",
+                principalTable: "images",
+                principalColumn: "id");
         }
     }
 }

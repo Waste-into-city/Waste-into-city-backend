@@ -26,6 +26,12 @@
             public const string REFRESH = $"{BASE}/{CONTROLLER_NAME}/refresh";
 
             public const string LOGOUT = $"{BASE}/{CONTROLLER_NAME}/logout";
+
+            public const string GET_SELF_USER_INFO = $"{BASE}/{CONTROLLER_NAME}/get-self-user-info";
+
+            public const string GET_USER_INFO = $$"""{{BASE}}/{{CONTROLLER_NAME}}/get-user-info/{userId:Guid}""";
+
+            public const string GET_USER_INFO_FOR_ADMIN = $$"""{{BASE}}/{{CONTROLLER_NAME}}/get-user-info-for-admin/{userId:Guid}""";
         }
 
         public static class Works

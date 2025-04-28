@@ -111,7 +111,7 @@ namespace WasteIntoCity.Application.BackgroundServices
                 }
 
                 updatedParticipants.Add(User.Create(participant.Id, participant.Nickname, participant.Email, participant.Password, ranking,
-                    participant.Roles, negativeScore, isBanned));
+                    participant.Roles, negativeScore, isBanned, null, null));
             }
 
             await usersRepository.UpdateAllByIdAsync(updatedParticipants);

@@ -40,6 +40,6 @@
 
         public List<WorkApplicationEntity> WorkApplications { get; set; } = [];
 
-        public List<ImageEntity> Images { get; set; } = [];
+        public ImageEntity? Image { get; set; }
     }
 }

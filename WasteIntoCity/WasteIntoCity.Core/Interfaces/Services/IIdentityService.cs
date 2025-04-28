@@ -1,4 +1,5 @@
 ﻿
+using WasteIntoCity.Core.Models;
 using WasteIntoCity.Core.Structs;
 
 namespace WasteIntoCity.Core.Interfaces.Services
@@ -12,5 +13,11 @@ namespace WasteIntoCity.Core.Interfaces.Services
         Task<UserPrepareTokensContextResponse> RefreshAsync(string accessTokenValue, string refreshTokenValue);
 
         Task LogoutAsync(Guid userId);
+
+        Task<User> GetUserInfo(Guid userId);
+
+        Task<User> GetSelfUserInfo(Guid userId);
+
+        Task<User> GetUserInfoForAdmin(Guid userId);
     }
 }

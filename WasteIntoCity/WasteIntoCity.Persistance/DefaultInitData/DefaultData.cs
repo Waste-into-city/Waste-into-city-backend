@@ -119,7 +119,9 @@ namespace WasteIntoCity.Persistance.DefaultInitData
                     Role.Create(RoleEnum.Moderator, Roles.SingleOrDefault(w => w.Id == RoleEnum.Moderator)!.Name)
                 },
                 0,
-                false
+                false,
+                null,
+                null
             ),
             User.Create(
                 Guid.NewGuid(),
@@ -132,7 +134,9 @@ namespace WasteIntoCity.Persistance.DefaultInitData
                     Role.Create(RoleEnum.Admin, Roles.SingleOrDefault(w => w.Id == RoleEnum.Admin)!.Name)
                 },
                 0,
-                false
+                false,
+                null,
+                null
             ),
         };
     }

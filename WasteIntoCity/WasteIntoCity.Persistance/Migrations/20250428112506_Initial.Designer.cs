@@ -12,8 +12,8 @@ using WasteIntoCity.Persistance;
 namespace WasteIntoCity.Persistance.Migrations
 {
     [DbContext(typeof(MainDbContext))]
-    [Migration("20250427142003_Image_users_id")]
-    partial class Image_users_id
+    [Migration("20250428112506_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,16 +32,12 @@ namespace WasteIntoCity.Persistance.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("id");
 
-                    b.Property<string>("Lat")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)")
+                    b.Property<decimal>("Lat")
+                        .HasColumnType("decimal(12,9)")
                         .HasColumnName("lat");
 
-                    b.Property<string>("Lng")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)")
+                    b.Property<decimal>("Lng")
+                        .HasColumnType("decimal(12,9)")
                         .HasColumnName("lng");
 
                     b.HasKey("Id");
@@ -85,8 +81,6 @@ namespace WasteIntoCity.Persistance.Migrations
 
                     b.HasIndex("Name")
                         .IsUnique();
-
-                    b.HasIndex("UsersId");
 
                     b.HasIndex("WorkApplicationsId");
 
@@ -406,7 +400,6 @@ namespace WasteIntoCity.Persistance.Migrations
             modelBuilder.Entity("WasteIntoCity.Persistance.Entities.UserEntity", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("id");
 
@@ -820,10 +813,6 @@ namespace WasteIntoCity.Persistance.Migrations
 
             modelBuilder.Entity("WasteIntoCity.Persistance.Entities.ImageEntity", b =>
                 {
-                    b.HasOne("WasteIntoCity.Persistance.Entities.UserEntity", "User")
-                        .WithMany("Images")
-                        .HasForeignKey("UsersId");
-
                     b.HasOne("WasteIntoCity.Persistance.Entities.WorkApplicationEntity", "WorkApplication")
                         .WithMany("Images")
                         .HasForeignKey("WorkApplicationsId");
@@ -835,8 +824,6 @@ namespace WasteIntoCity.Persistance.Migrations
                     b.HasOne("WasteIntoCity.Persistance.Entities.WorkReportResultEntity", "WorkReportResult")
                         .WithMany("Images")
                         .HasForeignKey("WorkReportResultsId");
-
-                    b.Navigation("User");
 
                     b.Navigation("WorkApplication");
 
@@ -947,6 +934,16 @@ namespace WasteIntoCity.Persistance.Migrations
                         .WithMany()
                         .HasForeignKey("UsersId")
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("WasteIntoCity.Persistance.Entities.UserEntity", b =>
+                {
+                    b.HasOne("WasteIntoCity.Persistance.Entities.ImageEntity", "Image")
+                        .WithOne("User")
+                        .HasForeignKey("WasteIntoCity.Persistance.Entities.UserEntity", "Id")
+                        .IsRequired();
+
+                    b.Navigation("Image");
                 });
 
             modelBuilder.Entity("WasteIntoCity.Persistance.Entities.WorkApplicationEntity", b =>
@@ -1113,6 +1110,11 @@ namespace WasteIntoCity.Persistance.Migrations
                     b.Navigation("Works");
                 });
 
+            modelBuilder.Entity("WasteIntoCity.Persistance.Entities.ImageEntity", b =>
+                {
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("WasteIntoCity.Persistance.Entities.TrashcanEntity", b =>
                 {
                     b.Navigation("TrashcanPointReportEachMark");
@@ -1137,8 +1139,6 @@ namespace WasteIntoCity.Persistance.Migrations
 
             modelBuilder.Entity("WasteIntoCity.Persistance.Entities.UserEntity", b =>
                 {
-                    b.Navigation("Images");
-
                     b.Navigation("NotificationsFrom");
 
                     b.Navigation("NotificationsTo");

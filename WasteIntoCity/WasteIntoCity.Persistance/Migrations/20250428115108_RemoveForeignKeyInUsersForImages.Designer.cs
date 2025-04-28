@@ -12,8 +12,8 @@ using WasteIntoCity.Persistance;
 namespace WasteIntoCity.Persistance.Migrations
 {
     [DbContext(typeof(MainDbContext))]
-    [Migration("20250405234419_WorkStatusTypesAddingRankingMultiplierComplexity")]
-    partial class WorkStatusTypesAddingRankingMultiplierComplexity
+    [Migration("20250428115108_RemoveForeignKeyInUsersForImages")]
+    partial class RemoveForeignKeyInUsersForImages
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,38 +25,6 @@ namespace WasteIntoCity.Persistance.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("WasteIntoCity.Persistance.Entities.AdminSettingsEntity", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("id");
-
-                    b.Property<int>("AcceptableDifferenceReportTrashcanOccupancy")
-                        .HasColumnType("int")
-                        .HasColumnName("acceptable_difference_report_trashcan_occupancy");
-
-                    b.Property<int>("FalseComplaintFromAdditionRanking")
-                        .HasColumnType("int")
-                        .HasColumnName("false_complaint_from_addition_ranking");
-
-                    b.Property<int>("FalseReportTrashcansOccupancyAdditionRanking")
-                        .HasColumnType("int")
-                        .HasColumnName("false_report_trashcans_occupancy_addition_ranking");
-
-                    b.Property<int>("TrueComplaintFromAdditionRanking")
-                        .HasColumnType("int")
-                        .HasColumnName("true_complaint_from_addition_ranking");
-
-                    b.Property<int>("TrueComplaintToAdditionRanking")
-                        .HasColumnType("int")
-                        .HasColumnName("true_complaint_to_addition_ranking");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("admin_settings", (string)null);
-                });
-
             modelBuilder.Entity("WasteIntoCity.Persistance.Entities.CoordinatesEntity", b =>
                 {
                     b.Property<Guid>("Id")
@@ -64,16 +32,12 @@ namespace WasteIntoCity.Persistance.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("id");
 
-                    b.Property<string>("Lat")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)")
+                    b.Property<decimal>("Lat")
+                        .HasColumnType("decimal(12,9)")
                         .HasColumnName("lat");
 
-                    b.Property<string>("Lng")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)")
+                    b.Property<decimal>("Lng")
+                        .HasColumnType("decimal(12,9)")
                         .HasColumnName("lng");
 
                     b.HasKey("Id");
@@ -94,6 +58,13 @@ namespace WasteIntoCity.Persistance.Migrations
                         .HasColumnType("nvarchar(255)")
                         .HasColumnName("name");
 
+                    b.Property<DateTime>("UploadedTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("uploaded_time");
+
+                    b.Property<Guid?>("UsersId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid?>("WorkApplicationsId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("work_applications_id");
@@ -107,6 +78,13 @@ namespace WasteIntoCity.Persistance.Migrations
                         .HasColumnName("work_report_results_id");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.HasIndex("UsersId")
+                        .IsUnique()
+                        .HasFilter("[UsersId] IS NOT NULL");
 
                     b.HasIndex("WorkApplicationsId");
 
@@ -214,6 +192,53 @@ namespace WasteIntoCity.Persistance.Migrations
                         .IsUnique();
 
                     b.ToTable("roles", (string)null);
+                });
+
+            modelBuilder.Entity("WasteIntoCity.Persistance.Entities.ScoreSettingsTypeEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("name");
+
+                    b.Property<int>("Value")
+                        .HasColumnType("int")
+                        .HasColumnName("value");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("score_settings_types", (string)null);
+                });
+
+            modelBuilder.Entity("WasteIntoCity.Persistance.Entities.TrashTypeEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("trash_types", (string)null);
                 });
 
             modelBuilder.Entity("WasteIntoCity.Persistance.Entities.TrashcanEntity", b =>
@@ -774,8 +799,29 @@ namespace WasteIntoCity.Persistance.Migrations
                     b.ToTable("work_status_types", (string)null);
                 });
 
+            modelBuilder.Entity("WasteIntoCity.Persistance.Entities.WorkTrashTypeEntity", b =>
+                {
+                    b.Property<Guid>("WorksId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("works_id");
+
+                    b.Property<int>("TrashTypesId")
+                        .HasColumnType("int")
+                        .HasColumnName("trash_types_id");
+
+                    b.HasKey("WorksId", "TrashTypesId");
+
+                    b.HasIndex("TrashTypesId");
+
+                    b.ToTable("works_trash_types", (string)null);
+                });
+
             modelBuilder.Entity("WasteIntoCity.Persistance.Entities.ImageEntity", b =>
                 {
+                    b.HasOne("WasteIntoCity.Persistance.Entities.UserEntity", "User")
+                        .WithOne("Image")
+                        .HasForeignKey("WasteIntoCity.Persistance.Entities.ImageEntity", "UsersId");
+
                     b.HasOne("WasteIntoCity.Persistance.Entities.WorkApplicationEntity", "WorkApplication")
                         .WithMany("Images")
                         .HasForeignKey("WorkApplicationsId");
@@ -787,6 +833,8 @@ namespace WasteIntoCity.Persistance.Migrations
                     b.HasOne("WasteIntoCity.Persistance.Entities.WorkReportResultEntity", "WorkReportResult")
                         .WithMany("Images")
                         .HasForeignKey("WorkReportResultsId");
+
+                    b.Navigation("User");
 
                     b.Navigation("WorkApplication");
 
@@ -1039,6 +1087,19 @@ namespace WasteIntoCity.Persistance.Migrations
                     b.Navigation("WorkStatusType");
                 });
 
+            modelBuilder.Entity("WasteIntoCity.Persistance.Entities.WorkTrashTypeEntity", b =>
+                {
+                    b.HasOne("WasteIntoCity.Persistance.Entities.TrashTypeEntity", null)
+                        .WithMany()
+                        .HasForeignKey("TrashTypesId")
+                        .IsRequired();
+
+                    b.HasOne("WasteIntoCity.Persistance.Entities.WorkEntity", null)
+                        .WithMany()
+                        .HasForeignKey("WorksId")
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("WasteIntoCity.Persistance.Entities.CoordinatesEntity", b =>
                 {
                     b.Navigation("TrashcanPointReports");
@@ -1074,6 +1135,8 @@ namespace WasteIntoCity.Persistance.Migrations
 
             modelBuilder.Entity("WasteIntoCity.Persistance.Entities.UserEntity", b =>
                 {
+                    b.Navigation("Image");
+
                     b.Navigation("NotificationsFrom");
 
                     b.Navigation("NotificationsTo");
