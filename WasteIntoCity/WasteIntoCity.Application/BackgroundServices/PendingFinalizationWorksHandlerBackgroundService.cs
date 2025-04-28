@@ -7,7 +7,6 @@ using WasteIntoCity.Core.Enums;
 using WasteIntoCity.Core.Exceptions.InternalServer500Exceptions;
 using WasteIntoCity.Core.Interfaces.Repositories;
 using WasteIntoCity.Core.Models;
-using WasteIntoCity.Core.Types;
 using WasteIntoCity.Persistance.Repositories;
 
 namespace WasteIntoCity.Application.BackgroundServices

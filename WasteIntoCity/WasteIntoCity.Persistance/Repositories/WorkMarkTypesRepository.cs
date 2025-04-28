@@ -1,6 +1,6 @@
-﻿using WasteIntoCity.Core.Interfaces.Repositories;
+﻿using WasteIntoCity.Core.Enums;
+using WasteIntoCity.Core.Interfaces.Repositories;
 using WasteIntoCity.Core.Models;
-using WasteIntoCity.Core.Types;
 using WasteIntoCity.Persistance.Configurations;
 using WasteIntoCity.Persistance.Entities;
 using WasteIntoCity.Persistance.Extensions;

@@ -1,4 +1,4 @@
-﻿namespace WasteIntoCity.Core.Types
+﻿namespace WasteIntoCity.Core.Enums
 {
     public enum WorkMarkEnum
     {

@@ -1,4 +1,4 @@
-﻿using WasteIntoCity.Core.Types;
+﻿using WasteIntoCity.Core.Enums;
 using WasteIntoCity.Core.ValueObjects;
 
 namespace WasteIntoCity.Core.Models
@@ -13,14 +13,14 @@ namespace WasteIntoCity.Core.Models
 
         public const int DESCRIPTION_LENGTH_MAX = Description.VALUE_LENGTH_MAX;
 
-        private WorkReportResult(Guid id, Guid fromParticipantId, Title title, Description description, WorkStatusEnum workStatusesId, User? fromParticipant)
+        private WorkReportResult(Guid id, Guid fromParticipantId, Title title, Description description, WorkComplexityEnum workComplexityTypesId,
+            WorkStatusEnum workStatusesId)
         {
             Id = id;
             FromParticipantId = fromParticipantId;
             Title = title;
             Description = description;
-            WorkStatusTypesId = workStatusesId;
-            FromParticipant = fromParticipant;
+            WorkComplexityTypesId = workComplexityTypesId;
         }
 
         public Guid Id { get; }
@@ -31,14 +31,14 @@ namespace WasteIntoCity.Core.Models
 
         public Description Description { get; }
 
+        public WorkComplexityEnum WorkComplexityTypesId { get; }
+
         public WorkStatusEnum WorkStatusTypesId { get; }
 
-        public User? FromParticipant { get; }
-
-        public static WorkReportResult Create(Guid id, Guid fromParticipantId, Title title, Description description, WorkStatusEnum workStatusesId,
-            User? fromParticipant)
+        public static WorkReportResult Create(Guid id, Guid fromParticipantId, Title title, Description description, WorkComplexityEnum workComplexityTypesId,
+            WorkStatusEnum workStatusesId)
         {
-            return new WorkReportResult(id, fromParticipantId, title, description, workStatusesId, fromParticipant);
+            return new WorkReportResult(id, fromParticipantId, title, description, workComplexityTypesId, workStatusesId);
         }
 
     }

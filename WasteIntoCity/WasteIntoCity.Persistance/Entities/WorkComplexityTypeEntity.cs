@@ -19,5 +19,7 @@
         public List<WorkApplicationEntity> WorkApplications { get; set; } = [];
 
         public List<WorkEntity> Works { get; set; } = [];
+
+        public List<WorkReportResultEntity> WorkReportResults { get; set; } = [];
     }
 }

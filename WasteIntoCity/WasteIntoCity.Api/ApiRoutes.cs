@@ -62,6 +62,15 @@
             public const string CONFIRM = $$"""{{BASE}}/{{CONTROLLER_NAME}}/confirm/{workApplicationsId}""";
         }
 
+        public static class WorkReportResults
+        {
+            private const string CONTROLLER_NAME = "work-report-results";
+
+            public const string CREATE = $"{BASE}/{CONTROLLER_NAME}/create";
+
+            public const string GET = $$"""{{BASE}}/{{CONTROLLER_NAME}}/{workReportResultId:Guid}""";
+        }
+
         public static class Images
         {
             private const string CONTROLLER_NAME = "images";

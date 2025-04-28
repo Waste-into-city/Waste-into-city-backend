@@ -1,4 +1,4 @@
-﻿using WasteIntoCity.Core.Types;
+﻿using WasteIntoCity.Core.Enums;
 
 namespace WasteIntoCity.Core.Models
 {

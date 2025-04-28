@@ -10,11 +10,15 @@
 
         public Guid FromParticipantsId { get; set; }
 
+        public int WorkComplexityTypesId { get; set; }
+
         public int WorkStatusTypesId { get; set; }
 
         public UserEntity? FromParticipant { get; set; }
 
         public WorkStatusTypeEntity? WorkStatusType { get; set; }
+
+        public WorkComplexityTypeEntity? WorkComplexityType { get; set; }
 
         public List<ImageEntity> Images { get; set; } = [];
     }

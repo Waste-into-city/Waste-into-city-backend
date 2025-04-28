@@ -1,8 +1,8 @@
-﻿using WasteIntoCity.Core.Extensions;
+﻿using WasteIntoCity.Core.Enums;
+using WasteIntoCity.Core.Extensions;
 using WasteIntoCity.Core.Interfaces.Repositories;
 using WasteIntoCity.Core.Interfaces.Services;
 using WasteIntoCity.Core.Models;
-using WasteIntoCity.Core.Types;
 using WasteIntoCity.Core.ValueObjects;
 
 namespace WasteIntoCity.Application.Services

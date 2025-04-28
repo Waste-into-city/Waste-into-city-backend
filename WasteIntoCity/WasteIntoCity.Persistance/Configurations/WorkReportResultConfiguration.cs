@@ -21,6 +21,8 @@ namespace WasteIntoCity.Persistance.Configurations
 
             builder.Property(w => w.FromParticipantsId).IsRequired().HasColumnName("from_participant_id");
 
+            builder.Property(w => w.WorkComplexityTypesId).IsRequired().HasColumnName("work_complexity_types_id");
+
             builder.Property(w => w.WorkStatusTypesId).IsRequired().HasColumnName("work_statuses_id");
 
             builder.HasKey(w => w.Id);

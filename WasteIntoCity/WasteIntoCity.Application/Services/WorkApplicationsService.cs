@@ -3,7 +3,6 @@ using WasteIntoCity.Core.Exceptions.BadRequest400Exceptions;
 using WasteIntoCity.Core.Interfaces.Repositories;
 using WasteIntoCity.Core.Interfaces.Services;
 using WasteIntoCity.Core.Models;
-using WasteIntoCity.Core.Types;
 using WasteIntoCity.Core.ValueObjects;
 using WasteIntoCity.Persistance.Repositories;
 
@@ -51,7 +50,7 @@ namespace WasteIntoCity.Application.Services
         {
             Coordinates coordinates = Coordinates.Create(Guid.NewGuid(), lat, lng);
 
-            await _coordinatesRepository.AddAsync(coordinates);
+            await _coordinatesRepository.CreateAsync(coordinates);
 
             WorkApplication workApplication = WorkApplication.Create(Guid.NewGuid(), Title.Create(title), Description.Create(description),
                 (WorkComplexityEnum)workComplexityId, coordinates.Id, DateTime.UtcNow, userId, WorkReportStatusEnum.Pending, null);

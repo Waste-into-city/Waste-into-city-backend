@@ -1,7 +1,6 @@
 ﻿using WasteIntoCity.Core.Enums;
 using WasteIntoCity.Core.Exceptions.BadRequest400Exceptions;
 using WasteIntoCity.Core.Extensions;
-using WasteIntoCity.Core.Types;
 using WasteIntoCity.Core.ValueObjects;
 
 namespace WasteIntoCity.Core.Models
