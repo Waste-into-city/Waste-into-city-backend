@@ -136,7 +136,7 @@ namespace WasteIntoCity.Persistance.Repositories
             {
                 if (user.Roles == null)
                 {
-                    throw new NullValueServerException(26, "roles", null);
+                    throw new NullValueServerException(27, "roles", null);
                 }
 
                 bool userExists = await _mainDbContext.Users.AnyAsync(u => u.Email == user.Email.Value);

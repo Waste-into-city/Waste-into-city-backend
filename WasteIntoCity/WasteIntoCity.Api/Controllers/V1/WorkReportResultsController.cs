@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WasteIntoCity.Api.Contracts.V1.Requests;
+using WasteIntoCity.Api.Contracts.V1.Responses;
 using WasteIntoCity.Application;
 using WasteIntoCity.Application.Extensions;
 using WasteIntoCity.Core.Enums;
+using WasteIntoCity.Core.Exceptions.InternalServer500Exceptions;
 using WasteIntoCity.Core.Interfaces.Services;
 using WasteIntoCity.Core.Models;
 
@@ -20,7 +22,7 @@ namespace WasteIntoCity.Api.Controllers.V1
 
         [Authorize(Roles = $"{nameof(RoleEnum.Admin)},{nameof(RoleEnum.Moderator)},{nameof(RoleEnum.User)}")]
         [HttpPost(ApiRoutes.WorkReportResults.CREATE)]
-        public async Task<IActionResult> Create([FromBody] WorkReportResultCreate workReportResultCreate)
+        public async Task<IActionResult> Create([FromBody] WorkReportCreateRequest workReportResultCreate)
         {
             Guid fromParticipantId = HttpContext.TakeUserIdFromAccessToken();
 
@@ -36,15 +38,23 @@ namespace WasteIntoCity.Api.Controllers.V1
         {
             WorkReportResult workReportResult = await _workReportResultsService.GetAsync(id);
 
-            WorkReportResultCreate workReportResultCreate = new WorkReportResultCreate
+            if (workReportResult.FromParticipant == null)
             {
+                throw new NullValueServerException(26, "from participant", null);
+            }
+
+            WorkReportResultGetResponse workReportResultGetResponse = new WorkReportResultGetResponse
+            {
+                FromParticipantId = workReportResult.FromParticipantId,
+                FromParticipantEmail = workReportResult.FromParticipant.Email.Value,
+                FromParticipantNickname = workReportResult.FromParticipant.Nickname.Value,
                 Title = workReportResult.Title.Value,
                 Description = workReportResult.Title.Value,
                 WorkComplexityTypesId = (int)workReportResult.WorkComplexityTypesId,
                 WorkStatusTypesId = (int)workReportResult.WorkStatusTypesId,
             };
 
-            return Ok(workReportResultCreate);
+            return Ok(workReportResultGetResponse);
         }
     }
 }

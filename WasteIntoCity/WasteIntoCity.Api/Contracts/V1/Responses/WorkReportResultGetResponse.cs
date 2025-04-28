@@ -4,7 +4,9 @@
     {
         required public Guid FromParticipantId { get; init; }
 
-        required public Guid FromParticipantEmail { get; init; }
+        required public string FromParticipantEmail { get; init; }
+
+        required public string FromParticipantNickname { get; init; }
 
         required public string Title { get; init; }
 

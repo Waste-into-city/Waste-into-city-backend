@@ -14,13 +14,14 @@ namespace WasteIntoCity.Core.Models
         public const int DESCRIPTION_LENGTH_MAX = Description.VALUE_LENGTH_MAX;
 
         private WorkReportResult(Guid id, Guid fromParticipantId, Title title, Description description, WorkComplexityEnum workComplexityTypesId,
-            WorkStatusEnum workStatusesId)
+            WorkStatusEnum workStatusesId, User? fromParticipant)
         {
             Id = id;
             FromParticipantId = fromParticipantId;
             Title = title;
             Description = description;
             WorkComplexityTypesId = workComplexityTypesId;
+            FromParticipant = fromParticipant;
         }
 
         public Guid Id { get; }
@@ -35,10 +36,12 @@ namespace WasteIntoCity.Core.Models
 
         public WorkStatusEnum WorkStatusTypesId { get; }
 
+        public User? FromParticipant { get; }
+
         public static WorkReportResult Create(Guid id, Guid fromParticipantId, Title title, Description description, WorkComplexityEnum workComplexityTypesId,
-            WorkStatusEnum workStatusesId)
+            WorkStatusEnum workStatusesId, User? fromParticipant)
         {
-            return new WorkReportResult(id, fromParticipantId, title, description, workComplexityTypesId, workStatusesId);
+            return new WorkReportResult(id, fromParticipantId, title, description, workComplexityTypesId, workStatusesId, fromParticipant);
         }
 
     }

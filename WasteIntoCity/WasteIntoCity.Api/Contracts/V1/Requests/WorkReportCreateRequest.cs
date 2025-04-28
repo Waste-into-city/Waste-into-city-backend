@@ -1,6 +1,6 @@
 ﻿namespace WasteIntoCity.Api.Contracts.V1.Requests
 {
-    public record WorkReportResultCreate
+    public record WorkReportCreateRequest
     {
         public required string Title { get; init; }
 
