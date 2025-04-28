@@ -18,6 +18,8 @@
 
         public Guid FromUsersId { get; set; }
 
+        public int WorkTypesId { get; set; }
+
         public WorkComplexityTypeEntity? WorkComplexityType { get; set; }
 
         public WorkReportStatusTypeEntity? WorkReportStatusType { get; set; }
@@ -27,5 +29,7 @@
         public CoordinatesEntity? Coordinates { get; set; }
 
         public UserEntity? FromUser { get; set; }
+
+        public ICollection<TrashTypeEntity> TrashTypes { get; set; } = [];
     }
 }

@@ -54,7 +54,7 @@ namespace WasteIntoCity.Application.Services
             await _coordinatesRepository.AddAsync(coordinates);
 
             WorkApplication workApplication = WorkApplication.Create(Guid.NewGuid(), Title.Create(title), Description.Create(description),
-                (WorkComplexityEnum)workComplexityId, coordinates.Id, DateTime.UtcNow, userId, WorkReportStatusEnum.Pending);
+                (WorkComplexityEnum)workComplexityId, coordinates.Id, DateTime.UtcNow, userId, WorkReportStatusEnum.Pending, null);
 
             await _workApplicationsRepository.AddAsync(workApplication);
         }

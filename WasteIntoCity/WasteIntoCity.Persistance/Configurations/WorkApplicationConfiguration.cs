@@ -46,6 +46,13 @@ namespace WasteIntoCity.Persistance.Configurations
 
             builder.HasOne(w => w.WorkReportStatusType)
                 .WithMany(wo => wo.WorkApplications);
+
+            builder.HasMany(w => w.TrashTypes)
+                .WithMany(t => t.WorkApplications)
+                .UsingEntity<WorkApplicationTrashTypeEntity>(
+                    w => w.HasOne<TrashTypeEntity>().WithMany().HasForeignKey(e => e.TrashTypesId),
+                    t => t.HasOne<WorkApplicationEntity>().WithMany().HasForeignKey(e => e.WorksApplicationsId)
+                );
         }
     }
 }

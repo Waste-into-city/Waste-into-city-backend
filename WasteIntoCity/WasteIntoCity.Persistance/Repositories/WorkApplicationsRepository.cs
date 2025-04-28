@@ -43,7 +43,7 @@ namespace WasteIntoCity.Persistance.Repositories
             return WorkApplication.Create(workApplicationEntity.Id, Title.Create(workApplicationEntity.Title),
                 Description.Create(workApplicationEntity.Description), (WorkComplexityEnum)workApplicationEntity.WorkComplexityTypesId,
                 workApplicationEntity.CoordinatesId, workApplicationEntity.StartedDatetime, workApplicationEntity.FromUsersId,
-                (WorkReportStatusEnum)workApplicationEntity.WorkReportStatusTypesId);
+                (WorkReportStatusEnum)workApplicationEntity.WorkReportStatusTypesId, null);
         }
 
         public async Task UpdateAsync(WorkApplication workApplication)
