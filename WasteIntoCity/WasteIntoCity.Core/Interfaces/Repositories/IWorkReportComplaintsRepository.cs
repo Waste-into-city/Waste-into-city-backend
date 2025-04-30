@@ -1,17 +1,14 @@
-﻿using WasteIntoCity.Core.Models;
+﻿using WasteIntoCity.Core.Enums;
+using WasteIntoCity.Core.Models;
 
 namespace WasteIntoCity.Core.Interfaces.Repositories
 {
     public interface IWorkReportComplaintsRepository
     {
-        Task Create(WorkReportComplaint workReportComplaint);
+        Task CreateAsync(WorkReportComplaint workReportComplaint);
 
-        Task Delete(Guid id);
+        Task<WorkReportComplaint> FindByIdAsync(Guid id);
 
-        Task<List<WorkReportComplaint>> Get();
-
-        Task<WorkReportComplaint> GetById(Guid id);
-
-        Task Update(WorkReportComplaint workReportComplaint);
+        Task UpdateWorkReportStatusTypesIdByIdAsync(Guid id, WorkReportStatusEnum workReportStatusTypesId);
     }
 }

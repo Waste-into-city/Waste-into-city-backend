@@ -165,7 +165,7 @@ namespace WasteIntoCity.Application.Services
 
             if (Guid.TryParse(accessTokenClaimsPrincipal.Claims.Single(x => x.Type == "id").Value, out Guid parsedGuid))
             {
-                user = await _userRepository.FindByIdWithRolesAsync(parsedGuid);
+                user = await _userRepository.FindWithRolesByIdAsync(parsedGuid);
             }
             else
             {

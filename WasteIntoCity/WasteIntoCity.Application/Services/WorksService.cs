@@ -28,7 +28,7 @@ namespace WasteIntoCity.Application.Services
 
         public async Task<Work> GetById(Guid id)
         {
-            return await _worksRepository.FindByIdAsync(id);
+            return await _worksRepository.FindWithCoordinatesByIdAsync(id);
         }
 
         public async Task UpdateAsync(Guid id, string title, string description, DateTime startedDatetime, DateTime finishDatetime, int workComplexityTypesId,

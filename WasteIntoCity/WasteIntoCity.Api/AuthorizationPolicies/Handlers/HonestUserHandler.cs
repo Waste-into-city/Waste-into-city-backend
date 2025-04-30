@@ -35,7 +35,7 @@ namespace WasteIntoCity.Api.AuthorizationPolicies.Handlers
             {
                 if (Guid.TryParse(context.User.Claims.Single(x => x.Type == "id").Value, out Guid parsedGuid))
                 {
-                    User user = await _usersRepository.FindByIdWithRolesAsync(parsedGuid);
+                    User user = await _usersRepository.FindWithRolesByIdAsync(parsedGuid);
 
                     if (user.Ranking < requirement.RankingMin)
                     {

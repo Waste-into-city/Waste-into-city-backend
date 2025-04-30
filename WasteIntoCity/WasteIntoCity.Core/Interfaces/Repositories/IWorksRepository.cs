@@ -9,7 +9,9 @@ namespace WasteIntoCity.Core.Interfaces.Repositories
 
         Task<List<Work>> FindAllAsync();
 
-        Task<Work> FindByIdAsync(Guid id);
+        Task<Work> FindWithCoordinatesByIdAsync(Guid id);
+
+        Task<Work> FindWithParticipantsByIdAsync(Guid id);
 
         Task<List<Work>> FindAllWithCoordinatesByParticipantIdAsync(Guid participantId);
 

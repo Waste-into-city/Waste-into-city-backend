@@ -80,14 +80,30 @@ namespace WasteIntoCity.Persistance.Repositories
             return works;
         }
 
-        public async Task<Work> FindByIdAsync(Guid id)
+        public async Task<Work> FindWithCoordinatesByIdAsync(Guid id)
         {
             WorkEntity work = await _mainDbContext.Works.AsNoTracking().Include(w => w.Coordinates).FirstOrDefaultAsync(w => w.Id == id)
                 ?? throw new DbIsNotFoundException(nameof(Work), 8, null);
 
             return Work.Create(work.Id, Title.Create(work.Title), Description.Create(work.Description), work.StartedDatetime, work.FinishDatetime,
-                (WorkComplexityEnum)work.WorkComplexityTypesId, (WorkStatusEnum)work.WorkStatusTypesId, work.CoordinatesId, [],
+                (WorkComplexityEnum)work.WorkComplexityTypesId, (WorkStatusEnum)work.WorkStatusTypesId, work.CoordinatesId, null,
                 Coordinates.Create(work.Coordinates!.Id, work.Coordinates!.Lat, work.Coordinates!.Lng), null, null, null, null);
+        }
+
+
+        public async Task<Work> FindWithParticipantsByIdAsync(Guid id)
+        {
+            WorkEntity workEntity = await _mainDbContext.Works.AsNoTracking().Include(w => w.Users).FirstOrDefaultAsync(w => w.Id == id)
+                ?? throw new DbIsNotFoundException(nameof(Work), 14, null);
+
+            List<User>? participants = workEntity.Users == null ? null : workEntity.Users.Select(u => User.Create(u.Id,
+                Nickname.Create(u.Nickname), Email.Create(u.Email), Password.Create(u.Password), u.Ranking, null, u.NegativeScore,
+                u.IsBanned, null, null)).ToList();
+
+            return Work.Create(workEntity.Id, Title.Create(workEntity.Title), Description.Create(workEntity.Description),
+                workEntity.StartedDatetime, workEntity.FinishDatetime, (WorkComplexityEnum)workEntity.WorkComplexityTypesId,
+                (WorkStatusEnum)workEntity.WorkStatusTypesId, workEntity.CoordinatesId, participants, null, null, null, null,
+                null);
         }
 
         public async Task UpdateAsync(Work work)
@@ -193,7 +209,7 @@ namespace WasteIntoCity.Persistance.Repositories
                     {
                         if (wc.WorkMarkType is null)
                         {
-                            throw new DbIsNotFoundException(nameof(WorkComplexityType), 11, null);
+                            throw new DbIsNotFoundException(nameof(WorkComplexityType), 15, null);
                         }
 
                         return WorkColleagueReport.Create(

@@ -22,19 +22,19 @@ namespace WasteIntoCity.Api.Controllers.V1
 
         [Authorize(Roles = $"{nameof(RoleEnum.Admin)},{nameof(RoleEnum.Moderator)},{nameof(RoleEnum.User)}")]
         [HttpPost(ApiRoutes.WorkReportResults.CREATE)]
-        public async Task<IActionResult> Create([FromBody] WorkReportCreateRequest workReportResultCreate)
+        public async Task<IActionResult> CreateAsync([FromBody] WorkReportCreateRequest workReportResultCreate)
         {
             Guid fromParticipantId = HttpContext.TakeUserIdFromAccessToken();
 
             await _workReportResultsService.CreateAsync(fromParticipantId, workReportResultCreate.Title, workReportResultCreate.Description,
                 workReportResultCreate.WorkComplexityTypesId, workReportResultCreate.WorkStatusTypesId);
 
-            return Ok();
+            return Created();
         }
 
         [AllowAnonymous]
         [HttpGet(ApiRoutes.WorkReportResults.GET)]
-        public async Task<IActionResult> Get([FromRoute] Guid id)
+        public async Task<IActionResult> GetAsync([FromRoute] Guid id)
         {
             WorkReportResult workReportResult = await _workReportResultsService.GetAsync(id);
 

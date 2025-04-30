@@ -7,5 +7,7 @@ namespace WasteIntoCity.Core.Interfaces.Repositories
         Task CreateAsync(WorkReportResult workReportResult);
 
         Task<WorkReportResult> FindByIdAsync(Guid id);
+
+        Task<WorkReportResult> FindWithParticipantByIdAsync(Guid id);
     }
 }

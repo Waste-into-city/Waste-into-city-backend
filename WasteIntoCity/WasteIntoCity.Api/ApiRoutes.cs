@@ -71,6 +71,19 @@
             public const string GET = $$"""{{BASE}}/{{CONTROLLER_NAME}}/{workReportResultId:Guid}""";
         }
 
+        public static class WorkReportComplaint
+        {
+            private const string CONTROLLER_NAME = "work-report-complains";
+
+            public const string CREATE = $"{BASE}/{CONTROLLER_NAME}/create";
+
+            public const string GET = $$"""{{BASE}}/{{CONTROLLER_NAME}}/{workReportComplaintId:Guid}""";
+
+            public const string CONFIRM = $$"""{{BASE}}/{{CONTROLLER_NAME}}/confirm/{workReportComplaintId:Guid}""";
+
+            public const string REJECT = $$"""{{BASE}}/{{CONTROLLER_NAME}}/reject/{workReportComplaintId:Guid}""";
+        }
+
         public static class Images
         {
             private const string CONTROLLER_NAME = "images";

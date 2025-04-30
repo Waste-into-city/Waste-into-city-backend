@@ -36,7 +36,7 @@ namespace WasteIntoCity.Core.Models
 
             if (addingRanking is < MULTIPLIER_RANKING_MIN or > MULTIPLIER_RANKING_MAX)
             {
-                throw new ValueOutOfRangeException<int>(nameof(addingRanking), MULTIPLIER_RANKING_MIN, MULTIPLIER_RANKING_MAX, 67);
+                throw new ValueOutOfRangeException<int>(nameof(addingRanking), MULTIPLIER_RANKING_MIN, MULTIPLIER_RANKING_MAX, 69);
             }
 
             return new WorkStatusType(id, name, addingRanking);

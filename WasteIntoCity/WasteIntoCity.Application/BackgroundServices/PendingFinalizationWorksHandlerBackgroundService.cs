@@ -18,8 +18,8 @@ namespace WasteIntoCity.Application.BackgroundServices
 
         private readonly List<ScoreSettingsEnum> _scoreSettingsIds = new List<ScoreSettingsEnum>
         {
-            ScoreSettingsEnum.ProcessedWorkRankingSubstracting,
-            ScoreSettingsEnum.ProcessedWorkNegativeAdding,
+            ScoreSettingsEnum.PendingFinalizationWorkRankingSubstracting,
+            ScoreSettingsEnum.PendingFinalizationWorkNegativeAdding,
             ScoreSettingsEnum.UserBanRankingAtLeast,
         };
 
@@ -46,13 +46,13 @@ namespace WasteIntoCity.Application.BackgroundServices
 
                 if (participant.NegativeScore == 0)
                 {
-                    ranking = participant.Ranking - scoreSettingsValues[ScoreSettingsEnum.ProcessedWorkRankingSubstracting];
+                    ranking = participant.Ranking - scoreSettingsValues[ScoreSettingsEnum.PendingFinalizationWorkRankingSubstracting];
                     negativeScore = 1;
                 }
                 else
                 {
-                    ranking = participant.Ranking - scoreSettingsValues[ScoreSettingsEnum.ProcessedWorkRankingSubstracting] * negativeScore;
-                    negativeScore = participant.NegativeScore + scoreSettingsValues[ScoreSettingsEnum.ProcessedWorkNegativeAdding];
+                    ranking = participant.Ranking - scoreSettingsValues[ScoreSettingsEnum.PendingFinalizationWorkRankingSubstracting] * negativeScore;
+                    negativeScore = participant.NegativeScore + scoreSettingsValues[ScoreSettingsEnum.PendingFinalizationWorkNegativeAdding];
                 }
 
                 bool isBanned = false;

@@ -70,7 +70,7 @@ namespace WasteIntoCity.Application.Services
                     nameof(WorkApplication), $"Application is not in {nameof(WorkReportStatusEnum.Pending)} state", 50);
             }
 
-            User user = await _usersRepository.FindByIdWithRolesAsync(workApplication.FromUsersId);
+            User user = await _usersRepository.FindByIdAsync(workApplication.FromUsersId);
 
             int negativeScore;
             int ranking;
@@ -83,7 +83,7 @@ namespace WasteIntoCity.Application.Services
             else
             {
                 ranking = user.Ranking - (scoreSettingsValues[ScoreSettingsEnum.WorkApplicationRankingSubstracting] * user.NegativeScore);
-                negativeScore = user.NegativeScore * scoreSettingsValues[ScoreSettingsEnum.WorkNegativeAddingMultiplier];
+                negativeScore = user.NegativeScore * scoreSettingsValues[ScoreSettingsEnum.WorkApplicationNegativeAddingMultiplier];
             }
 
             bool isBanned = false;
@@ -95,10 +95,10 @@ namespace WasteIntoCity.Application.Services
                 await _refreshTokensRepository.UpdateInvalidatedByUserIdTokensAsync(true, user.Id);
             }
 
-            User updatedUser = User.Create(user.Id, user.Nickname, user.Email, user.Password, ranking, user.Roles, negativeScore, isBanned,
+            User updatedUser = User.Create(user.Id, user.Nickname, user.Email, user.Password, ranking, null, negativeScore, isBanned,
                 null, null);
 
-            await _usersRepository.UpdateAsync(updatedUser);
+            await _usersRepository.UpdateByIdAsync(updatedUser);
 
             await _workApplicationsRepository.UpdateWorkReportStatusTypesIdByIdAsync(workApplicationsId, WorkReportStatusEnum.Denied);
         }
@@ -115,7 +115,7 @@ namespace WasteIntoCity.Application.Services
                     nameof(WorkApplication), $"Application is not in {nameof(WorkReportStatusEnum.Pending)} state", 51);
             }
 
-            User user = await _usersRepository.FindByIdWithRolesAsync(workApplication.FromUsersId);
+            User user = await _usersRepository.FindByIdAsync(workApplication.FromUsersId);
 
             int ranking = user.Ranking + scoreSettingsValues[ScoreSettingsEnum.WorkApplicationRankingAdding];
 
@@ -124,7 +124,7 @@ namespace WasteIntoCity.Application.Services
             User updatedUser = User.Create(user.Id, user.Nickname, user.Email, user.Password, ranking, user.Roles, negativeScore, user.IsBanned,
                 null, null);
 
-            await _usersRepository.UpdateAsync(updatedUser);
+            await _usersRepository.UpdateByIdAsync(updatedUser);
 
             WorkComplexityType workComplexityType = await _workComplexityTypesRepository.FindById((int)workApplication.WorkComplexityTypesId);
 

@@ -21,15 +21,15 @@ namespace WasteIntoCity.Application.Services
             EnumOperationsExtension.CheckEnumIntValue<WorkComplexityEnum>(workComplexityTypesId, "Work comlexity type");
             EnumOperationsExtension.CheckEnumIntValue<WorkStatusEnum>(workStatusTypesId, "Work status type");
 
-            WorkReportResult workReportResult = WorkReportResult.Create(Guid.NewGuid(), fromParticipantId, Title.Create(title), Description.Create(description),
-                (WorkComplexityEnum)workComplexityTypesId, (WorkStatusEnum)workStatusTypesId);
+            WorkReportResult workReportResult = WorkReportResult.Create(Guid.NewGuid(), fromParticipantId, Title.Create(title),
+                Description.Create(description), (WorkComplexityEnum)workComplexityTypesId, (WorkStatusEnum)workStatusTypesId, null);
 
             await _workReportResultsRepository.CreateAsync(workReportResult);
         }
 
         public async Task<WorkReportResult> GetAsync(Guid id)
         {
-            return await _workReportResultsRepository.FindByIdAsync(id);
+            return await _workReportResultsRepository.FindWithParticipantByIdAsync(id);
         }
     }
 }
