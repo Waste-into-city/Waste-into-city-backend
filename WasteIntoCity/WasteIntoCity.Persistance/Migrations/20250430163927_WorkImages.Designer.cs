@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WasteIntoCity.Persistance;
 
@@ -11,9 +12,11 @@ using WasteIntoCity.Persistance;
 namespace WasteIntoCity.Persistance.Migrations
 {
     [DbContext(typeof(MainDbContext))]
-    partial class MainDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250430163927_WorkImages")]
+    partial class WorkImages
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -60,8 +63,7 @@ namespace WasteIntoCity.Persistance.Migrations
                         .HasColumnName("uploaded_time");
 
                     b.Property<Guid?>("UsersId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("users_id");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("WorkApplicationsId")
                         .HasColumnType("uniqueidentifier")
@@ -85,7 +87,7 @@ namespace WasteIntoCity.Persistance.Migrations
 
                     b.HasIndex("UsersId")
                         .IsUnique()
-                        .HasFilter("[users_id] IS NOT NULL");
+                        .HasFilter("[UsersId] IS NOT NULL");
 
                     b.HasIndex("WorkApplicationsId");
 
@@ -773,10 +775,6 @@ namespace WasteIntoCity.Persistance.Migrations
                         .HasColumnType("int")
                         .HasColumnName("work_statuses_id");
 
-                    b.Property<Guid>("WorksId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("works_id");
-
                     b.HasKey("Id");
 
                     b.HasIndex("FromParticipantsId");
@@ -784,9 +782,6 @@ namespace WasteIntoCity.Persistance.Migrations
                     b.HasIndex("WorkComplexityTypeId");
 
                     b.HasIndex("WorkStatusTypesId");
-
-                    b.HasIndex("WorksId")
-                        .IsUnique();
 
                     b.ToTable("work_report_results", (string)null);
                 });
@@ -1144,14 +1139,7 @@ namespace WasteIntoCity.Persistance.Migrations
                         .HasForeignKey("WorkStatusTypesId")
                         .IsRequired();
 
-                    b.HasOne("WasteIntoCity.Persistance.Entities.WorkEntity", "Work")
-                        .WithOne("WorkReportResult")
-                        .HasForeignKey("WasteIntoCity.Persistance.Entities.WorkReportResultEntity", "WorksId")
-                        .IsRequired();
-
                     b.Navigation("FromParticipant");
-
-                    b.Navigation("Work");
 
                     b.Navigation("WorkComplexityType");
 
@@ -1248,8 +1236,6 @@ namespace WasteIntoCity.Persistance.Migrations
                     b.Navigation("WorkColleagueReports");
 
                     b.Navigation("WorkReportComplaints");
-
-                    b.Navigation("WorkReportResult");
                 });
 
             modelBuilder.Entity("WasteIntoCity.Persistance.Entities.WorkMarkTypeEntity", b =>

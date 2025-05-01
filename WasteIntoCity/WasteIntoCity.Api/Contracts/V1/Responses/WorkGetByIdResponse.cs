@@ -2,11 +2,24 @@
 {
     public record WorkGetByIdResponse
     {
+        public record WorkGetByIdResponseParticipant
+        {
+            required public string Email { get; init; }
+
+            required public string Nickname { get; init; }
+        }
+
         required public Guid Id { get; init; }
 
         required public string Title { get; init; }
 
         required public string Description { get; init; }
+
+        required public List<WorkGetByIdResponseParticipant> Participants { get; init; }
+
+        required public List<string> ImageNames { get; init; }
+
+        required public List<int> TrashTypesIds { get; init; }
 
         required public DateTime? StartedDatetime { get; init; }
 

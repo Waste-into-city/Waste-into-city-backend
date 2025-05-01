@@ -5,11 +5,11 @@ namespace WasteIntoCity.Core.Interfaces.Repositories
 {
     public interface IWorksRepository
     {
-        Task AddAsync(Work work);
+        Task CreateAsync(Work work);
 
         Task<List<Work>> FindAllAsync();
 
-        Task<Work> FindWithCoordinatesByIdAsync(Guid id);
+        Task<Work> FindWithCoordinatesAndParticipantsAndImagesAndTrashTypesByIdAsync(Guid id);
 
         Task<Work> FindWithParticipantsByIdAsync(Guid id);
 

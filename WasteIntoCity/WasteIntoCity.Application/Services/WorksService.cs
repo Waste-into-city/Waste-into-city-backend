@@ -26,9 +26,9 @@ namespace WasteIntoCity.Application.Services
             return await _worksRepository.FindAllWithCoordinatesByParticipantIdAsync(userId);
         }
 
-        public async Task<Work> GetById(Guid id)
+        public async Task<Work> GetByIdAsync(Guid id)
         {
-            return await _worksRepository.FindWithCoordinatesByIdAsync(id);
+            return await _worksRepository.FindWithCoordinatesAndParticipantsAndImagesAndTrashTypesByIdAsync(id);
         }
 
         public async Task UpdateAsync(Guid id, string title, string description, DateTime startedDatetime, DateTime finishDatetime, int workComplexityTypesId,
@@ -38,7 +38,8 @@ namespace WasteIntoCity.Application.Services
             EnumOperationsExtension.CheckEnumIntValue<WorkStatusEnum>(workStatusesId, "work status");
 
             Work work = Work.Create(id, Title.Create(title), Description.Create(description), startedDatetime, finishDatetime,
-                (WorkComplexityEnum)workComplexityTypesId, (WorkStatusEnum)workStatusesId, coordinatesId, null, null, null, null, null, null);
+                (WorkComplexityEnum)workComplexityTypesId, (WorkStatusEnum)workStatusesId, coordinatesId, null, null, null, null,
+                null, null, null, null, null);
 
             await _worksRepository.UpdateAsync(work);
         }

@@ -14,7 +14,8 @@ namespace WasteIntoCity.Core.Models
         public const int DESCRIPTION_LENGTH_MAX = Description.VALUE_LENGTH_MAX;
 
         private WorkApplication(Guid id, Title title, Description description, WorkComplexityEnum workComplexityTypesId, Guid coordinatesId,
-            DateTime startedDatetime, Guid fromUsersId, WorkReportStatusEnum workReportStatusTypesId, TrashType[]? trashTypes)
+            DateTime startedDatetime, Guid fromUsersId, WorkReportStatusEnum workReportStatusTypesId, List<TrashType>? trashTypes,
+            List<ImageName>? imageNames)
         {
             Id = id;
             Title = title;
@@ -25,6 +26,7 @@ namespace WasteIntoCity.Core.Models
             FromUsersId = fromUsersId;
             WorkReportStatusTypesId = workReportStatusTypesId;
             TrashTypes = trashTypes;
+            ImageNames = imageNames;
         }
 
         public Guid Id { get; }
@@ -43,12 +45,16 @@ namespace WasteIntoCity.Core.Models
 
         public WorkReportStatusEnum WorkReportStatusTypesId { get; }
 
-        public TrashType[]? TrashTypes { get; }
+        public List<TrashType>? TrashTypes { get; }
+
+        public List<ImageName>? ImageNames { get; }
 
         public static WorkApplication Create(Guid id, Title title, Description description, WorkComplexityEnum workComplexityTypesId, Guid coordinatesId,
-            DateTime startedDatetime, Guid fromUsersId, WorkReportStatusEnum workReportStatusTypesId, TrashType[]? trashTypes)
+            DateTime startedDatetime, Guid fromUsersId, WorkReportStatusEnum workReportStatusTypesId, List<TrashType>? trashTypes,
+            List<ImageName>? imageNames)
         {
-            return new WorkApplication(id, title, description, workComplexityTypesId, coordinatesId, startedDatetime, fromUsersId, workReportStatusTypesId, trashTypes);
+            return new WorkApplication(id, title, description, workComplexityTypesId, coordinatesId, startedDatetime, fromUsersId,
+                workReportStatusTypesId, trashTypes, imageNames);
         }
     }
 }

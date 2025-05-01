@@ -1,5 +1,6 @@
 ﻿using WasteIntoCity.Core.Enums;
 using WasteIntoCity.Core.Exceptions.BadRequest400Exceptions;
+using WasteIntoCity.Core.Exceptions.InternalServer500Exceptions;
 using WasteIntoCity.Core.Interfaces.Repositories;
 using WasteIntoCity.Core.Interfaces.Services;
 using WasteIntoCity.Core.Models;
@@ -30,11 +31,12 @@ namespace WasteIntoCity.Application.Services
         private readonly IWorkComplexityTypesRepository _workComplexityTypesRepository;
         private readonly IWorksRepository _worksRepository;
         private readonly IScoreSettingsTypeRepository _scoreSettingsTypeRepository;
+        private readonly IImagesRepository _imagesRepository;
 
 
         public WorkApplicationsService(IWorkApplicationsRepository workApplicationsRepository, ICoordinatesRepository coordinatesRepository,
             IUsersRepository usersRepository, RefreshTokensRepository refreshTokensRepository, IWorkComplexityTypesRepository workComplexityTypesRepository,
-            IWorksRepository worksRepository, IScoreSettingsTypeRepository scoreSettingsTypeRepository)
+            IWorksRepository worksRepository, IScoreSettingsTypeRepository scoreSettingsTypeRepository, IImagesRepository imagesRepository)
         {
             _workApplicationsRepository = workApplicationsRepository;
             _coordinatesRepository = coordinatesRepository;
@@ -43,6 +45,7 @@ namespace WasteIntoCity.Application.Services
             _workComplexityTypesRepository = workComplexityTypesRepository;
             _worksRepository = worksRepository;
             _scoreSettingsTypeRepository = scoreSettingsTypeRepository;
+            _imagesRepository = imagesRepository;
         }
 
         public async Task CreateOwnAsync(string title, string description, int workComplexityId, decimal lat, decimal lng,
@@ -109,6 +112,11 @@ namespace WasteIntoCity.Application.Services
 
             WorkApplication workApplication = await _workApplicationsRepository.FindById(workApplicationsId);
 
+            if (workApplication.ImageNames == null)
+            {
+                throw new NullValueServerException(33, "image names", null);
+            }
+
             if (workApplication.WorkReportStatusTypesId != WorkReportStatusEnum.Pending)
             {
                 throw new ValueOutOfRangeException<WorkReportStatusEnum>(
@@ -130,9 +138,11 @@ namespace WasteIntoCity.Application.Services
 
             Work work = Work.Create(Guid.NewGuid(), workApplication.Title, workApplication.Description, null,
                 null, workApplication.WorkComplexityTypesId, WorkStatusEnum.NotFinished,
-                workApplication.CoordinatesId, null, null, null, null, null, null);
+                workApplication.CoordinatesId, null, null, null, null, null, null, null, null, workApplication.TrashTypes);
 
-            await _worksRepository.AddAsync(work);
+            await _imagesRepository.UploadWorksIdByNamesAsync(workApplication.ImageNames, work.Id);
+
+            await _worksRepository.CreateAsync(work);
 
             await _workApplicationsRepository.UpdateWorkReportStatusTypesIdByIdAsync(workApplicationsId, WorkReportStatusEnum.Accepted);
         }

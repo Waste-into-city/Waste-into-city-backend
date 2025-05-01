@@ -7,6 +7,7 @@ using WasteIntoCity.Core.Enums;
 using WasteIntoCity.Core.Exceptions.InternalServer500Exceptions;
 using WasteIntoCity.Core.Interfaces.Services;
 using WasteIntoCity.Core.Models;
+using static WasteIntoCity.Api.Contracts.V1.Responses.WorkGetByIdResponse;
 
 namespace WasteIntoCity.Api.Controllers.V1
 {
@@ -55,18 +56,46 @@ namespace WasteIntoCity.Api.Controllers.V1
         [HttpGet(ApiRoutes.Works.GET_BY_ID)]
         public async Task<IActionResult> GetByIdAsync([FromRoute] Guid id)
         {
-            Work work = await _workService.GetById(id);
+            Work work = await _workService.GetByIdAsync(id);
 
             if (work.Coordinates is null)
             {
-                throw new NullValueServerException(12, nameof(work.Coordinates), null);
+                throw new NullValueServerException(12, "coordinates", null);
             }
+
+            if (work.Participants is null)
+            {
+                throw new NullValueServerException(30, "participants", null);
+            }
+
+            if (work.TrashTypes is null)
+            {
+                throw new NullValueServerException(31, "participants", null);
+            }
+
+            if (work.ImageNames is null)
+            {
+                throw new NullValueServerException(32, "participants", null);
+            }
+
+            List<WorkGetByIdResponseParticipant> participants = work.Participants.Select(p => new WorkGetByIdResponseParticipant
+            {
+                Email = p.Email.Value,
+                Nickname = p.Nickname.Value
+            }).ToList();
+
+            List<int> trashTypesIds = work.TrashTypes.Select(t => (int)t.Id).ToList();
+
+            List<string> imageNames = work.ImageNames.Select(i => i.Value).ToList();
 
             WorkGetByIdResponse workGetByIdResponse = new WorkGetByIdResponse
             {
                 Id = work.Id,
                 Title = work.Title.Value,
                 Description = work.Description.Value,
+                Participants = participants,
+                ImageNames = imageNames,
+                TrashTypesIds = trashTypesIds,
                 StartedDatetime = work.StartedDatetime,
                 FinishDatetime = work.FinishDatetime,
                 WorkComplexityTypesId = (int)work.WorkComplexityTypesId,

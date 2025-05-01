@@ -31,5 +31,9 @@
         public ICollection<UserEntity> Users { get; set; } = [];
 
         public ICollection<TrashTypeEntity> TrashTypes { get; set; } = [];
+
+        public List<ImageEntity> Images { get; set; } = [];
+
+        public WorkReportResultEntity? WorkReportResult { get; set; }
     }
 }

@@ -7,7 +7,9 @@ namespace WasteIntoCity.Core.Interfaces.Repositories
     {
         Task Create(Image image);
 
-        Task<List<ImageName>> FindNamesFirstNotReferencedByFinished(int imagesAmount, TimeSpan minImageIntervalAfterFinished);
+        Task<List<ImageName>> FindNamesFirstNotReferencedByUploadedTimeInterval(int imagesAmount, TimeSpan minImageIntervalAfterFinished);
+
+        Task UploadWorksIdByNamesAsync(List<ImageName> imageNames, Guid? worksId);
 
         Task DeleteByNames(List<string> imageNames);
     }

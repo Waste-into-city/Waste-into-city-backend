@@ -16,6 +16,8 @@
 
         public Guid? UsersId { get; set; }
 
+        public Guid? WorksId { get; set; }
+
         public WorkApplicationEntity? WorkApplication { get; set; }
 
         public WorkReportComplaintEntity? WorkReportComplaint { get; set; }
@@ -23,5 +25,7 @@
         public WorkReportResultEntity? WorkReportResult { get; set; }
 
         public UserEntity? User { get; set; }
+
+        public WorkEntity? Work { get; set; }
     }
 }

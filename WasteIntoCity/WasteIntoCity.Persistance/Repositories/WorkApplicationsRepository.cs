@@ -43,7 +43,22 @@ namespace WasteIntoCity.Persistance.Repositories
             return WorkApplication.Create(workApplicationEntity.Id, Title.Create(workApplicationEntity.Title),
                 Description.Create(workApplicationEntity.Description), (WorkComplexityEnum)workApplicationEntity.WorkComplexityTypesId,
                 workApplicationEntity.CoordinatesId, workApplicationEntity.StartedDatetime, workApplicationEntity.FromUsersId,
-                (WorkReportStatusEnum)workApplicationEntity.WorkReportStatusTypesId, null);
+                (WorkReportStatusEnum)workApplicationEntity.WorkReportStatusTypesId, null, null);
+        }
+
+        public async Task<WorkApplication> FindWithTrashTypesAndImageNameById(Guid id)
+        {
+            WorkApplicationEntity workApplicationEntity = await _mainDbContext.WorkApplications.AsNoTracking().Include(u => u.TrashTypes)
+                .Include(u => u.Images).FirstOrDefaultAsync(u => u.Id == id) ?? throw new DbIsNotFoundException(nameof(WorkApplication), 15, null);
+
+            List<TrashType> trashTypes = workApplicationEntity.TrashTypes.Select(t => TrashType.Create((TrashEnum)t.Id, MeanText.Create(t.Name)))
+                .ToList();
+            List<ImageName> imageNames = workApplicationEntity.Images.Select(i => ImageName.Create(i.Name)).ToList();
+
+            return WorkApplication.Create(workApplicationEntity.Id, Title.Create(workApplicationEntity.Title),
+                Description.Create(workApplicationEntity.Description), (WorkComplexityEnum)workApplicationEntity.WorkComplexityTypesId,
+                workApplicationEntity.CoordinatesId, workApplicationEntity.StartedDatetime, workApplicationEntity.FromUsersId,
+                (WorkReportStatusEnum)workApplicationEntity.WorkReportStatusTypesId, trashTypes, imageNames);
         }
 
         public async Task UpdateAsync(WorkApplication workApplication)
