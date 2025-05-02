@@ -7,7 +7,11 @@ namespace WasteIntoCity.Core.Interfaces.Repositories
     {
         Task CreateAsync(Work work);
 
+        Task<int> CountAsync();
+
         Task<List<Work>> FindAllAsync();
+
+        Task<List<Work>> FindAllWithCoordinatesByPageAsync(int page, int pageSize);
 
         Task<Work> FindWithCoordinatesAndParticipantsAndImagesAndTrashTypesByIdAsync(Guid id);
 

@@ -32,6 +32,8 @@
             public const string GET_USER_INFO = $$"""{{BASE}}/{{CONTROLLER_NAME}}/get-user-info/{userId:Guid}""";
 
             public const string GET_USER_INFO_FOR_ADMIN = $$"""{{BASE}}/{{CONTROLLER_NAME}}/get-user-info-for-admin/{userId:Guid}""";
+
+            public const string GET_LEADERBOARD_PAGE_BY_BEST_RANKING = $$"""{{BASE}}/{{CONTROLLER_NAME}}/get-leaderboard-page-by-best-ranking""";
         }
 
         public static class Works
@@ -43,6 +45,8 @@
             public const string GET_ALL = $"{BASE}/{CONTROLLER_NAME}/get-all";
 
             public const string GET_BY_ID = $$"""{{BASE}}/{{CONTROLLER_NAME}}/get-by-id/{id:Guid}""";
+
+            public const string GET_ALL_LOOKUP = $"{BASE}/{CONTROLLER_NAME}/get-all-lookup";
 
             public const string GET_ALL_OWN_TAKE_PART_IN = $"{BASE}/{CONTROLLER_NAME}/get-all-own-take-part-in";
 
@@ -60,6 +64,8 @@
             public const string REJECT = $$"""{{BASE}}/{{CONTROLLER_NAME}}/reject/{workApplicationsId}""";
 
             public const string CONFIRM = $$"""{{BASE}}/{{CONTROLLER_NAME}}/confirm/{workApplicationsId}""";
+
+            public const string GET_FROM_QUEUE = $$"""{{BASE}}/{{CONTROLLER_NAME}}/get-from-queue""";
         }
 
         public static class WorkReportResults
@@ -71,7 +77,7 @@
             public const string GET = $$"""{{BASE}}/{{CONTROLLER_NAME}}/{workReportResultId:Guid}""";
         }
 
-        public static class WorkReportComplaint
+        public static class WorkReportComplaints
         {
             private const string CONTROLLER_NAME = "work-report-complains";
 
@@ -82,6 +88,8 @@
             public const string CONFIRM = $$"""{{BASE}}/{{CONTROLLER_NAME}}/confirm/{workReportComplaintId:Guid}""";
 
             public const string REJECT = $$"""{{BASE}}/{{CONTROLLER_NAME}}/reject/{workReportComplaintId:Guid}""";
+
+            public const string GET_FROM_QUEUE = $$"""{{BASE}}/{{CONTROLLER_NAME}}/get-from-queue""";
         }
 
         public static class Images

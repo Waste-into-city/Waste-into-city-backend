@@ -6,6 +6,8 @@ namespace WasteIntoCity.Core.Interfaces.Services
     {
         Task<List<Work>> GetAll();
 
+        Task<(List<Work>, int)> GetAllLookup(int page, int pageSize);
+
         Task<Work> GetByIdAsync(Guid id);
 
         Task<List<Work>> GetAllOwnTakePartIn(Guid userId);

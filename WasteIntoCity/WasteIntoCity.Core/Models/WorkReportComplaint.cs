@@ -14,7 +14,7 @@ namespace WasteIntoCity.Core.Models
         public const int DESCRIPTION_LENGTH_MAX = Description.VALUE_LENGTH_MAX;
 
         private WorkReportComplaint(Guid id, Title title, Description description, DateTime startedDatime, Guid worksId,
-            Guid fromUsersId, WorkReportStatusEnum workReportStatusTypesId)
+            Guid fromUsersId, WorkReportStatusEnum workReportStatusTypesId, User? fromUser, List<ImageName>? imageNames)
         {
             Id = id;
             Title = title;
@@ -23,6 +23,8 @@ namespace WasteIntoCity.Core.Models
             WorksId = worksId;
             FromUsersId = fromUsersId;
             WorkReportStatusTypesId = workReportStatusTypesId;
+            FromUser = fromUser;
+            ImageNames = imageNames;
         }
 
         public Guid Id { get; }
@@ -39,10 +41,15 @@ namespace WasteIntoCity.Core.Models
 
         public WorkReportStatusEnum WorkReportStatusTypesId { get; }
 
+        public User? FromUser { get; }
+
+        public List<ImageName>? ImageNames { get; }
+
         public static WorkReportComplaint Create(Guid id, Title title, Description description, DateTime startedDatetime,
-            Guid worksId, Guid fromUsersId, WorkReportStatusEnum workReportStatusTypesId)
+            Guid worksId, Guid fromUsersId, WorkReportStatusEnum workReportStatusTypesId, User? fromUser, List<ImageName>? imageNames)
         {
-            return new WorkReportComplaint(id, title, description, startedDatetime, worksId, fromUsersId, workReportStatusTypesId);
+            return new WorkReportComplaint(id, title, description, startedDatetime, worksId, fromUsersId, workReportStatusTypesId, fromUser,
+                imageNames);
         }
     }
 }

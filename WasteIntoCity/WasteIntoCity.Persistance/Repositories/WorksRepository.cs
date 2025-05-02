@@ -34,9 +34,9 @@ namespace WasteIntoCity.Persistance.Repositories
 
             await _mainDbContext.Works.AddAsync(workEntity);
 
-            if (workEntity.TrashTypes != null)
+            if (work.TrashTypesIds != null)
             {
-                List<int> trashTypesIds = workEntity.TrashTypes.Select(t => (int)t.Id).ToList();
+                List<int> trashTypesIds = work.TrashTypesIds.Select(t => (int)t).ToList();
 
                 List<WorkTrashTypeEntity> workTrashTypeEntities = trashTypesIds.Select(trashTypesId => new WorkTrashTypeEntity
                 {
@@ -50,6 +50,27 @@ namespace WasteIntoCity.Persistance.Repositories
             await _mainDbContext.SaveChangesAsync();
         }
 
+        public async Task<int> CountAsync()
+        {
+            return await _mainDbContext.Works.AsNoTracking().CountAsync();
+        }
+
+        public async Task<List<Work>> FindAllWithCoordinatesByPageAsync(int page, int pageSize)
+        {
+            List<WorkEntity> workEntities = await _mainDbContext.Works.AsNoTracking().Skip((page - 1) * pageSize).Take(pageSize)
+                .Include(w => w.Coordinates).ToListAsync();
+
+            List<Work> works = workEntities.Select(work =>
+            {
+                return Work.Create(work.Id, Title.Create(work.Title), Description.Create(work.Description), work.StartedDatetime, work.FinishDatetime,
+                    (WorkComplexityEnum)work.WorkComplexityTypesId, (WorkStatusEnum)work.WorkStatusTypesId, work.CoordinatesId, null,
+                    Coordinates.Create(work.Coordinates!.Id, work.Coordinates!.Lat, work.Coordinates!.Lng), null, null, null, null,
+                    null, null, null);
+            }).ToList();
+
+            return works;
+        }
+
         public async Task<List<Work>> FindAllAsync()
         {
             List<WorkEntity> workEntities = await _mainDbContext.Works.AsNoTracking().Include(w => w.Coordinates).ToListAsync();
@@ -57,7 +78,7 @@ namespace WasteIntoCity.Persistance.Repositories
             List<Work> works = workEntities.Select(work =>
             {
                 return Work.Create(work.Id, Title.Create(work.Title), Description.Create(work.Description), work.StartedDatetime, work.FinishDatetime,
-                    (WorkComplexityEnum)work.WorkComplexityTypesId, (WorkStatusEnum)work.WorkStatusTypesId, work.CoordinatesId, [],
+                    (WorkComplexityEnum)work.WorkComplexityTypesId, (WorkStatusEnum)work.WorkStatusTypesId, work.CoordinatesId, null,
                     Coordinates.Create(work.Coordinates!.Id, work.Coordinates!.Lat, work.Coordinates!.Lng), null, null, null, null,
                     null, null, null);
             }).ToList();
@@ -109,13 +130,12 @@ namespace WasteIntoCity.Persistance.Repositories
 
             List<ImageName> imageNames = work.Images.Select(i => ImageName.Create(i.Name)).ToList();
 
-            List<TrashType> trashTypes = work.TrashTypes.Select(t => TrashType.Create((TrashEnum)t.Id, MeanText.Create(t.Name)))
-                .ToList();
+            List<TrashEnum> trashTypesIds = work.TrashTypes.Select(t => (TrashEnum)t.Id).ToList();
 
             return Work.Create(work.Id, Title.Create(work.Title), Description.Create(work.Description), work.StartedDatetime,
                 work.FinishDatetime, (WorkComplexityEnum)work.WorkComplexityTypesId, (WorkStatusEnum)work.WorkStatusTypesId,
                 work.CoordinatesId, participants, Coordinates.Create(work.Coordinates!.Id, work.Coordinates!.Lat,
-                work.Coordinates!.Lng), null, null, null, null, imageNames, null, trashTypes);
+                work.Coordinates!.Lng), null, null, null, null, imageNames, null, trashTypesIds);
         }
 
 

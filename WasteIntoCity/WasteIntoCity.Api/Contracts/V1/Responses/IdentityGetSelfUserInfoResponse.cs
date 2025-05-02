@@ -1,6 +1,6 @@
 ﻿namespace WasteIntoCity.Api.Contracts.V1.Responses
 {
-    public record GetSelfUserInfoResponse
+    public record IdentityGetSelfUserInfoResponse
     {
         required public Guid Id { get; init; }
 

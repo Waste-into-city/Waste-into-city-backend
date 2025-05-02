@@ -21,6 +21,15 @@ namespace WasteIntoCity.Application.Services
             return await _worksRepository.FindAllAsync();
         }
 
+        public async Task<(List<Work>, int)> GetAllLookup(int page, int pageSize)
+        {
+            int total = await _worksRepository.CountAsync();
+
+            List<Work> works = await _worksRepository.FindAllWithCoordinatesByPageAsync(page, pageSize);
+
+            return (works, total);
+        }
+
         public async Task<List<Work>> GetAllOwnTakePartIn(Guid userId)
         {
             return await _worksRepository.FindAllWithCoordinatesByParticipantIdAsync(userId);

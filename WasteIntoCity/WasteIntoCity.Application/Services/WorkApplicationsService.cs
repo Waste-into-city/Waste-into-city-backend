@@ -1,6 +1,7 @@
 ﻿using WasteIntoCity.Core.Enums;
 using WasteIntoCity.Core.Exceptions.BadRequest400Exceptions;
 using WasteIntoCity.Core.Exceptions.InternalServer500Exceptions;
+using WasteIntoCity.Core.Extensions;
 using WasteIntoCity.Core.Interfaces.Repositories;
 using WasteIntoCity.Core.Interfaces.Services;
 using WasteIntoCity.Core.Models;
@@ -48,17 +49,27 @@ namespace WasteIntoCity.Application.Services
             _imagesRepository = imagesRepository;
         }
 
-        public async Task CreateOwnAsync(string title, string description, int workComplexityId, decimal lat, decimal lng,
-            Guid userId)
+        public async Task CreateOwnAsync(string title, string description, int workComplexityId, decimal lat, decimal lng, List<int> trashTypesIds,
+            List<string> imageNamesLines, Guid userId)
         {
             Coordinates coordinates = Coordinates.Create(Guid.NewGuid(), lat, lng);
 
-            await _coordinatesRepository.CreateAsync(coordinates);
+            List<TrashEnum> trashTypes = new List<TrashEnum>();
+            foreach (int trashTypesId in trashTypesIds)
+            {
+                EnumOperationsExtension.CheckEnumIntValue<TrashEnum>(trashTypesId, "trash type");
+                trashTypes.Add((TrashEnum)trashTypesId);
+            }
+
+            List<ImageName> imageNames = imageNamesLines.Select(i => ImageName.Create(i)).ToList();
 
             WorkApplication workApplication = WorkApplication.Create(Guid.NewGuid(), Title.Create(title), Description.Create(description),
-                (WorkComplexityEnum)workComplexityId, coordinates.Id, DateTime.UtcNow, userId, WorkReportStatusEnum.Pending, null);
+                (WorkComplexityEnum)workComplexityId, coordinates.Id, DateTime.UtcNow, userId, WorkReportStatusEnum.Pending, trashTypes,
+                null, null, null);
 
-            await _workApplicationsRepository.AddAsync(workApplication);
+            await _workApplicationsRepository.CreateAsync(workApplication);
+            await _coordinatesRepository.CreateAsync(coordinates);
+            await _imagesRepository.UpdateWorkApplicationsIdByNamesAsync(imageNames, workApplication.Id);
         }
 
         public async Task RejectAsync(Guid workApplicationsId)
@@ -138,13 +149,18 @@ namespace WasteIntoCity.Application.Services
 
             Work work = Work.Create(Guid.NewGuid(), workApplication.Title, workApplication.Description, null,
                 null, workApplication.WorkComplexityTypesId, WorkStatusEnum.NotFinished,
-                workApplication.CoordinatesId, null, null, null, null, null, null, null, null, workApplication.TrashTypes);
+                workApplication.CoordinatesId, null, null, null, null, null, null, null, null, workApplication.TrashTypesIds);
 
-            await _imagesRepository.UploadWorksIdByNamesAsync(workApplication.ImageNames, work.Id);
+            await _imagesRepository.UpdateWorksIdByNamesAsync(workApplication.ImageNames, work.Id);
 
             await _worksRepository.CreateAsync(work);
 
             await _workApplicationsRepository.UpdateWorkReportStatusTypesIdByIdAsync(workApplicationsId, WorkReportStatusEnum.Accepted);
+        }
+
+        public async Task<WorkApplication> GetFromQueueAsync()
+        {
+            return await _workApplicationsRepository.FindPendingWithFromUserAndTrashTypesIdsAndImageNamesAndCoordinatesByStartedDatetimeAscending();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WasteIntoCity.Core.Enums;
+using WasteIntoCity.Core.Exceptions.InternalServer500Exceptions;
 using WasteIntoCity.Core.Exceptions.NotFound404Exceptions;
 using WasteIntoCity.Core.Interfaces.Repositories;
 using WasteIntoCity.Core.Models;
@@ -17,7 +18,7 @@ namespace WasteIntoCity.Persistance.Repositories
             _mainDbContext = mainDbContext;
         }
 
-        public async Task AddAsync(WorkApplication workApplication)
+        public async Task CreateAsync(WorkApplication workApplication)
         {
             WorkApplicationEntity workApplicationEntity = new WorkApplicationEntity
             {
@@ -32,6 +33,21 @@ namespace WasteIntoCity.Persistance.Repositories
             };
 
             await _mainDbContext.WorkApplications.AddAsync(workApplicationEntity);
+
+            if (workApplication.TrashTypesIds != null)
+            {
+                List<int> trashTypesIds = workApplication.TrashTypesIds.Select(t => (int)t).ToList();
+
+                List<WorkApplicationTrashTypeEntity> workTrashTypeEntities = trashTypesIds.Select(trashTypesId =>
+                    new WorkApplicationTrashTypeEntity
+                    {
+                        WorksApplicationsId = workApplication.Id,
+                        TrashTypesId = trashTypesId
+                    }).ToList();
+
+                await _mainDbContext.WorkApplicationsTrashTypes.AddRangeAsync(workTrashTypeEntities); //TODO: Maybe cannot work, need to do as in usersRepository
+            }
+
             await _mainDbContext.SaveChangesAsync();
         }
 
@@ -43,7 +59,40 @@ namespace WasteIntoCity.Persistance.Repositories
             return WorkApplication.Create(workApplicationEntity.Id, Title.Create(workApplicationEntity.Title),
                 Description.Create(workApplicationEntity.Description), (WorkComplexityEnum)workApplicationEntity.WorkComplexityTypesId,
                 workApplicationEntity.CoordinatesId, workApplicationEntity.StartedDatetime, workApplicationEntity.FromUsersId,
-                (WorkReportStatusEnum)workApplicationEntity.WorkReportStatusTypesId, null, null);
+                (WorkReportStatusEnum)workApplicationEntity.WorkReportStatusTypesId, null, null, null, null);
+        }
+
+        public async Task<WorkApplication> FindPendingWithFromUserAndTrashTypesIdsAndImageNamesAndCoordinatesByStartedDatetimeAscending()
+        {
+            WorkApplicationEntity workApplicationEntity = await _mainDbContext.WorkApplications.AsNoTracking().Include(w => w.FromUser)
+                .Include(w => w.TrashTypes).Include(w => w.Images).Include(w => w.Coordinates).OrderBy(w => w.StartedDatetime)
+                .FirstOrDefaultAsync(w => w.WorkReportStatusTypesId == (int)WorkReportStatusEnum.Pending)
+                    ?? throw new DbIsNotFoundException(nameof(WorkApplication), 17, null);
+
+            List<TrashEnum> trashTypeIds = workApplicationEntity.TrashTypes.Select(t => (TrashEnum)t.Id).ToList();
+            List<ImageName> imageNames = workApplicationEntity.Images.Select(i => ImageName.Create(i.Name)).ToList();
+
+            if (workApplicationEntity.FromUser == null)
+            {
+                throw new NullValueServerException(38, "from user", null);
+            }
+
+            UserEntity userEntity = workApplicationEntity.FromUser;
+            User fromUser = User.Create(userEntity.Id, Nickname.Create(userEntity.Nickname), Email.Create(userEntity.Email), Password.Create(userEntity.Password),
+                userEntity.Ranking, null, userEntity.NegativeScore, userEntity.IsBanned, null, null);
+
+            if (workApplicationEntity.Coordinates == null)
+            {
+                throw new NullValueServerException(39, "coordinates", null);
+            }
+
+            Coordinates coordinates = Coordinates.Create(workApplicationEntity.Coordinates.Id, workApplicationEntity.Coordinates.Lat,
+                workApplicationEntity.Coordinates.Lng);
+
+            return WorkApplication.Create(workApplicationEntity.Id, Title.Create(workApplicationEntity.Title),
+                Description.Create(workApplicationEntity.Description), (WorkComplexityEnum)workApplicationEntity.WorkComplexityTypesId,
+                workApplicationEntity.CoordinatesId, workApplicationEntity.StartedDatetime, workApplicationEntity.FromUsersId,
+                (WorkReportStatusEnum)workApplicationEntity.WorkReportStatusTypesId, trashTypeIds, imageNames, fromUser, coordinates);
         }
 
         public async Task<WorkApplication> FindWithTrashTypesAndImageNameById(Guid id)
@@ -51,14 +100,13 @@ namespace WasteIntoCity.Persistance.Repositories
             WorkApplicationEntity workApplicationEntity = await _mainDbContext.WorkApplications.AsNoTracking().Include(u => u.TrashTypes)
                 .Include(u => u.Images).FirstOrDefaultAsync(u => u.Id == id) ?? throw new DbIsNotFoundException(nameof(WorkApplication), 15, null);
 
-            List<TrashType> trashTypes = workApplicationEntity.TrashTypes.Select(t => TrashType.Create((TrashEnum)t.Id, MeanText.Create(t.Name)))
-                .ToList();
+            List<TrashEnum> trashTypesIds = workApplicationEntity.TrashTypes.Select(t => (TrashEnum)t.Id).ToList();
             List<ImageName> imageNames = workApplicationEntity.Images.Select(i => ImageName.Create(i.Name)).ToList();
 
             return WorkApplication.Create(workApplicationEntity.Id, Title.Create(workApplicationEntity.Title),
                 Description.Create(workApplicationEntity.Description), (WorkComplexityEnum)workApplicationEntity.WorkComplexityTypesId,
                 workApplicationEntity.CoordinatesId, workApplicationEntity.StartedDatetime, workApplicationEntity.FromUsersId,
-                (WorkReportStatusEnum)workApplicationEntity.WorkReportStatusTypesId, trashTypes, imageNames);
+                (WorkReportStatusEnum)workApplicationEntity.WorkReportStatusTypesId, trashTypesIds, imageNames, null, null);
         }
 
         public async Task UpdateAsync(WorkApplication workApplication)

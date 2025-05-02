@@ -8,7 +8,9 @@
 
         required public int WorkComplexityId { get; init; }
 
-        required public int[] TrashTypeIds { get; init; }
+        required public List<int> TrashTypeIds { get; init; }
+
+        required public List<string> ImageNames { get; init; }
 
         required public decimal Lat { get; init; }
 

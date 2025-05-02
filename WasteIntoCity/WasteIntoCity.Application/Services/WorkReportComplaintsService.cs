@@ -44,7 +44,7 @@ namespace WasteIntoCity.Application.Services
         public async Task CreateAsync(string title, string description, Guid worksId, Guid fromUsersId)
         {
             WorkReportComplaint workReportComplaint = WorkReportComplaint.Create(Guid.NewGuid(), Title.Create(title),
-                Description.Create(description), DateTime.UtcNow, worksId, fromUsersId, WorkReportStatusEnum.Pending);
+                Description.Create(description), DateTime.UtcNow, worksId, fromUsersId, WorkReportStatusEnum.Pending, null, null);
 
             await _workReportComplaintsRepository.CreateAsync(workReportComplaint);
         }
@@ -52,6 +52,11 @@ namespace WasteIntoCity.Application.Services
         public async Task<WorkReportComplaint> GetAsync(Guid id)
         {
             return await _workReportComplaintsRepository.FindByIdAsync(id);
+        }
+
+        public async Task<WorkReportComplaint> GetFromQueueAsync()
+        {
+            return await _workReportComplaintsRepository.FindPendingWithFromUserAndImageNamesByStartedDatetimeAscending();
         }
 
         public async Task ConfirmAsync(Guid id)

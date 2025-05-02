@@ -14,8 +14,8 @@ namespace WasteIntoCity.Core.Models
         public const int DESCRIPTION_LENGTH_MAX = Description.VALUE_LENGTH_MAX;
 
         private WorkApplication(Guid id, Title title, Description description, WorkComplexityEnum workComplexityTypesId, Guid coordinatesId,
-            DateTime startedDatetime, Guid fromUsersId, WorkReportStatusEnum workReportStatusTypesId, List<TrashType>? trashTypes,
-            List<ImageName>? imageNames)
+            DateTime startedDatetime, Guid fromUsersId, WorkReportStatusEnum workReportStatusTypesId, List<TrashEnum>? trashTypesIds,
+            List<ImageName>? imageNames, User? fromUser, Coordinates? coordinates)
         {
             Id = id;
             Title = title;
@@ -25,8 +25,10 @@ namespace WasteIntoCity.Core.Models
             StartedDatetime = startedDatetime;
             FromUsersId = fromUsersId;
             WorkReportStatusTypesId = workReportStatusTypesId;
-            TrashTypes = trashTypes;
+            TrashTypesIds = trashTypesIds;
             ImageNames = imageNames;
+            FromUser = fromUser;
+            Coordinates = coordinates;
         }
 
         public Guid Id { get; }
@@ -45,16 +47,20 @@ namespace WasteIntoCity.Core.Models
 
         public WorkReportStatusEnum WorkReportStatusTypesId { get; }
 
-        public List<TrashType>? TrashTypes { get; }
+        public List<TrashEnum>? TrashTypesIds { get; }
 
         public List<ImageName>? ImageNames { get; }
 
+        public User? FromUser { get; }
+
+        public Coordinates? Coordinates { get; }
+
         public static WorkApplication Create(Guid id, Title title, Description description, WorkComplexityEnum workComplexityTypesId, Guid coordinatesId,
-            DateTime startedDatetime, Guid fromUsersId, WorkReportStatusEnum workReportStatusTypesId, List<TrashType>? trashTypes,
-            List<ImageName>? imageNames)
+            DateTime startedDatetime, Guid fromUsersId, WorkReportStatusEnum workReportStatusTypesId, List<TrashEnum>? trashTypesIds,
+            List<ImageName>? imageNames, User? fromUser, Coordinates? coordinates)
         {
             return new WorkApplication(id, title, description, workComplexityTypesId, coordinatesId, startedDatetime, fromUsersId,
-                workReportStatusTypesId, trashTypes, imageNames);
+                workReportStatusTypesId, trashTypesIds, imageNames, fromUser, coordinates);
         }
     }
 }

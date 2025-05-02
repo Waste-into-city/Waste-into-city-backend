@@ -68,7 +68,7 @@ namespace WasteIntoCity.Api.Controllers.V1
                 throw new NullValueServerException(30, "participants", null);
             }
 
-            if (work.TrashTypes is null)
+            if (work.TrashTypesIds is null)
             {
                 throw new NullValueServerException(31, "participants", null);
             }
@@ -84,7 +84,7 @@ namespace WasteIntoCity.Api.Controllers.V1
                 Nickname = p.Nickname.Value
             }).ToList();
 
-            List<int> trashTypesIds = work.TrashTypes.Select(t => (int)t.Id).ToList();
+            List<int> trashTypesIds = work.TrashTypesIds.Select(t => (int)t).ToList();
 
             List<string> imageNames = work.ImageNames.Select(i => i.Value).ToList();
 
@@ -102,6 +102,39 @@ namespace WasteIntoCity.Api.Controllers.V1
                 WorkStatusTypesId = (int)work.WorkStatusTypesId,
                 Lat = work.Coordinates.Lat,
                 Lng = work.Coordinates.Lng,
+            };
+
+            return Ok(workGetByIdResponse);
+        }
+
+        [AllowAnonymous]
+        [HttpGet(ApiRoutes.Works.GET_ALL_LOOKUP)]
+        public async Task<IActionResult> GetAllLookup([FromQuery] int page, [FromQuery] int pageSize)
+        {
+            (List<Work> works, int total) = await _workService.GetAllLookup(page, pageSize);
+
+            List<WorksGetAllLookupResponse> items = works.Select(w =>
+            {
+                if (w.Coordinates == null)
+                {
+                    throw new NullValueServerException(34, "coordinates", null);
+                }
+
+                return new WorksGetAllLookupResponse
+                {
+                    Id = w.Id,
+                    WorkStatusTypesId = (int)w.WorkStatusTypesId,
+                    Lat = w.Coordinates.Lat,
+                    Lng = w.Coordinates.Lng
+                };
+            }).ToList();
+
+            ByPageResponse<WorksGetAllLookupResponse> workGetByIdResponse = new ByPageResponse<WorksGetAllLookupResponse>
+            {
+                PageSize = pageSize,
+                Page = page,
+                Total = total,
+                Items = items
             };
 
             return Ok(workGetByIdResponse);

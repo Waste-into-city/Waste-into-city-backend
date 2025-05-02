@@ -187,17 +187,26 @@ namespace WasteIntoCity.Application.Services
 
         public async Task<User> GetUserInfo(Guid userId)
         {
-            return await _userRepository.FindWithImagesById(userId);
+            return await _userRepository.FindWithImageById(userId);
         }
 
         public async Task<User> GetSelfUserInfo(Guid userId)
         {
-            return await _userRepository.FindWithImagesById(userId);
+            return await _userRepository.FindWithImageById(userId);
         }
 
         public async Task<User> GetUserInfoForAdmin(Guid userId)
         {
-            return await _userRepository.FindWithImagesById(userId);
+            return await _userRepository.FindWithImageById(userId);
+        }
+
+        public async Task<(List<User>, int)> GetLeaderboardByPage(int page, int pageSize)
+        {
+            int total = await _userRepository.CountByUserRoleAsync();
+
+            List<User> users = await _userRepository.FindAllByRoleUserAndRankingDescendingAndPageAsync(page, pageSize);
+
+            return (users, total);
         }
 
         private static ClaimsPrincipal GetPrincipalFromAccessToken(string accessTokenValue, TokenValidationParameters tokenValidationParameters)

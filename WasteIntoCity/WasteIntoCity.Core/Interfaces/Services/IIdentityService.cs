@@ -19,5 +19,7 @@ namespace WasteIntoCity.Core.Interfaces.Services
         Task<User> GetSelfUserInfo(Guid userId);
 
         Task<User> GetUserInfoForAdmin(Guid userId);
+
+        Task<(List<User>, int)> GetLeaderboardByPage(int page, int pageSize);
     }
 }

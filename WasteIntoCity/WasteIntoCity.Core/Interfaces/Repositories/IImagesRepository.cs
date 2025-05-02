@@ -9,7 +9,9 @@ namespace WasteIntoCity.Core.Interfaces.Repositories
 
         Task<List<ImageName>> FindNamesFirstNotReferencedByUploadedTimeInterval(int imagesAmount, TimeSpan minImageIntervalAfterFinished);
 
-        Task UploadWorksIdByNamesAsync(List<ImageName> imageNames, Guid? worksId);
+        Task UpdateWorksIdByNamesAsync(List<ImageName> imageNames, Guid? worksId);
+
+        Task UpdateWorkApplicationsIdByNamesAsync(List<ImageName> imageNames, Guid? workApplicationsId);
 
         Task DeleteByNames(List<string> imageNames);
     }

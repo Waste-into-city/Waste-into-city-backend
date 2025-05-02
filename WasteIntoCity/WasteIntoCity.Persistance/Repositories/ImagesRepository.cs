@@ -55,7 +55,7 @@ namespace WasteIntoCity.Persistance.Repositories
             return imageNames;
         }
 
-        public async Task UploadWorksIdByNamesAsync(List<ImageName> imageNames, Guid? worksId)
+        public async Task UpdateWorksIdByNamesAsync(List<ImageName> imageNames, Guid? worksId)
         {
             List<string> imageNamesLines = imageNames.Select(i => i.Value).ToList();
 
@@ -63,6 +63,17 @@ namespace WasteIntoCity.Persistance.Repositories
                 .Where(w => imageNamesLines.Contains(w.Name))
                 .ExecuteUpdateAsync(n => n
                     .SetProperty(w => w.WorksId, worksId)
+                );
+        }
+
+        public async Task UpdateWorkApplicationsIdByNamesAsync(List<ImageName> imageNames, Guid? workApplicationsId)
+        {
+            List<string> imageNamesLines = imageNames.Select(i => i.Value).ToList();
+
+            int updatedRows = await _mainDbContext.Images
+                .Where(w => imageNamesLines.Contains(w.Name))
+                .ExecuteUpdateAsync(n => n
+                    .SetProperty(w => w.WorkApplicationsId, workApplicationsId)
                 );
         }
     }

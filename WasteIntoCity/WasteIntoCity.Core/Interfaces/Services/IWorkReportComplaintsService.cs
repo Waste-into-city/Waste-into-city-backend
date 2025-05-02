@@ -8,6 +8,8 @@ namespace WasteIntoCity.Core.Interfaces.Services
 
         Task<WorkReportComplaint> GetAsync(Guid id);
 
+        Task<WorkReportComplaint> GetFromQueueAsync();
+
         Task ConfirmAsync(Guid id);
 
         Task RejectAsync(Guid id);

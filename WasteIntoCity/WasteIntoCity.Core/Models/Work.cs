@@ -18,7 +18,7 @@ namespace WasteIntoCity.Core.Models
         private Work(Guid id, Title title, Description description, DateTime? startedDatetime, DateTime? finishDatetime, WorkComplexityEnum workComplexityTypesId,
             WorkStatusEnum workStatusTypesId, Guid coordinatesId, List<User>? participants, Coordinates? coordinates,
             WorkComplexityType? workComplexityType, List<WorkColleagueReport>? workColleagueReports, WorkStatusType? workStatusType,
-            WorkReportResult? workReportResult, List<ImageName>? imageNames, List<IFormFile>? imageFiles, List<TrashType>? trashTypes)
+            WorkReportResult? workReportResult, List<ImageName>? imageNames, List<IFormFile>? imageFiles, List<TrashEnum>? trashTypesIds)
         {
             Id = id;
             Title = title;
@@ -37,7 +37,7 @@ namespace WasteIntoCity.Core.Models
             WorkStatusForClient = null;
             ImageNames = imageNames;
             ImageFiles = imageFiles;
-            TrashTypes = trashTypes;
+            TrashTypesIds = trashTypesIds;
         }
 
         public Guid Id { get; }
@@ -74,12 +74,12 @@ namespace WasteIntoCity.Core.Models
 
         public List<IFormFile>? ImageFiles { get; }
 
-        public List<TrashType>? TrashTypes { get; }
+        public List<TrashEnum>? TrashTypesIds { get; }
 
         public static Work Create(Guid id, Title title, Description description, DateTime? startedDatetime, DateTime? finishDatetime,
             WorkComplexityEnum workComplexityTypesId, WorkStatusEnum workStatusTypesId, Guid coordinatesId, List<User>? participants,
             Coordinates? coordinates, WorkComplexityType? workComplexityType, List<WorkColleagueReport>? workColleagueReports, WorkStatusType? workStatusType,
-            WorkReportResult? workReportResult, List<ImageName>? imageNames, List<IFormFile>? imageFiles, List<TrashType>? trashTypes)
+            WorkReportResult? workReportResult, List<ImageName>? imageNames, List<IFormFile>? imageFiles, List<TrashEnum>? trashTypesIds)
         {
             if (startedDatetime > finishDatetime)
             {
@@ -94,7 +94,7 @@ namespace WasteIntoCity.Core.Models
 
             return new Work(id, title, description, startedDatetime, finishDatetime, workComplexityTypesId, workStatusTypesId,
                 coordinatesId, participants, coordinates, workComplexityType, workColleagueReports, workStatusType, workReportResult,
-                imageNames, imageFiles, trashTypes);
+                imageNames, imageFiles, trashTypesIds);
         }
     }
 }

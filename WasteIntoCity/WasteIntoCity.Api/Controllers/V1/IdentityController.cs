@@ -80,7 +80,7 @@ namespace WasteIntoCity.Application.Controllers.V1
         {
             User user = await _identityService.GetUserInfo(userId);
 
-            GetUserInfoResponse getUserInfoResponse = new GetUserInfoResponse
+            IdentityGetUserInfoResponse getUserInfoResponse = new IdentityGetUserInfoResponse
             {
                 Id = user.Id,
                 Nickname = user.Nickname.Value,
@@ -98,7 +98,7 @@ namespace WasteIntoCity.Application.Controllers.V1
 
             User user = await _identityService.GetSelfUserInfo(userId);
 
-            GetSelfUserInfoResponse getSelfUserInfoResponse = new GetSelfUserInfoResponse
+            IdentityGetSelfUserInfoResponse getSelfUserInfoResponse = new IdentityGetSelfUserInfoResponse
             {
                 Id = user.Id,
                 Nickname = user.Nickname.Value,
@@ -113,9 +113,9 @@ namespace WasteIntoCity.Application.Controllers.V1
         [HttpGet(ApiRoutes.Identity.GET_USER_INFO_FOR_ADMIN)]
         public async Task<IActionResult> GetUserInfoForAdmin(Guid userId)
         {
-            User user = await _identityService.GetUserInfo(userId);
+            User user = await _identityService.GetUserInfoForAdmin(userId);
 
-            GetUserInfoForAdminResponse getUserInfoForAdminResponse = new GetUserInfoForAdminResponse
+            IdentityGetUserInfoForAdminResponse getUserInfoForAdminResponse = new IdentityGetUserInfoForAdminResponse
             {
                 Id = user.Id,
                 Nickname = user.Nickname.Value,
@@ -124,6 +124,30 @@ namespace WasteIntoCity.Application.Controllers.V1
             };
 
             return Ok(getUserInfoForAdminResponse);
+        }
+
+        [AllowAnonymous]
+        [HttpGet(ApiRoutes.Identity.GET_LEADERBOARD_PAGE_BY_BEST_RANKING)]
+        public async Task<IActionResult> GetLeaderboardByPage([FromQuery] int page, [FromQuery] int pageSize)
+        {
+            (List<User> users, int total) = await _identityService.GetLeaderboardByPage(page, pageSize);
+
+            List<IdentityGetLeaderboardByPageResponse> items = users.Select(u => new IdentityGetLeaderboardByPageResponse
+            {
+                Nickname = u.Nickname.Value,
+                Email = u.Email.Value,
+                Ranking = u.Ranking
+            }).ToList();
+
+            ByPageResponse<IdentityGetLeaderboardByPageResponse> byPageResponse = new ByPageResponse<IdentityGetLeaderboardByPageResponse>
+            {
+                Page = page,
+                PageSize = pageSize,
+                Items = items,
+                Total = total
+            };
+
+            return Ok(byPageResponse);
         }
     }
 }

@@ -26,7 +26,7 @@ namespace WasteIntoCity.Persistance.Repositories
                 Id = workReportComplaint.Id,
                 Title = workReportComplaint.Title.Value,
                 Description = workReportComplaint.Description.Value,
-                StartedDatime = workReportComplaint.StartedDatime,
+                StartedDatetime = workReportComplaint.StartedDatime,
                 WorksId = workReportComplaint.WorksId,
                 FromUsersId = workReportComplaint.FromUsersId,
                 WorkReportStatusTypesId = (int)workReportComplaint.WorkReportStatusTypesId
@@ -42,9 +42,34 @@ namespace WasteIntoCity.Persistance.Repositories
                 FirstOrDefaultAsync(w => w.Id == id) ?? throw new DbIsNotFoundException(nameof(WorkReportComplaint), 13, null);
 
             return WorkReportComplaint.Create(workReportComplaintEntity.Id, Title.Create(workReportComplaintEntity.Title),
-                Description.Create(workReportComplaintEntity.Description), workReportComplaintEntity.StartedDatime,
+                Description.Create(workReportComplaintEntity.Description), workReportComplaintEntity.StartedDatetime,
                 workReportComplaintEntity.WorksId, workReportComplaintEntity.FromUsersId,
-                (WorkReportStatusEnum)workReportComplaintEntity.WorkReportStatusTypesId);
+                (WorkReportStatusEnum)workReportComplaintEntity.WorkReportStatusTypesId, null, null);
+        }
+
+        public async Task<WorkReportComplaint> FindPendingWithFromUserAndImageNamesByStartedDatetimeAscending()
+        {
+            WorkReportComplaintEntity workReportComplaintEntity = await _mainDbContext.WorkReportComplaints.AsNoTracking().Include(w => w.FromUser)
+                .Include(w => w.Images).OrderBy(w => w.StartedDatetime).
+                FirstOrDefaultAsync(w => w.WorkReportStatusTypesId == (int)WorkReportStatusEnum.Pending)
+                ?? throw new DbIsNotFoundException(nameof(WorkApplication), 17, null);
+
+            List<ImageName> imageNames = workReportComplaintEntity.Images.Select(i => ImageName.Create(i.Name)).ToList();
+
+            if (workReportComplaintEntity.FromUser == null)
+            {
+                throw new NullValueServerException(42, "from user", null);
+            }
+
+            UserEntity fromUserEntity = workReportComplaintEntity.FromUser;
+            User fromUser = User.Create(fromUserEntity.Id, Nickname.Create(fromUserEntity.Nickname), Email.Create(fromUserEntity.Email),
+                Password.Create(fromUserEntity.Password), fromUserEntity.Ranking, null, fromUserEntity.NegativeScore, fromUserEntity.IsBanned,
+                null, null);
+
+            return WorkReportComplaint.Create(workReportComplaintEntity.Id, Title.Create(workReportComplaintEntity.Title),
+                Description.Create(workReportComplaintEntity.Description), workReportComplaintEntity.StartedDatetime,
+                workReportComplaintEntity.WorksId, workReportComplaintEntity.FromUsersId,
+                (WorkReportStatusEnum)workReportComplaintEntity.WorkReportStatusTypesId, fromUser, imageNames);
         }
 
         public async Task UpdateWorkReportStatusTypesIdByIdAsync(Guid id, WorkReportStatusEnum workReportStatusTypesId)
