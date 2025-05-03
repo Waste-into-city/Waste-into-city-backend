@@ -56,7 +56,7 @@ namespace WasteIntoCity.Persistance.Repositories
 
             if (userEntity == null)
             {
-                throw new NullValueServerException(43, "from participant", null);
+                throw new NullValueServerException(44, "from participant", null);
             }
 
             User participant = User.Create(userEntity.Id, Nickname.Create(userEntity.Nickname), Email.Create(userEntity.Email),

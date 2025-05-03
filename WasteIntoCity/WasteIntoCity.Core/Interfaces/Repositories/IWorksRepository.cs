@@ -7,7 +7,13 @@ namespace WasteIntoCity.Core.Interfaces.Repositories
     {
         Task CreateAsync(Work work);
 
+        Task AddParticipants(Guid id, List<Guid> participantsIds);
+
         Task<int> CountAsync();
+
+        Task<Work> FindByIdAsync(Guid id);
+
+        Task<Work> FindWithWorkComplexityTypeByIdAsync(Guid id);
 
         Task<List<Work>> FindAllAsync();
 
@@ -30,5 +36,7 @@ namespace WasteIntoCity.Core.Interfaces.Repositories
         Task<List<Work>> FindFirstPendingFinalizationWorksWithParticipantsByFinishedTimeAndClientStatuses(int worksAmount, TimeSpan minWorkIntervalAfterFinished);
 
         Task<List<Guid>> FindFirstPreparingWorksIdsByBeforeStartedTime(int worksAmount, TimeSpan minWorkIntervalBeforeStart);
+
+        Task RemoveParticipants(Guid id, List<Guid> userId);
     }
 }

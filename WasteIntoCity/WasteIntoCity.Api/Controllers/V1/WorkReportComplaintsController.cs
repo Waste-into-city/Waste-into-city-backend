@@ -61,7 +61,7 @@ namespace WasteIntoCity.Api.Controllers.V1
         }
 
         [Authorize(Roles = $"{nameof(RoleEnum.Moderator)},{nameof(RoleEnum.Admin)}")]
-        [HttpPost(ApiRoutes.WorkReportComplaints.GET_FROM_QUEUE)]
+        [HttpGet(ApiRoutes.WorkReportComplaints.GET_FROM_QUEUE)]
         public async Task<IActionResult> GetFromQueueAsync()
         {
             WorkReportComplaint workReportComplaint = await _workReportComplaintsService.GetFromQueueAsync();

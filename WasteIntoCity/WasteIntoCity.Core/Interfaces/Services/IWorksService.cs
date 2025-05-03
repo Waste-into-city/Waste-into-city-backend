@@ -16,5 +16,11 @@ namespace WasteIntoCity.Core.Interfaces.Services
             int workStatusesId, Guid coordinatesId);
 
         Task UpdateWorkStatusAsync(Guid id, int workStatusesId);
+
+        Task TakePartInFirstSelfAsync(Guid id, Guid userId, DateTime startedDatetime);
+
+        Task TakePartInSelfAsync(Guid id, Guid userId);
+
+        Task LeaveFromParticipationSelfAsync(Guid id, Guid userId);
     }
 }

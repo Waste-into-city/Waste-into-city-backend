@@ -9,20 +9,23 @@ namespace WasteIntoCity.Application.BackgroundServices
     public class PreparingWorksHandlerBackgroundService : BackgroundService
     {
         private readonly IServiceScopeFactory _scopeFactory;
-        private readonly IOptions<PreparingWorksHandlerBackgroundServiceOptions> _options;
+        private readonly IOptions<PreparingWorksHandlerBackgroundServiceOptions> _optionsBackgroundService;
+        private readonly IOptions<PreparingWorksStatusOptions> _optionsPreparingWorks;
 
         public PreparingWorksHandlerBackgroundService(IServiceScopeFactory scopeFactory,
-            IOptions<PreparingWorksHandlerBackgroundServiceOptions> options)
+            IOptions<PreparingWorksHandlerBackgroundServiceOptions> optionsBackgroundService,
+            IOptions<PreparingWorksStatusOptions> optionsPreparingWorks)
         {
             _scopeFactory = scopeFactory;
-            _options = options;
+            _optionsBackgroundService = optionsBackgroundService;
+            _optionsPreparingWorks = optionsPreparingWorks;
         }
 
         public async Task ReturnPreparingWorksToAvaliableAsync(IWorksRepository worksRepository, CancellationToken stoppingToken)
         {
             List<Guid> workIds = await worksRepository.FindFirstPreparingWorksIdsByBeforeStartedTime(
-                _options.Value.WorksAtTimeAmount,
-                _options.Value.MinWorkIntervalBeforeStart
+                _optionsBackgroundService.Value.WorksAtTimeAmount,
+                _optionsPreparingWorks.Value.MinIntervalStartAfterNow
             );
 
             await worksRepository.UpdateToAvailableWorksByIds(workIds);
@@ -30,7 +33,7 @@ namespace WasteIntoCity.Application.BackgroundServices
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            await Task.Delay(_options.Value.StartServiceWaitingTime, stoppingToken);
+            await Task.Delay(_optionsBackgroundService.Value.StartServiceWaitingTime, stoppingToken);
 
             while (!stoppingToken.IsCancellationRequested)
             {
@@ -40,7 +43,7 @@ namespace WasteIntoCity.Application.BackgroundServices
 
                 await ReturnPreparingWorksToAvaliableAsync(worksRepository, stoppingToken);
 
-                await Task.Delay(_options.Value.IntervalTime, stoppingToken);
+                await Task.Delay(_optionsBackgroundService.Value.IntervalTime, stoppingToken);
             }
         }
     }

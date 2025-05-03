@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using WasteIntoCity.Api.Contracts.V1.Responses;
 using WasteIntoCity.Application;
+using WasteIntoCity.Application.Contracts.V1.Requests;
 using WasteIntoCity.Application.Extensions;
 using WasteIntoCity.Core.Enums;
 using WasteIntoCity.Core.Exceptions.InternalServer500Exceptions;
@@ -172,6 +173,39 @@ namespace WasteIntoCity.Api.Controllers.V1
             );
 
             return Ok(workGetAllOwnTakePartInResponse);
+        }
+
+        [Authorize(Roles = $"{nameof(RoleEnum.Admin)},{nameof(RoleEnum.Moderator)},{nameof(RoleEnum.User)}")]
+        [HttpPut(ApiRoutes.Works.TAKE_PART_IN_FIRST)]
+        public async Task<IActionResult> TakePartInFirstSelfAsync([FromRoute] Guid id, [FromBody] WorkTakePartInFirstSelfRequest workTakePartInFirstSelfRequest)
+        {
+            Guid userId = HttpContext.TakeUserIdFromAccessToken();
+
+            await _workService.TakePartInFirstSelfAsync(id, userId, workTakePartInFirstSelfRequest.StartedDatetime);
+
+            return Ok();
+        }
+
+        [Authorize(Roles = $"{nameof(RoleEnum.Admin)},{nameof(RoleEnum.Moderator)},{nameof(RoleEnum.User)}")]
+        [HttpGet(ApiRoutes.Works.TAKE_PART_IN)]
+        public async Task<IActionResult> TakePartInSelfAsync([FromRoute] Guid id)
+        {
+            Guid userId = HttpContext.TakeUserIdFromAccessToken();
+
+            await _workService.TakePartInSelfAsync(id, userId);
+
+            return Ok();
+        }
+
+        [Authorize(Roles = $"{nameof(RoleEnum.Admin)},{nameof(RoleEnum.Moderator)},{nameof(RoleEnum.User)}")]
+        [HttpGet(ApiRoutes.Works.LEAVE_FROM_PARTICIPATION)]
+        public async Task<IActionResult> LeaveFromParticipationSelfAsync([FromRoute] Guid id)
+        {
+            Guid userId = HttpContext.TakeUserIdFromAccessToken();
+
+            await _workService.LeaveFromParticipationSelfAsync(id, userId);
+
+            return Ok();
         }
     }
 }

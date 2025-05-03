@@ -54,7 +54,7 @@ namespace WasteIntoCity.Api.Controllers.V1
         }
 
         [Authorize(Roles = $"{nameof(RoleEnum.Moderator)},{nameof(RoleEnum.Admin)}")]
-        [HttpPost(ApiRoutes.WorkApplications.GET_FROM_QUEUE)]
+        [HttpGet(ApiRoutes.WorkApplications.GET_FROM_QUEUE)]
         public async Task<IActionResult> GetFromQueueAsync()
         {
             WorkApplication workApplication = await _workApplicationService.GetFromQueueAsync();

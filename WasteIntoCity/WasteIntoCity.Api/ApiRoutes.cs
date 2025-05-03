@@ -53,6 +53,12 @@
             public const string UPDATE = $$"""{{BASE}}/{{CONTROLLER_NAME}}/update/{id:Guid}""";
 
             public const string UPDATE_WORK_STATUS = $$"""{{BASE}}/{{CONTROLLER_NAME}}/update-work-status/{id:Guid}""";
+
+            public const string TAKE_PART_IN_FIRST = $$"""{{BASE}}/{{CONTROLLER_NAME}}/take-part-in-first-self/{id:Guid}""";
+
+            public const string TAKE_PART_IN = $$"""{{BASE}}/{{CONTROLLER_NAME}}/take-part-in-self/{id:Guid}""";
+
+            public const string LEAVE_FROM_PARTICIPATION = $$"""{{BASE}}/{{CONTROLLER_NAME}}/leave-from-participation-self/{id:Guid}""";
         }
 
         public static class WorkApplications

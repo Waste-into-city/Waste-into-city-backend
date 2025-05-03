@@ -50,6 +50,20 @@ namespace WasteIntoCity.Persistance.Repositories
             await _mainDbContext.SaveChangesAsync();
         }
 
+
+        public async Task AddParticipants(Guid id, List<Guid> participantsIds)
+        {
+            List<WorkParticipantEntity> participants = participantsIds
+                .Select(p => new WorkParticipantEntity
+                {
+                    WorksId = id,
+                    ParticipantsId = p
+                }).ToList();
+
+            await _mainDbContext.WorksParticipants.AddRangeAsync(participants);
+            await _mainDbContext.SaveChangesAsync();
+        }
+
         public async Task<int> CountAsync()
         {
             return await _mainDbContext.Works.AsNoTracking().CountAsync();
@@ -119,6 +133,37 @@ namespace WasteIntoCity.Persistance.Repositories
             return works;
         }
 
+        public async Task<Work> FindByIdAsync(Guid id)
+        {
+            WorkEntity workEntity = await _mainDbContext.Works.AsNoTracking().FirstOrDefaultAsync(w => w.Id == id)
+                ?? throw new DbIsNotFoundException(nameof(Work), 16, null);
+
+            return Work.Create(workEntity.Id, Title.Create(workEntity.Title), Description.Create(workEntity.Description), workEntity.StartedDatetime,
+                workEntity.FinishDatetime, (WorkComplexityEnum)workEntity.WorkComplexityTypesId, (WorkStatusEnum)workEntity.WorkStatusTypesId,
+                workEntity.CoordinatesId, null, null, null, null, null, null, null, null, null);
+        }
+
+        public async Task<Work> FindWithWorkComplexityTypeByIdAsync(Guid id)
+        {
+            WorkEntity workEntity = await _mainDbContext.Works.AsNoTracking().Include(w => w.WorkComplexityType)
+                .FirstOrDefaultAsync(w => w.Id == id) ?? throw new DbIsNotFoundException(nameof(Work), 16, null);
+
+            if (workEntity.WorkComplexityType == null)
+            {
+                throw new NullValueServerException(45, "work complexity type", null);
+            }
+
+            WorkComplexityTypeEntity workComplexityTypeEntity = workEntity.WorkComplexityType;
+
+            WorkComplexityType workComplexityType = WorkComplexityType.Create((WorkComplexityEnum)workComplexityTypeEntity.Id,
+                MeanText.Create(workComplexityTypeEntity.Name), workComplexityTypeEntity.ParticipantsMin, workComplexityTypeEntity.ParticipantsMax,
+                workComplexityTypeEntity.DurationHours, workComplexityTypeEntity.MultiplierRanking, workComplexityTypeEntity.RadiusOnMap);
+
+            return Work.Create(workEntity.Id, Title.Create(workEntity.Title), Description.Create(workEntity.Description), workEntity.StartedDatetime,
+                workEntity.FinishDatetime, (WorkComplexityEnum)workEntity.WorkComplexityTypesId, (WorkStatusEnum)workEntity.WorkStatusTypesId,
+                workEntity.CoordinatesId, null, null, workComplexityType, null, null, null, null, null, null);
+        }
+
         public async Task<Work> FindWithCoordinatesAndParticipantsAndImagesAndTrashTypesByIdAsync(Guid id)
         {
             WorkEntity work = await _mainDbContext.Works.AsNoTracking().Include(w => w.Coordinates).Include(w => w.Users).
@@ -165,6 +210,7 @@ namespace WasteIntoCity.Persistance.Repositories
                     .SetProperty(w => w.FinishDatetime, work.FinishDatetime)
                     .SetProperty(w => w.WorkComplexityTypesId, (int)work.WorkComplexityTypesId)
                     .SetProperty(w => w.WorkStatusTypesId, (int)work.WorkStatusTypesId)
+                    .SetProperty(w => w.CoordinatesId, work.CoordinatesId)
                 );
 
             if (updatedRows == 0)
@@ -252,7 +298,7 @@ namespace WasteIntoCity.Persistance.Repositories
                     {
                         if (wc.WorkMarkType is null)
                         {
-                            throw new DbIsNotFoundException(nameof(WorkComplexityType), 16, null);
+                            throw new DbIsNotFoundException(nameof(WorkComplexityType), 17, null);
                         }
 
                         return WorkColleagueReport.Create(
@@ -373,5 +419,19 @@ namespace WasteIntoCity.Persistance.Repositories
 
             return workIds;
         }
+
+        public async Task RemoveParticipants(Guid id, List<Guid> participantsIds)
+        {
+            List<WorkParticipantEntity> participants = participantsIds
+                .Select(p => new WorkParticipantEntity
+                {
+                    WorksId = id,
+                    ParticipantsId = p
+                }).ToList();
+
+            _mainDbContext.WorksParticipants.RemoveRange(participants);
+            await _mainDbContext.SaveChangesAsync();
+        }
     }
 }
+
