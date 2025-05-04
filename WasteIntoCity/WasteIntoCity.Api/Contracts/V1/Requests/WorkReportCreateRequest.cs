@@ -9,5 +9,7 @@
         public required int WorkComplexityTypesId { get; init; }
 
         public required int WorkStatusTypesId { get; init; }
+
+        public required Guid WorksId { get; init; }
     }
 }

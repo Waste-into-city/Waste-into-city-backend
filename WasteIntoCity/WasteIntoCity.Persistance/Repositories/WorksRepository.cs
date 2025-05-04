@@ -150,7 +150,7 @@ namespace WasteIntoCity.Persistance.Repositories
 
             if (workEntity.WorkComplexityType == null)
             {
-                throw new NullValueServerException(45, "work complexity type", null);
+                throw new NullValueServerException(46, "work complexity type", null);
             }
 
             WorkComplexityTypeEntity workComplexityTypeEntity = workEntity.WorkComplexityType;
@@ -298,7 +298,7 @@ namespace WasteIntoCity.Persistance.Repositories
                     {
                         if (wc.WorkMarkType is null)
                         {
-                            throw new DbIsNotFoundException(nameof(WorkComplexityType), 17, null);
+                            throw new DbIsNotFoundException(nameof(WorkComplexityType), 19, null);
                         }
 
                         return WorkColleagueReport.Create(
@@ -307,7 +307,8 @@ namespace WasteIntoCity.Persistance.Repositories
                             wc.AboutColleagueId,
                             wc.WorksId,
                             (WorkMarkEnum)wc.WorkMarkTypesId,
-                            WorkMarkType.Create((WorkMarkEnum)wc.WorkMarkType.Id, MeanText.Create(wc.WorkMarkType.Name), wc.WorkMarkType.AdditionRanking)
+                            WorkMarkType.Create((WorkMarkEnum)wc.WorkMarkType.Id, MeanText.Create(wc.WorkMarkType.Name), wc.WorkMarkType.AdditionRanking),
+                            null
                         );
                     }
                 ).ToList();

@@ -4,8 +4,8 @@ namespace WasteIntoCity.Core.Interfaces.Repositories
 {
     public interface IWorkColleaguesReportRepository
     {
-        Task<List<WorkColleagueReport>> FindByFromParticipantIdAndWorksIdAsync(Guid fromParticipantId, Guid worksId);
+        Task AddMarksAsync(List<WorkColleagueReport> workColleagueReports);
 
-        Task<List<WorkColleagueReport>> FindByWorksIdAsync(Guid worksId);
+        Task<List<WorkColleagueReport>> FindAllWithAboutColleagueByWorksIdAsync(Guid worksId);
     }
 }

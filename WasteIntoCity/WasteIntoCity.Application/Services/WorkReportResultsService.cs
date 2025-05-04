@@ -16,13 +16,14 @@ namespace WasteIntoCity.Application.Services
             _workReportResultsRepository = workReportResultsRepository;
         }
 
-        public async Task CreateAsync(Guid fromParticipantId, string title, string description, int workComplexityTypesId, int workStatusTypesId)
+        public async Task CreateAsync(Guid fromParticipantId, string title, string description, int workComplexityTypesId, int workStatusTypesId,
+            Guid worksId)
         {
             EnumOperationsExtension.CheckEnumIntValue<WorkComplexityEnum>(workComplexityTypesId, "Work comlexity type");
             EnumOperationsExtension.CheckEnumIntValue<WorkStatusEnum>(workStatusTypesId, "Work status type");
 
             WorkReportResult workReportResult = WorkReportResult.Create(Guid.NewGuid(), fromParticipantId, Title.Create(title),
-                Description.Create(description), (WorkComplexityEnum)workComplexityTypesId, (WorkStatusEnum)workStatusTypesId, null);
+                Description.Create(description), (WorkComplexityEnum)workComplexityTypesId, (WorkStatusEnum)workStatusTypesId, worksId, null);
 
             await _workReportResultsRepository.CreateAsync(workReportResult);
         }

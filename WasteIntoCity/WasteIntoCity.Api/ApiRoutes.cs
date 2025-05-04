@@ -107,5 +107,13 @@
             public const string GET_BY_NAME = $$"""{{BASE}}/{{CONTROLLER_NAME}}/get-by-name/{name}""";
         }
 
+        public static class WorkColleagueReports
+        {
+            private const string CONTROLLER_NAME = "work-colleague-reports";
+
+            public const string CREATE_MARKS = $"{BASE}/{CONTROLLER_NAME}/create-marks";
+
+            public const string GET_ALL_BY_WORKS_ID = $$"""{{BASE}}/{{CONTROLLER_NAME}}/get-all-works-by-id/{worksId:Guid}""";
+        }
     }
 }

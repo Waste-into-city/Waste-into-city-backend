@@ -42,8 +42,20 @@ namespace WasteIntoCity.Persistance.Repositories
             return WorkReportResult.Create(workReportResultEntity.Id, workReportResultEntity.FromParticipantsId,
                 Title.Create(workReportResultEntity.Title), Description.Create(workReportResultEntity.Description),
                 (WorkComplexityEnum)workReportResultEntity.WorkComplexityTypesId,
-                (WorkStatusEnum)workReportResultEntity.WorkStatusTypesId, null);
+                (WorkStatusEnum)workReportResultEntity.WorkStatusTypesId, workReportResultEntity.WorksId, null);
 
+        }
+
+        public async Task<WorkReportResult> FindByWorksIdAsync(Guid worksId)
+        {
+            WorkReportResultEntity workReportResultEntity = await _mainDbContext.WorkReportResults.AsNoTracking()
+                .FirstOrDefaultAsync(w => w.WorksId == worksId) ??
+                throw new DbIsNotFoundException(nameof(WorkReportResult), 18, null);
+
+            return WorkReportResult.Create(workReportResultEntity.Id, workReportResultEntity.FromParticipantsId,
+                Title.Create(workReportResultEntity.Title), Description.Create(workReportResultEntity.Description),
+                (WorkComplexityEnum)workReportResultEntity.WorkComplexityTypesId,
+                (WorkStatusEnum)workReportResultEntity.WorkStatusTypesId, workReportResultEntity.WorksId, null);
         }
 
         public async Task<WorkReportResult> FindWithParticipantByIdAsync(Guid id)
@@ -66,7 +78,7 @@ namespace WasteIntoCity.Persistance.Repositories
             return WorkReportResult.Create(workReportResultEntity.Id, workReportResultEntity.FromParticipantsId,
                 Title.Create(workReportResultEntity.Title), Description.Create(workReportResultEntity.Description),
                 (WorkComplexityEnum)workReportResultEntity.WorkComplexityTypesId,
-                (WorkStatusEnum)workReportResultEntity.WorkStatusTypesId, participant);
+                (WorkStatusEnum)workReportResultEntity.WorkStatusTypesId, workReportResultEntity.WorksId, participant);
         }
     }
 }
