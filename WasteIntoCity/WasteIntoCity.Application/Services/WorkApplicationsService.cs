@@ -1,9 +1,10 @@
 ﻿using WasteIntoCity.Core.Enums;
 using WasteIntoCity.Core.Exceptions.BadRequest400Exceptions;
+using WasteIntoCity.Core.Exceptions.InternalServer500Exceptions;
+using WasteIntoCity.Core.Extensions;
 using WasteIntoCity.Core.Interfaces.Repositories;
 using WasteIntoCity.Core.Interfaces.Services;
 using WasteIntoCity.Core.Models;
-using WasteIntoCity.Core.Types;
 using WasteIntoCity.Core.ValueObjects;
 using WasteIntoCity.Persistance.Repositories;
 
@@ -30,12 +31,13 @@ namespace WasteIntoCity.Application.Services
         private readonly RefreshTokensRepository _refreshTokensRepository;
         private readonly IWorkComplexityTypesRepository _workComplexityTypesRepository;
         private readonly IWorksRepository _worksRepository;
-        private readonly IScoreSettingsTypeRepository _scoreSettingsTypeRepository;
+        private readonly IScoreSettingsTypesRepository _scoreSettingsTypeRepository;
+        private readonly IImagesRepository _imagesRepository;
 
 
         public WorkApplicationsService(IWorkApplicationsRepository workApplicationsRepository, ICoordinatesRepository coordinatesRepository,
             IUsersRepository usersRepository, RefreshTokensRepository refreshTokensRepository, IWorkComplexityTypesRepository workComplexityTypesRepository,
-            IWorksRepository worksRepository, IScoreSettingsTypeRepository scoreSettingsTypeRepository)
+            IWorksRepository worksRepository, IScoreSettingsTypesRepository scoreSettingsTypeRepository, IImagesRepository imagesRepository)
         {
             _workApplicationsRepository = workApplicationsRepository;
             _coordinatesRepository = coordinatesRepository;
@@ -44,19 +46,30 @@ namespace WasteIntoCity.Application.Services
             _workComplexityTypesRepository = workComplexityTypesRepository;
             _worksRepository = worksRepository;
             _scoreSettingsTypeRepository = scoreSettingsTypeRepository;
+            _imagesRepository = imagesRepository;
         }
 
-        public async Task CreateOwnAsync(string title, string description, int workComplexityId, string lat, string lng,
-            Guid userId)
+        public async Task CreateOwnAsync(string title, string description, int workComplexityId, decimal lat, decimal lng, List<int> trashTypesIds,
+            List<string> imageNamesLines, Guid userId)
         {
             Coordinates coordinates = Coordinates.Create(Guid.NewGuid(), lat, lng);
 
-            await _coordinatesRepository.AddAsync(coordinates);
+            List<TrashEnum> trashTypes = new List<TrashEnum>();
+            foreach (int trashTypesId in trashTypesIds)
+            {
+                EnumOperationsExtension.CheckEnumIntValue<TrashEnum>(trashTypesId, "trash type");
+                trashTypes.Add((TrashEnum)trashTypesId);
+            }
+
+            List<ImageName> imageNames = imageNamesLines.Select(i => ImageName.Create(i)).ToList();
 
             WorkApplication workApplication = WorkApplication.Create(Guid.NewGuid(), Title.Create(title), Description.Create(description),
-                (WorkComplexityEnum)workComplexityId, coordinates.Id, DateTime.UtcNow, userId, WorkReportStatusEnum.Pending);
+                (WorkComplexityEnum)workComplexityId, coordinates.Id, DateTime.UtcNow, userId, WorkReportStatusEnum.Pending, trashTypes,
+                null, null, null);
 
-            await _workApplicationsRepository.AddAsync(workApplication);
+            await _workApplicationsRepository.CreateAsync(workApplication);
+            await _coordinatesRepository.CreateAsync(coordinates);
+            await _imagesRepository.UpdateWorkApplicationsIdByNamesAsync(imageNames, workApplication.Id);
         }
 
         public async Task RejectAsync(Guid workApplicationsId)
@@ -71,7 +84,7 @@ namespace WasteIntoCity.Application.Services
                     nameof(WorkApplication), $"Application is not in {nameof(WorkReportStatusEnum.Pending)} state", 50);
             }
 
-            User user = await _usersRepository.FindByIdWithRolesAsync(workApplication.FromUsersId);
+            User user = await _usersRepository.FindByIdAsync(workApplication.FromUsersId);
 
             int negativeScore;
             int ranking;
@@ -84,7 +97,7 @@ namespace WasteIntoCity.Application.Services
             else
             {
                 ranking = user.Ranking - (scoreSettingsValues[ScoreSettingsEnum.WorkApplicationRankingSubstracting] * user.NegativeScore);
-                negativeScore = user.NegativeScore * scoreSettingsValues[ScoreSettingsEnum.WorkNegativeAddingMultiplier];
+                negativeScore = user.NegativeScore * scoreSettingsValues[ScoreSettingsEnum.WorkApplicationNegativeAddingMultiplier];
             }
 
             bool isBanned = false;
@@ -96,9 +109,10 @@ namespace WasteIntoCity.Application.Services
                 await _refreshTokensRepository.UpdateInvalidatedByUserIdTokensAsync(true, user.Id);
             }
 
-            User updatedUser = User.Create(user.Id, user.Nickname, user.Email, user.Password, ranking, user.Roles, negativeScore, isBanned);
+            User updatedUser = User.Create(user.Id, user.Nickname, user.Email, user.Password, ranking, null, negativeScore, isBanned,
+                null, null);
 
-            await _usersRepository.UpdateAsync(updatedUser);
+            await _usersRepository.UpdateByIdAsync(updatedUser);
 
             await _workApplicationsRepository.UpdateWorkReportStatusTypesIdByIdAsync(workApplicationsId, WorkReportStatusEnum.Denied);
         }
@@ -109,31 +123,44 @@ namespace WasteIntoCity.Application.Services
 
             WorkApplication workApplication = await _workApplicationsRepository.FindById(workApplicationsId);
 
+            if (workApplication.ImageNames == null)
+            {
+                throw new NullValueServerException(33, "image names", null);
+            }
+
             if (workApplication.WorkReportStatusTypesId != WorkReportStatusEnum.Pending)
             {
                 throw new ValueOutOfRangeException<WorkReportStatusEnum>(
                     nameof(WorkApplication), $"Application is not in {nameof(WorkReportStatusEnum.Pending)} state", 51);
             }
 
-            User user = await _usersRepository.FindByIdWithRolesAsync(workApplication.FromUsersId);
+            User user = await _usersRepository.FindByIdAsync(workApplication.FromUsersId);
 
             int ranking = user.Ranking + scoreSettingsValues[ScoreSettingsEnum.WorkApplicationRankingAdding];
 
             int negativeScore = Math.Max(user.NegativeScore - scoreSettingsValues[ScoreSettingsEnum.WorkApplicationNegativeSubstracting], 0);
 
-            User updatedUser = User.Create(user.Id, user.Nickname, user.Email, user.Password, ranking, user.Roles, negativeScore, user.IsBanned);
+            User updatedUser = User.Create(user.Id, user.Nickname, user.Email, user.Password, ranking, user.Roles, negativeScore, user.IsBanned,
+                null, null);
 
-            await _usersRepository.UpdateAsync(updatedUser);
+            await _usersRepository.UpdateByIdAsync(updatedUser);
 
             WorkComplexityType workComplexityType = await _workComplexityTypesRepository.FindById((int)workApplication.WorkComplexityTypesId);
 
             Work work = Work.Create(Guid.NewGuid(), workApplication.Title, workApplication.Description, null,
                 null, workApplication.WorkComplexityTypesId, WorkStatusEnum.NotFinished,
-                workApplication.CoordinatesId, null, null, null, null, null, null);
+                workApplication.CoordinatesId, null, null, null, null, null, null, null, null, workApplication.TrashTypesIds);
 
-            await _worksRepository.AddAsync(work);
+            await _imagesRepository.UpdateWorksIdByNamesAsync(workApplication.ImageNames, work.Id);
+
+            await _worksRepository.CreateAsync(work);
 
             await _workApplicationsRepository.UpdateWorkReportStatusTypesIdByIdAsync(workApplicationsId, WorkReportStatusEnum.Accepted);
+        }
+
+        public async Task<WorkApplication> GetFromQueueAsync()
+        {
+            return await _workApplicationsRepository.FindPendingWithFromUserAndTrashTypesIdsAndImageNamesAndCoordinatesByStartedDatetimeAscending();
         }
     }
 }

@@ -35,7 +35,7 @@ namespace WasteIntoCity.Application.BackgroundServices
             }
 
             List<ImageName> imageNames = await imagesRepository.
-                FindNamesFirstNotReferencedByFinished(_serviceOptions.Value.ImagesAtTimeAmount, _serviceOptions.Value.MinImageIntervalAfterUploaded);
+                FindNamesFirstNotReferencedByUploadedTimeInterval(_serviceOptions.Value.ImagesAtTimeAmount, _serviceOptions.Value.MinImageIntervalAfterUploaded);
 
             List<string> imagesForDelete = new List<string>(imageNames.Count);
 

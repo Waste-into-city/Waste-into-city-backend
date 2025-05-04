@@ -62,6 +62,27 @@ namespace WasteIntoCity.Persistance.Repositories
             return true;
         }
 
+        public async Task<int> CountByUserRoleAsync()
+        {
+            return await _mainDbContext.Users.AsNoTracking().Include(u => u.Roles).Where(u => u.Roles.Any(r => r.Id == (int)RoleEnum.User))
+                .CountAsync();
+        }
+
+        public async Task<List<User>> FindAllByRoleUserAndRankingDescendingAndPageAsync(int page, int pageSize)
+        {
+            List<UserEntity> userEntities = await _mainDbContext.Users.AsNoTracking().OrderByDescending(u => u.Ranking).Include(u => u.Roles).
+                Where(u => u.Roles.Any(r => r.Id == (int)RoleEnum.User)).Skip((page - 1) * pageSize).Take(pageSize)
+                .ToListAsync();
+
+            List<User> users = userEntities.Select(u =>
+            {
+                return User.Create(u.Id, Nickname.Create(u.Nickname), Email.Create(u.Email), Password.Create(u.Password), u.Ranking, null,
+                    u.NegativeScore, u.IsBanned, null, null);
+            }).ToList();
+
+            return users;
+        }
+
         public async Task<User> FindByEmailWithRolesAsync(string email)
         {
             UserEntity userEntity = await _mainDbContext.Users.AsNoTracking().Include(u => u.Roles).FirstOrDefaultAsync(u => u.Email == email)
@@ -70,10 +91,10 @@ namespace WasteIntoCity.Persistance.Repositories
             List<Role> roles = userEntity.Roles.Select(r => Role.Create((RoleEnum)r.Id, r.Name)).ToList();
 
             return User.Create(userEntity.Id, Nickname.Create(userEntity.Nickname), Email.Create(userEntity.Email), Password.Create(userEntity.Password),
-                userEntity.Ranking, roles, userEntity.NegativeScore, userEntity.IsBanned);
+                userEntity.Ranking, roles, userEntity.NegativeScore, userEntity.IsBanned, null, null);
         }
 
-        public async Task<User> FindByIdWithRolesAsync(Guid id)
+        public async Task<User> FindWithRolesByIdAsync(Guid id)
         {
             UserEntity userEntity = await _mainDbContext.Users.AsNoTracking().Include(u => u.Roles).FirstOrDefaultAsync(u => u.Id == id)
                 ?? throw new DbIsNotFoundException(nameof(User), 5, null);
@@ -81,10 +102,32 @@ namespace WasteIntoCity.Persistance.Repositories
             List<Role> roles = userEntity.Roles.Select(r => Role.Create((RoleEnum)r.Id, r.Name)).ToList();
 
             return User.Create(userEntity.Id, Nickname.Create(userEntity.Nickname), Email.Create(userEntity.Email), Password.Create(userEntity.Password),
-                userEntity.Ranking, roles, userEntity.NegativeScore, userEntity.IsBanned);
+                userEntity.Ranking, roles, userEntity.NegativeScore, userEntity.IsBanned, null, null);
         }
 
-        public async Task UpdateAsync(User user)
+        public async Task<User> FindByIdAsync(Guid id)
+        {
+            UserEntity userEntity = await _mainDbContext.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Id == id)
+                ?? throw new DbIsNotFoundException(nameof(User), 5, null);
+
+            return User.Create(userEntity.Id, Nickname.Create(userEntity.Nickname), Email.Create(userEntity.Email), Password.Create(userEntity.Password),
+                userEntity.Ranking, null, userEntity.NegativeScore, userEntity.IsBanned, null, null);
+        }
+
+        public async Task<User> FindWithImageById(Guid id)
+        {
+            UserEntity userEntity = await _mainDbContext.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Id == id)
+                ?? throw new DbIsNotFoundException(nameof(User), 11, null);
+
+            ImageEntity imageEntity = await _mainDbContext.Images.AsNoTracking().FirstOrDefaultAsync(i => i.UsersId == id)
+                ?? throw new DbIsNotFoundException(nameof(User), 12, null);
+
+            return User.Create(userEntity.Id, Nickname.Create(userEntity.Nickname), Email.Create(userEntity.Email),
+                Password.Create(userEntity.Password), userEntity.Ranking, null, userEntity.NegativeScore, userEntity.IsBanned,
+                ImageName.Create(imageEntity.Name), null);
+        }
+
+        public async Task UpdateByIdAsync(User user)
         {
             await _mainDbContext.Users
                 .Where(r => r.Id == user.Id)
@@ -123,7 +166,7 @@ namespace WasteIntoCity.Persistance.Repositories
             {
                 if (user.Roles == null)
                 {
-                    throw new NullValueServerException(26, "roles", null);
+                    throw new NullValueServerException(29, "roles", null);
                 }
 
                 bool userExists = await _mainDbContext.Users.AnyAsync(u => u.Email == user.Email.Value);
@@ -143,11 +186,15 @@ namespace WasteIntoCity.Persistance.Repositories
 
                     await _mainDbContext.Users.AddAsync(newUser);
 
+                    await _mainDbContext.SaveChangesAsync();
+
                     await _mainDbContext.UserAccordingRoles.AddRangeAsync(user.Roles.Select(role => new UserAccordingRoleEntity
                     {
                         UsersId = newUser.Id,
                         RolesId = (int)role.Id
                     }));
+
+                    await _mainDbContext.SaveChangesAsync();
                 }
             }
 

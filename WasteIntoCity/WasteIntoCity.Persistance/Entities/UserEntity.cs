@@ -39,5 +39,7 @@
         public List<RefreshTokenEntity> RefreshTokens { get; set; } = [];
 
         public List<WorkApplicationEntity> WorkApplications { get; set; } = [];
+
+        public ImageEntity? Image { get; set; }
     }
 }

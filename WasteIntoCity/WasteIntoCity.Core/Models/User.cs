@@ -1,4 +1,5 @@
-﻿using WasteIntoCity.Core.Exceptions.BadRequest400Exceptions;
+﻿using Microsoft.AspNetCore.Http;
+using WasteIntoCity.Core.Exceptions.BadRequest400Exceptions;
 using WasteIntoCity.Core.ValueObjects;
 
 namespace WasteIntoCity.Core.Models
@@ -26,7 +27,7 @@ namespace WasteIntoCity.Core.Models
         public const int PASSWORD_LENGTH_MAX = Password.VALUE_LENGTH_MAX;
 
 
-        private User(Guid id, Nickname nickname, Email email, Password password, int ranking, List<Role>? roles, int negativeScore, bool isBanned)
+        private User(Guid id, Nickname nickname, Email email, Password password, int ranking, List<Role>? roles, int negativeScore, bool isBanned, ImageName? avatarImageName, IFormFile? avatarImage)
         {
             Id = id;
             Nickname = nickname;
@@ -36,6 +37,8 @@ namespace WasteIntoCity.Core.Models
             Roles = roles;
             NegativeScore = negativeScore;
             IsBanned = isBanned;
+            AvatarImageName = avatarImageName;
+            AvatarImage = avatarImage;
         }
 
         public Guid Id { get; }
@@ -54,8 +57,12 @@ namespace WasteIntoCity.Core.Models
 
         public List<Role>? Roles { get; }
 
+        public ImageName? AvatarImageName { get; }
+
+        public IFormFile? AvatarImage { get; }
+
         public static User Create(Guid id, Nickname nickname, Email email, Password password, int ranking, List<Role>? roles, int negativeScore,
-            bool isBanned)
+            bool isBanned, ImageName? avatarImageName, IFormFile? avatarImage)
         {
             if (ranking is < RANKING_MIN or > RANKING_MAX)
             {
@@ -67,7 +74,7 @@ namespace WasteIntoCity.Core.Models
                 throw new ValueOutOfRangeException<int>(nameof(negativeScore), NEGATIVE_SCORE_MIN, NEGATIVE_SCORE_MAX, 56);
             }
 
-            return new User(id, nickname, email, password, ranking, roles, negativeScore, isBanned);
+            return new User(id, nickname, email, password, ranking, roles, negativeScore, isBanned, avatarImageName, avatarImage);
         }
     }
 }

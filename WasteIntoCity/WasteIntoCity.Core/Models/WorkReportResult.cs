@@ -1,4 +1,4 @@
-﻿using WasteIntoCity.Core.Types;
+﻿using WasteIntoCity.Core.Enums;
 using WasteIntoCity.Core.ValueObjects;
 
 namespace WasteIntoCity.Core.Models
@@ -13,13 +13,15 @@ namespace WasteIntoCity.Core.Models
 
         public const int DESCRIPTION_LENGTH_MAX = Description.VALUE_LENGTH_MAX;
 
-        private WorkReportResult(Guid id, Guid fromParticipantId, Title title, Description description, WorkStatusEnum workStatusesId, User? fromParticipant)
+        private WorkReportResult(Guid id, Guid fromParticipantId, Title title, Description description, WorkComplexityEnum workComplexityTypesId,
+            WorkStatusEnum workStatusesId, Guid worksId, User? fromParticipant)
         {
             Id = id;
             FromParticipantId = fromParticipantId;
             Title = title;
             Description = description;
-            WorkStatusTypesId = workStatusesId;
+            WorkComplexityTypesId = workComplexityTypesId;
+            WorksId = worksId;
             FromParticipant = fromParticipant;
         }
 
@@ -31,14 +33,18 @@ namespace WasteIntoCity.Core.Models
 
         public Description Description { get; }
 
+        public WorkComplexityEnum WorkComplexityTypesId { get; }
+
         public WorkStatusEnum WorkStatusTypesId { get; }
+
+        public Guid WorksId { get; }
 
         public User? FromParticipant { get; }
 
-        public static WorkReportResult Create(Guid id, Guid fromParticipantId, Title title, Description description, WorkStatusEnum workStatusesId,
-            User? fromParticipant)
+        public static WorkReportResult Create(Guid id, Guid fromParticipantId, Title title, Description description, WorkComplexityEnum workComplexityTypesId,
+            WorkStatusEnum workStatusesId, Guid worksId, User? fromParticipant)
         {
-            return new WorkReportResult(id, fromParticipantId, title, description, workStatusesId, fromParticipant);
+            return new WorkReportResult(id, fromParticipantId, title, description, workComplexityTypesId, workStatusesId, worksId, fromParticipant);
         }
 
     }

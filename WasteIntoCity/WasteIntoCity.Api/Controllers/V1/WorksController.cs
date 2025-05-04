@@ -2,11 +2,13 @@
 using Microsoft.AspNetCore.Mvc;
 using WasteIntoCity.Api.Contracts.V1.Responses;
 using WasteIntoCity.Application;
+using WasteIntoCity.Application.Contracts.V1.Requests;
 using WasteIntoCity.Application.Extensions;
 using WasteIntoCity.Core.Enums;
 using WasteIntoCity.Core.Exceptions.InternalServer500Exceptions;
 using WasteIntoCity.Core.Interfaces.Services;
 using WasteIntoCity.Core.Models;
+using static WasteIntoCity.Api.Contracts.V1.Responses.WorkGetByIdResponse;
 
 namespace WasteIntoCity.Api.Controllers.V1
 {
@@ -55,18 +57,46 @@ namespace WasteIntoCity.Api.Controllers.V1
         [HttpGet(ApiRoutes.Works.GET_BY_ID)]
         public async Task<IActionResult> GetByIdAsync([FromRoute] Guid id)
         {
-            Work work = await _workService.GetById(id);
+            Work work = await _workService.GetByIdAsync(id);
 
             if (work.Coordinates is null)
             {
-                throw new NullValueServerException(12, nameof(work.Coordinates), null);
+                throw new NullValueServerException(12, "coordinates", null);
             }
+
+            if (work.Participants is null)
+            {
+                throw new NullValueServerException(30, "participants", null);
+            }
+
+            if (work.TrashTypesIds is null)
+            {
+                throw new NullValueServerException(31, "participants", null);
+            }
+
+            if (work.ImageNames is null)
+            {
+                throw new NullValueServerException(32, "participants", null);
+            }
+
+            List<WorkGetByIdResponseParticipant> participants = work.Participants.Select(p => new WorkGetByIdResponseParticipant
+            {
+                Email = p.Email.Value,
+                Nickname = p.Nickname.Value
+            }).ToList();
+
+            List<int> trashTypesIds = work.TrashTypesIds.Select(t => (int)t).ToList();
+
+            List<string> imageNames = work.ImageNames.Select(i => i.Value).ToList();
 
             WorkGetByIdResponse workGetByIdResponse = new WorkGetByIdResponse
             {
                 Id = work.Id,
                 Title = work.Title.Value,
                 Description = work.Description.Value,
+                Participants = participants,
+                ImageNames = imageNames,
+                TrashTypesIds = trashTypesIds,
                 StartedDatetime = work.StartedDatetime,
                 FinishDatetime = work.FinishDatetime,
                 WorkComplexityTypesId = (int)work.WorkComplexityTypesId,
@@ -78,7 +108,40 @@ namespace WasteIntoCity.Api.Controllers.V1
             return Ok(workGetByIdResponse);
         }
 
-        [Authorize(Roles = $"{nameof(RoleEnum.SuperAdmin)},{nameof(RoleEnum.Moderator)},{nameof(RoleEnum.User)}")]
+        [AllowAnonymous]
+        [HttpGet(ApiRoutes.Works.GET_ALL_LOOKUP)]
+        public async Task<IActionResult> GetAllLookup([FromQuery] int page, [FromQuery] int pageSize)
+        {
+            (List<Work> works, int total) = await _workService.GetAllLookup(page, pageSize);
+
+            List<WorksGetAllLookupResponse> items = works.Select(w =>
+            {
+                if (w.Coordinates == null)
+                {
+                    throw new NullValueServerException(34, "coordinates", null);
+                }
+
+                return new WorksGetAllLookupResponse
+                {
+                    Id = w.Id,
+                    WorkStatusTypesId = (int)w.WorkStatusTypesId,
+                    Lat = w.Coordinates.Lat,
+                    Lng = w.Coordinates.Lng
+                };
+            }).ToList();
+
+            ByPageResponse<WorksGetAllLookupResponse> workGetByIdResponse = new ByPageResponse<WorksGetAllLookupResponse>
+            {
+                PageSize = pageSize,
+                Page = page,
+                Total = total,
+                Items = items
+            };
+
+            return Ok(workGetByIdResponse);
+        }
+
+        [Authorize(Roles = $"{nameof(RoleEnum.Admin)},{nameof(RoleEnum.Moderator)},{nameof(RoleEnum.User)}")]
         [HttpGet(ApiRoutes.Works.GET_ALL_OWN_TAKE_PART_IN)]
         public async Task<IActionResult> GetAllOwnTakePartInAsync()
         {
@@ -110,6 +173,39 @@ namespace WasteIntoCity.Api.Controllers.V1
             );
 
             return Ok(workGetAllOwnTakePartInResponse);
+        }
+
+        [Authorize(Roles = $"{nameof(RoleEnum.Admin)},{nameof(RoleEnum.Moderator)},{nameof(RoleEnum.User)}")]
+        [HttpPut(ApiRoutes.Works.TAKE_PART_IN_FIRST)]
+        public async Task<IActionResult> TakePartInFirstSelfAsync([FromRoute] Guid id, [FromBody] WorkTakePartInFirstSelfRequest workTakePartInFirstSelfRequest)
+        {
+            Guid userId = HttpContext.TakeUserIdFromAccessToken();
+
+            await _workService.TakePartInFirstSelfAsync(id, userId, workTakePartInFirstSelfRequest.StartedDatetime);
+
+            return Ok();
+        }
+
+        [Authorize(Roles = $"{nameof(RoleEnum.Admin)},{nameof(RoleEnum.Moderator)},{nameof(RoleEnum.User)}")]
+        [HttpGet(ApiRoutes.Works.TAKE_PART_IN)]
+        public async Task<IActionResult> TakePartInSelfAsync([FromRoute] Guid id)
+        {
+            Guid userId = HttpContext.TakeUserIdFromAccessToken();
+
+            await _workService.TakePartInSelfAsync(id, userId);
+
+            return Ok();
+        }
+
+        [Authorize(Roles = $"{nameof(RoleEnum.Admin)},{nameof(RoleEnum.Moderator)},{nameof(RoleEnum.User)}")]
+        [HttpGet(ApiRoutes.Works.LEAVE_FROM_PARTICIPATION)]
+        public async Task<IActionResult> LeaveFromParticipationSelfAsync([FromRoute] Guid id)
+        {
+            Guid userId = HttpContext.TakeUserIdFromAccessToken();
+
+            await _workService.LeaveFromParticipationSelfAsync(id, userId);
+
+            return Ok();
         }
     }
 }

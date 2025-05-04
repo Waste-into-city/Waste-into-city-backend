@@ -1,5 +1,5 @@
-﻿using WasteIntoCity.Core.Exceptions.BadRequest400Exceptions;
-using WasteIntoCity.Core.Types;
+﻿using WasteIntoCity.Core.Enums;
+using WasteIntoCity.Core.Exceptions.BadRequest400Exceptions;
 using WasteIntoCity.Core.ValueObjects;
 
 namespace WasteIntoCity.Core.Models
@@ -36,7 +36,7 @@ namespace WasteIntoCity.Core.Models
 
             if (addingRanking is < MULTIPLIER_RANKING_MIN or > MULTIPLIER_RANKING_MAX)
             {
-                throw new ValueOutOfRangeException<int>(nameof(addingRanking), MULTIPLIER_RANKING_MIN, MULTIPLIER_RANKING_MAX, 64);
+                throw new ValueOutOfRangeException<int>(nameof(addingRanking), MULTIPLIER_RANKING_MIN, MULTIPLIER_RANKING_MAX, 81);
             }
 
             return new WorkStatusType(id, name, addingRanking);

@@ -16,8 +16,8 @@
 
         required public int WorkStatusTypesId { get; init; }
 
-        required public string Lat { get; init; }
+        required public decimal Lat { get; init; }
 
-        required public string Lng { get; init; }
+        required public decimal Lng { get; init; }
     }
 }

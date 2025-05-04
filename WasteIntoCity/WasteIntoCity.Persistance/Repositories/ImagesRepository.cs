@@ -36,7 +36,7 @@ namespace WasteIntoCity.Persistance.Repositories
             await _mainDbContext.SaveChangesAsync();
         }
 
-        public async Task<List<ImageName>> FindNamesFirstNotReferencedByFinished(int imagesAmount, TimeSpan minImageIntervalAfterUpdated)
+        public async Task<List<ImageName>> FindNamesFirstNotReferencedByUploadedTimeInterval(int imagesAmount, TimeSpan minImageIntervalAfterUpdated)
         {
             DateTime minAppropriateUploadedWorkTime = DateTime.UtcNow.Subtract(minImageIntervalAfterUpdated);
 
@@ -53,6 +53,28 @@ namespace WasteIntoCity.Persistance.Repositories
             ).ToList();
 
             return imageNames;
+        }
+
+        public async Task UpdateWorksIdByNamesAsync(List<ImageName> imageNames, Guid? worksId)
+        {
+            List<string> imageNamesLines = imageNames.Select(i => i.Value).ToList();
+
+            int updatedRows = await _mainDbContext.Images
+                .Where(w => imageNamesLines.Contains(w.Name))
+                .ExecuteUpdateAsync(n => n
+                    .SetProperty(w => w.WorksId, worksId)
+                );
+        }
+
+        public async Task UpdateWorkApplicationsIdByNamesAsync(List<ImageName> imageNames, Guid? workApplicationsId)
+        {
+            List<string> imageNamesLines = imageNames.Select(i => i.Value).ToList();
+
+            int updatedRows = await _mainDbContext.Images
+                .Where(w => imageNamesLines.Contains(w.Name))
+                .ExecuteUpdateAsync(n => n
+                    .SetProperty(w => w.WorkApplicationsId, workApplicationsId)
+                );
         }
     }
 }

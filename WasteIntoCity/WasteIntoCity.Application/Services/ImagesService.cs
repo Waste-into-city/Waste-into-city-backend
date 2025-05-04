@@ -6,6 +6,7 @@ using WasteIntoCity.Core.Interfaces.Adapters;
 using WasteIntoCity.Core.Interfaces.Repositories;
 using WasteIntoCity.Core.Interfaces.Services;
 using WasteIntoCity.Core.Options;
+using WasteIntoCity.Core.Structs;
 using WasteIntoCity.Core.ValueObjects;
 
 namespace WasteIntoCity.Application.Services
@@ -98,7 +99,7 @@ namespace WasteIntoCity.Application.Services
                 Guid.NewGuid(),
                 ImageName.Create(fileName),
                 DateTime.UtcNow,
-                null, null, null
+                null, null, null, null
             );
 
             await _imagesRepository.Create(imageEntity);
@@ -107,14 +108,34 @@ namespace WasteIntoCity.Application.Services
         }
 
 
-        public (Stream imageStream, string mimeType) GetImageStreamAndMimeTypeAsync(string fileName)
+        public ImagesDataStruct GetImageStreamAndMimeTypeAsync(string fileName)
         {
             string filePath = Path.Combine(_uploadPath, fileName);
 
             if (!File.Exists(filePath))
                 throw new FileNotFoundCustomException(fileName, null, 16);
 
-            return (new FileStream(filePath, FileMode.Open, FileAccess.Read), GetMimeType(fileName));
+            return new ImagesDataStruct(fileName, new FileStream(filePath, FileMode.Open, FileAccess.Read), GetMimeType(fileName));
+        }
+
+        public List<ImagesDataStruct> GetImageStreamsAndMimeTypes(List<string> fileNames)
+        {
+            List<ImagesDataStruct> imagesDataStructs = new List<ImagesDataStruct>();
+
+            foreach (string fileName in fileNames)
+            {
+                string filePath = Path.Combine(_uploadPath, fileName);
+
+                if (!File.Exists(filePath))
+                    throw new FileNotFoundCustomException(fileName, null, 80);
+
+                FileStream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+                string mimeType = GetMimeType(fileName);
+
+                imagesDataStructs.Add(new ImagesDataStruct(fileName, stream, mimeType));
+            }
+
+            return imagesDataStructs;
         }
     }
 }

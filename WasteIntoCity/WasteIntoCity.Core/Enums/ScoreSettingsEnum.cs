@@ -18,8 +18,20 @@
 
         UserBanRankingAtLeast = 8,
 
-        ProcessedWorkRankingSubstracting = 9,
+        PendingFinalizationWorkRankingSubstracting = 9,
 
-        ProcessedWorkNegativeAdding = 10
+        PendingFinalizationWorkNegativeAdding = 10,
+
+        WorkComplaintNegativeSubstracting = 11,
+
+        WorkComplaintParticipantNegativeAddingMultiplier = 12,
+
+        WorkComplaintUserNegativeAddingMultiplier = 12,
+
+        WorkComplaintParticipantRankingSubstracting = 13,
+
+        WorkComplaintUserRankingSubstracting = 13,
+
+        WorkComplaintUserRankingAdding = 14,
     }
 }

@@ -21,7 +21,11 @@ namespace WasteIntoCity.Persistance.Configurations
 
             builder.Property(w => w.FromParticipantsId).IsRequired().HasColumnName("from_participant_id");
 
+            builder.Property(w => w.WorkComplexityTypesId).IsRequired().HasColumnName("work_complexity_types_id");
+
             builder.Property(w => w.WorkStatusTypesId).IsRequired().HasColumnName("work_statuses_id");
+
+            builder.Property(w => w.WorksId).IsRequired().HasColumnName("works_id");
 
             builder.HasKey(w => w.Id);
 
@@ -31,9 +35,13 @@ namespace WasteIntoCity.Persistance.Configurations
             builder.HasOne(w => w.WorkStatusType)
                 .WithMany(w => w.WorkReportResults);
 
-            builder.HasMany(i => i.Images)
-                .WithOne(w => w.WorkReportResult)
-                .HasForeignKey(w => w.WorkReportResultsId);
+            builder.HasMany(w => w.Images)
+                .WithOne(i => i.WorkReportResult)
+                .HasForeignKey(i => i.WorkReportResultsId);
+
+            builder.HasOne(w => w.Work)
+                .WithOne(wo => wo.WorkReportResult)
+                .HasForeignKey<WorkReportResultEntity>(w => w.WorksId);
         }
     }
 }

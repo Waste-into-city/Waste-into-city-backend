@@ -15,9 +15,9 @@ namespace WasteIntoCity.Persistance.Configurations
 
             builder.Property(c => c.Id).HasColumnName("id");
 
-            builder.Property(c => c.Lat).IsRequired().HasColumnName("lat").HasMaxLength(Coordinates.LAT_LEGTH_MAX);
+            builder.Property(c => c.Lat).IsRequired().HasColumnName("lat").HasColumnType($"decimal({Coordinates.LAT_PRECISION},{Coordinates.LAT_SCALE})"); ;
 
-            builder.Property(c => c.Lng).IsRequired().HasColumnName("lng").HasMaxLength(Coordinates.LNG_LEGTH_MAX);
+            builder.Property(c => c.Lng).IsRequired().HasColumnName("lng").HasColumnType($"decimal({Coordinates.LNG_PRECISION},{Coordinates.LNG_SCALE})"); ;
 
             builder.HasKey(c => c.Id);
 

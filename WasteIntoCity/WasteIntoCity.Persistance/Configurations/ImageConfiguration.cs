@@ -25,6 +25,8 @@ namespace WasteIntoCity.Persistance.Configurations
 
             builder.Property(i => i.WorkReportResultsId).HasColumnName("work_report_results_id");
 
+            builder.Property(i => i.UsersId).HasColumnName("users_id");
+
             builder.HasKey(i => i.Id);
 
             builder.HasIndex(i => i.Name).IsUnique();
@@ -37,6 +39,13 @@ namespace WasteIntoCity.Persistance.Configurations
 
             builder.HasOne(i => i.WorkReportResult)
                 .WithMany(wa => wa.Images);
+
+            builder.HasOne(i => i.User)
+                .WithOne(u => u.Image)
+                .HasForeignKey<ImageEntity>(u => u.UsersId);
+
+            builder.HasOne(i => i.Work)
+                .WithMany(w => w.Images);
         }
     }
 }

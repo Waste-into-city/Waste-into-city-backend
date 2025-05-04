@@ -1,6 +1,5 @@
 ﻿using WasteIntoCity.Core.Enums;
 using WasteIntoCity.Core.Models;
-using WasteIntoCity.Core.Types;
 using WasteIntoCity.Core.ValueObjects;
 
 
@@ -12,7 +11,7 @@ namespace WasteIntoCity.Persistance.DefaultInitData
         {
             Role.Create(RoleEnum.User, nameof(RoleEnum.User)),
             Role.Create(RoleEnum.Moderator, nameof(RoleEnum.Moderator)),
-            Role.Create(RoleEnum.SuperAdmin, nameof(RoleEnum.SuperAdmin)),
+            Role.Create(RoleEnum.Admin, nameof(RoleEnum.Admin)),
         };
 
         public static readonly WorkComplexityType[] WorkComplexityTypes = new WorkComplexityType[]
@@ -44,6 +43,15 @@ namespace WasteIntoCity.Persistance.DefaultInitData
             WorkStatusType.Create(WorkStatusEnum.FinishedSuccessfully, MeanText.Create(nameof(WorkStatusEnum.FinishedSuccessfully)), 0),
             WorkStatusType.Create(WorkStatusEnum.FinishedFailed, MeanText.Create(nameof(WorkStatusEnum.FinishedFailed)), 0),
             WorkStatusType.Create(WorkStatusEnum.Closed, MeanText.Create(nameof(WorkStatusEnum.Closed)), 0),
+        };
+
+        public static readonly TrashType[] TrashTypes = new TrashType[]
+        {
+            TrashType.Create(TrashEnum.Mixed, MeanText.Create(nameof(TrashEnum.Mixed))),
+            TrashType.Create(TrashEnum.Plastic, MeanText.Create(nameof(TrashEnum.Plastic))),
+            TrashType.Create(TrashEnum.Electronic, MeanText.Create(nameof(TrashEnum.Electronic))),
+            TrashType.Create(TrashEnum.Glass, MeanText.Create(nameof(TrashEnum.Glass))),
+            TrashType.Create(TrashEnum.Batteries, MeanText.Create(nameof(TrashEnum.Batteries))),
         };
 
         public static readonly ScoreSettingsType[] ScoreSettingsTypes = new ScoreSettingsType[]
@@ -110,7 +118,9 @@ namespace WasteIntoCity.Persistance.DefaultInitData
                     Role.Create(RoleEnum.Moderator, Roles.SingleOrDefault(w => w.Id == RoleEnum.Moderator)!.Name)
                 },
                 0,
-                false
+                false,
+                null,
+                null
             ),
             User.Create(
                 Guid.NewGuid(),
@@ -120,10 +130,12 @@ namespace WasteIntoCity.Persistance.DefaultInitData
                 0,
                 new List<Role>
                 {
-                    Role.Create(RoleEnum.SuperAdmin, Roles.SingleOrDefault(w => w.Id == RoleEnum.SuperAdmin)!.Name)
+                    Role.Create(RoleEnum.Admin, Roles.SingleOrDefault(w => w.Id == RoleEnum.Admin)!.Name)
                 },
                 0,
-                false
+                false,
+                null,
+                null
             ),
         };
     }

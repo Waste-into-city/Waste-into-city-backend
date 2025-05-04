@@ -7,7 +7,6 @@ using WasteIntoCity.Core.Enums;
 using WasteIntoCity.Core.Exceptions.InternalServer500Exceptions;
 using WasteIntoCity.Core.Interfaces.Repositories;
 using WasteIntoCity.Core.Models;
-using WasteIntoCity.Core.Types;
 using WasteIntoCity.Persistance.Repositories;
 
 namespace WasteIntoCity.Application.BackgroundServices
@@ -19,8 +18,8 @@ namespace WasteIntoCity.Application.BackgroundServices
 
         private readonly List<ScoreSettingsEnum> _scoreSettingsIds = new List<ScoreSettingsEnum>
         {
-            ScoreSettingsEnum.ProcessedWorkRankingSubstracting,
-            ScoreSettingsEnum.ProcessedWorkNegativeAdding,
+            ScoreSettingsEnum.PendingFinalizationWorkRankingSubstracting,
+            ScoreSettingsEnum.PendingFinalizationWorkNegativeAdding,
             ScoreSettingsEnum.UserBanRankingAtLeast,
         };
 
@@ -47,13 +46,13 @@ namespace WasteIntoCity.Application.BackgroundServices
 
                 if (participant.NegativeScore == 0)
                 {
-                    ranking = participant.Ranking - scoreSettingsValues[ScoreSettingsEnum.ProcessedWorkRankingSubstracting];
+                    ranking = participant.Ranking - scoreSettingsValues[ScoreSettingsEnum.PendingFinalizationWorkRankingSubstracting];
                     negativeScore = 1;
                 }
                 else
                 {
-                    ranking = participant.Ranking - scoreSettingsValues[ScoreSettingsEnum.ProcessedWorkRankingSubstracting] * negativeScore;
-                    negativeScore = participant.NegativeScore + scoreSettingsValues[ScoreSettingsEnum.ProcessedWorkNegativeAdding];
+                    ranking = participant.Ranking - scoreSettingsValues[ScoreSettingsEnum.PendingFinalizationWorkRankingSubstracting] * negativeScore;
+                    negativeScore = participant.NegativeScore + scoreSettingsValues[ScoreSettingsEnum.PendingFinalizationWorkNegativeAdding];
                 }
 
                 bool isBanned = false;
@@ -66,7 +65,7 @@ namespace WasteIntoCity.Application.BackgroundServices
                 }
 
                 updatedParticipants.Add(User.Create(participant.Id, participant.Nickname, participant.Email, participant.Password, ranking,
-                    participant.Roles, negativeScore, isBanned));
+                    participant.Roles, negativeScore, isBanned, null, null));
             }
 
             await usersRepository.UpdateAllByIdAsync(updatedParticipants);
@@ -74,7 +73,7 @@ namespace WasteIntoCity.Application.BackgroundServices
             await worksRepository.UpdateStatusIdByIdAsync(work.Id, WorkStatusEnum.Closed);
         }
 
-        private async Task ClosePendingFinalizationWorksAsync(IWorksRepository worksRepository, IScoreSettingsTypeRepository scoreSettingsTypeRepository,
+        private async Task ClosePendingFinalizationWorksAsync(IWorksRepository worksRepository, IScoreSettingsTypesRepository scoreSettingsTypeRepository,
             IUsersRepository usersRepository, RefreshTokensRepository refreshTokensRepository, CancellationToken stoppingToken)
         {
             List<Work> works = await worksRepository.FindFirstPendingFinalizationWorksWithParticipantsByFinishedTimeAndClientStatuses(
@@ -102,7 +101,7 @@ namespace WasteIntoCity.Application.BackgroundServices
                 using IServiceScope scope = _scopeFactory.CreateScope();
 
                 IWorksRepository worksRepository = scope.ServiceProvider.GetRequiredService<IWorksRepository>();
-                IScoreSettingsTypeRepository scoreSettingsTypeRepository = scope.ServiceProvider.GetRequiredService<IScoreSettingsTypeRepository>();
+                IScoreSettingsTypesRepository scoreSettingsTypeRepository = scope.ServiceProvider.GetRequiredService<IScoreSettingsTypesRepository>();
                 IUsersRepository usersRepository = scope.ServiceProvider.GetRequiredService<IUsersRepository>();
                 RefreshTokensRepository refreshTokensRepository = scope.ServiceProvider.GetRequiredService<RefreshTokensRepository>();
 

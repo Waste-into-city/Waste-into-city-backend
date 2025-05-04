@@ -7,7 +7,5 @@
         public TimeSpan IntervalTime { get; set; }
 
         public int WorksAtTimeAmount { get; set; }
-
-        public TimeSpan MinWorkIntervalBeforeStart { get; set; }
     }
 }

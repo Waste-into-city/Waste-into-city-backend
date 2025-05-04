@@ -8,7 +8,7 @@
 
         public string Description { get; set; } = string.Empty;
 
-        public DateTime StartedDatime { get; set; }
+        public DateTime StartedDatetime { get; set; }
 
         public Guid WorksId { get; set; }
 

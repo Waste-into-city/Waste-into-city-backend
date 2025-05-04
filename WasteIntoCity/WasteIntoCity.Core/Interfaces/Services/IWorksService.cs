@@ -6,7 +6,9 @@ namespace WasteIntoCity.Core.Interfaces.Services
     {
         Task<List<Work>> GetAll();
 
-        Task<Work> GetById(Guid id);
+        Task<(List<Work>, int)> GetAllLookup(int page, int pageSize);
+
+        Task<Work> GetByIdAsync(Guid id);
 
         Task<List<Work>> GetAllOwnTakePartIn(Guid userId);
 
@@ -14,5 +16,11 @@ namespace WasteIntoCity.Core.Interfaces.Services
             int workStatusesId, Guid coordinatesId);
 
         Task UpdateWorkStatusAsync(Guid id, int workStatusesId);
+
+        Task TakePartInFirstSelfAsync(Guid id, Guid userId, DateTime startedDatetime);
+
+        Task TakePartInSelfAsync(Guid id, Guid userId);
+
+        Task LeaveFromParticipationSelfAsync(Guid id, Guid userId);
     }
 }

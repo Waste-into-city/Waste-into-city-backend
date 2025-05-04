@@ -19,7 +19,7 @@ namespace WasteIntoCity.Persistance.Configurations
 
             builder.Property(w => w.Description).IsRequired().HasColumnName("description").HasMaxLength(WorkReportComplaint.DESCRIPTION_LENGTH_MAX);
 
-            builder.Property(w => w.StartedDatime).IsRequired().HasColumnName("started_datetime");
+            builder.Property(w => w.StartedDatetime).IsRequired().HasColumnName("started_datetime");
 
             builder.Property(w => w.WorksId).IsRequired().HasColumnName("works_id");
 

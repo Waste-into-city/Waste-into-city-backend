@@ -29,16 +29,12 @@ namespace WasteIntoCity.Persistance.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("id");
 
-                    b.Property<string>("Lat")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)")
+                    b.Property<decimal>("Lat")
+                        .HasColumnType("decimal(12,9)")
                         .HasColumnName("lat");
 
-                    b.Property<string>("Lng")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)")
+                    b.Property<decimal>("Lng")
+                        .HasColumnType("decimal(12,9)")
                         .HasColumnName("lng");
 
                     b.HasKey("Id");
@@ -63,6 +59,10 @@ namespace WasteIntoCity.Persistance.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("uploaded_time");
 
+                    b.Property<Guid?>("UsersId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("users_id");
+
                     b.Property<Guid?>("WorkApplicationsId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("work_applications_id");
@@ -75,16 +75,25 @@ namespace WasteIntoCity.Persistance.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("work_report_results_id");
 
+                    b.Property<Guid?>("WorksId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Name")
                         .IsUnique();
+
+                    b.HasIndex("UsersId")
+                        .IsUnique()
+                        .HasFilter("[users_id] IS NOT NULL");
 
                     b.HasIndex("WorkApplicationsId");
 
                     b.HasIndex("WorkReportComplaintsId");
 
                     b.HasIndex("WorkReportResultsId");
+
+                    b.HasIndex("WorksId");
 
                     b.ToTable("images", (string)null);
                 });
@@ -210,6 +219,29 @@ namespace WasteIntoCity.Persistance.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("score_settings_types", (string)null);
+                });
+
+            modelBuilder.Entity("WasteIntoCity.Persistance.Entities.TrashTypeEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("trash_types", (string)null);
                 });
 
             modelBuilder.Entity("WasteIntoCity.Persistance.Entities.TrashcanEntity", b =>
@@ -456,6 +488,9 @@ namespace WasteIntoCity.Persistance.Migrations
                         .HasColumnType("int")
                         .HasColumnName("work_report_status_types_id");
 
+                    b.Property<int>("WorkTypesId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CoordinatesId");
@@ -467,6 +502,23 @@ namespace WasteIntoCity.Persistance.Migrations
                     b.HasIndex("WorkReportStatusTypesId");
 
                     b.ToTable("work_applications", (string)null);
+                });
+
+            modelBuilder.Entity("WasteIntoCity.Persistance.Entities.WorkApplicationTrashTypeEntity", b =>
+                {
+                    b.Property<Guid>("WorksApplicationsId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("work_applications");
+
+                    b.Property<int>("TrashTypesId")
+                        .HasColumnType("int")
+                        .HasColumnName("trash_types_id");
+
+                    b.HasKey("WorksApplicationsId", "TrashTypesId");
+
+                    b.HasIndex("TrashTypesId");
+
+                    b.ToTable("work_applications_trash_types", (string)null);
                 });
 
             modelBuilder.Entity("WasteIntoCity.Persistance.Entities.WorkColleagueReportEntity", b =>
@@ -710,15 +762,31 @@ namespace WasteIntoCity.Persistance.Migrations
                         .HasColumnType("nvarchar(1)")
                         .HasColumnName("title");
 
+                    b.Property<int?>("WorkComplexityTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WorkComplexityTypesId")
+                        .HasColumnType("int")
+                        .HasColumnName("work_complexity_types_id");
+
                     b.Property<int>("WorkStatusTypesId")
                         .HasColumnType("int")
                         .HasColumnName("work_statuses_id");
+
+                    b.Property<Guid>("WorksId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("works_id");
 
                     b.HasKey("Id");
 
                     b.HasIndex("FromParticipantsId");
 
+                    b.HasIndex("WorkComplexityTypeId");
+
                     b.HasIndex("WorkStatusTypesId");
+
+                    b.HasIndex("WorksId")
+                        .IsUnique();
 
                     b.ToTable("work_report_results", (string)null);
                 });
@@ -770,8 +838,29 @@ namespace WasteIntoCity.Persistance.Migrations
                     b.ToTable("work_status_types", (string)null);
                 });
 
+            modelBuilder.Entity("WasteIntoCity.Persistance.Entities.WorkTrashTypeEntity", b =>
+                {
+                    b.Property<Guid>("WorksId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("works_id");
+
+                    b.Property<int>("TrashTypesId")
+                        .HasColumnType("int")
+                        .HasColumnName("trash_types_id");
+
+                    b.HasKey("WorksId", "TrashTypesId");
+
+                    b.HasIndex("TrashTypesId");
+
+                    b.ToTable("works_trash_types", (string)null);
+                });
+
             modelBuilder.Entity("WasteIntoCity.Persistance.Entities.ImageEntity", b =>
                 {
+                    b.HasOne("WasteIntoCity.Persistance.Entities.UserEntity", "User")
+                        .WithOne("Image")
+                        .HasForeignKey("WasteIntoCity.Persistance.Entities.ImageEntity", "UsersId");
+
                     b.HasOne("WasteIntoCity.Persistance.Entities.WorkApplicationEntity", "WorkApplication")
                         .WithMany("Images")
                         .HasForeignKey("WorkApplicationsId");
@@ -783,6 +872,14 @@ namespace WasteIntoCity.Persistance.Migrations
                     b.HasOne("WasteIntoCity.Persistance.Entities.WorkReportResultEntity", "WorkReportResult")
                         .WithMany("Images")
                         .HasForeignKey("WorkReportResultsId");
+
+                    b.HasOne("WasteIntoCity.Persistance.Entities.WorkEntity", "Work")
+                        .WithMany("Images")
+                        .HasForeignKey("WorksId");
+
+                    b.Navigation("User");
+
+                    b.Navigation("Work");
 
                     b.Navigation("WorkApplication");
 
@@ -926,6 +1023,19 @@ namespace WasteIntoCity.Persistance.Migrations
                     b.Navigation("WorkReportStatusType");
                 });
 
+            modelBuilder.Entity("WasteIntoCity.Persistance.Entities.WorkApplicationTrashTypeEntity", b =>
+                {
+                    b.HasOne("WasteIntoCity.Persistance.Entities.TrashTypeEntity", null)
+                        .WithMany()
+                        .HasForeignKey("TrashTypesId")
+                        .IsRequired();
+
+                    b.HasOne("WasteIntoCity.Persistance.Entities.WorkApplicationEntity", null)
+                        .WithMany()
+                        .HasForeignKey("WorksApplicationsId")
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("WasteIntoCity.Persistance.Entities.WorkColleagueReportEntity", b =>
                 {
                     b.HasOne("WasteIntoCity.Persistance.Entities.UserEntity", "UserAboutColleague")
@@ -1025,14 +1135,40 @@ namespace WasteIntoCity.Persistance.Migrations
                         .HasForeignKey("FromParticipantsId")
                         .IsRequired();
 
+                    b.HasOne("WasteIntoCity.Persistance.Entities.WorkComplexityTypeEntity", "WorkComplexityType")
+                        .WithMany("WorkReportResults")
+                        .HasForeignKey("WorkComplexityTypeId");
+
                     b.HasOne("WasteIntoCity.Persistance.Entities.WorkStatusTypeEntity", "WorkStatusType")
                         .WithMany("WorkReportResults")
                         .HasForeignKey("WorkStatusTypesId")
                         .IsRequired();
 
+                    b.HasOne("WasteIntoCity.Persistance.Entities.WorkEntity", "Work")
+                        .WithOne("WorkReportResult")
+                        .HasForeignKey("WasteIntoCity.Persistance.Entities.WorkReportResultEntity", "WorksId")
+                        .IsRequired();
+
                     b.Navigation("FromParticipant");
 
+                    b.Navigation("Work");
+
+                    b.Navigation("WorkComplexityType");
+
                     b.Navigation("WorkStatusType");
+                });
+
+            modelBuilder.Entity("WasteIntoCity.Persistance.Entities.WorkTrashTypeEntity", b =>
+                {
+                    b.HasOne("WasteIntoCity.Persistance.Entities.TrashTypeEntity", null)
+                        .WithMany()
+                        .HasForeignKey("TrashTypesId")
+                        .IsRequired();
+
+                    b.HasOne("WasteIntoCity.Persistance.Entities.WorkEntity", null)
+                        .WithMany()
+                        .HasForeignKey("WorksId")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("WasteIntoCity.Persistance.Entities.CoordinatesEntity", b =>
@@ -1070,6 +1206,8 @@ namespace WasteIntoCity.Persistance.Migrations
 
             modelBuilder.Entity("WasteIntoCity.Persistance.Entities.UserEntity", b =>
                 {
+                    b.Navigation("Image");
+
                     b.Navigation("NotificationsFrom");
 
                     b.Navigation("NotificationsTo");
@@ -1098,14 +1236,20 @@ namespace WasteIntoCity.Persistance.Migrations
                 {
                     b.Navigation("WorkApplications");
 
+                    b.Navigation("WorkReportResults");
+
                     b.Navigation("Works");
                 });
 
             modelBuilder.Entity("WasteIntoCity.Persistance.Entities.WorkEntity", b =>
                 {
+                    b.Navigation("Images");
+
                     b.Navigation("WorkColleagueReports");
 
                     b.Navigation("WorkReportComplaints");
+
+                    b.Navigation("WorkReportResult");
                 });
 
             modelBuilder.Entity("WasteIntoCity.Persistance.Entities.WorkMarkTypeEntity", b =>

@@ -1,7 +1,6 @@
-﻿using WasteIntoCity.Core.Enums;
+﻿using Microsoft.AspNetCore.Http;
+using WasteIntoCity.Core.Enums;
 using WasteIntoCity.Core.Exceptions.BadRequest400Exceptions;
-using WasteIntoCity.Core.Extensions;
-using WasteIntoCity.Core.Types;
 using WasteIntoCity.Core.ValueObjects;
 
 namespace WasteIntoCity.Core.Models
@@ -19,7 +18,7 @@ namespace WasteIntoCity.Core.Models
         private Work(Guid id, Title title, Description description, DateTime? startedDatetime, DateTime? finishDatetime, WorkComplexityEnum workComplexityTypesId,
             WorkStatusEnum workStatusTypesId, Guid coordinatesId, List<User>? participants, Coordinates? coordinates,
             WorkComplexityType? workComplexityType, List<WorkColleagueReport>? workColleagueReports, WorkStatusType? workStatusType,
-            WorkReportResult? workReportResult)
+            WorkReportResult? workReportResult, List<ImageName>? imageNames, List<IFormFile>? imageFiles, List<TrashEnum>? trashTypesIds)
         {
             Id = id;
             Title = title;
@@ -36,6 +35,9 @@ namespace WasteIntoCity.Core.Models
             WorkStatusType = workStatusType;
             WorkReportResult = workReportResult;
             WorkStatusForClient = null;
+            ImageNames = imageNames;
+            ImageFiles = imageFiles;
+            TrashTypesIds = trashTypesIds;
         }
 
         public Guid Id { get; }
@@ -68,15 +70,16 @@ namespace WasteIntoCity.Core.Models
 
         public WorkStatusForClientEnum? WorkStatusForClient { get; }
 
-        public WorkStatusForClientEnum TakeStatusForClientEnum()
-        {
-            return EnumOperationsExtension.TakeWorkStatusForClientEnum(StartedDatetime, FinishDatetime, WorkStatusTypesId);
-        }
+        public List<ImageName>? ImageNames { get; }
+
+        public List<IFormFile>? ImageFiles { get; }
+
+        public List<TrashEnum>? TrashTypesIds { get; }
 
         public static Work Create(Guid id, Title title, Description description, DateTime? startedDatetime, DateTime? finishDatetime,
             WorkComplexityEnum workComplexityTypesId, WorkStatusEnum workStatusTypesId, Guid coordinatesId, List<User>? participants,
             Coordinates? coordinates, WorkComplexityType? workComplexityType, List<WorkColleagueReport>? workColleagueReports, WorkStatusType? workStatusType,
-            WorkReportResult? workReportResult)
+            WorkReportResult? workReportResult, List<ImageName>? imageNames, List<IFormFile>? imageFiles, List<TrashEnum>? trashTypesIds)
         {
             if (startedDatetime > finishDatetime)
             {
@@ -89,8 +92,9 @@ namespace WasteIntoCity.Core.Models
                     "finish datetime and startedDatetime should be null or both should be not null", 44);
             }
 
-            return new Work(id, title, description, startedDatetime, finishDatetime, workComplexityTypesId, workStatusTypesId, coordinatesId,
-                participants, coordinates, workComplexityType, workColleagueReports, workStatusType, workReportResult);
+            return new Work(id, title, description, startedDatetime, finishDatetime, workComplexityTypesId, workStatusTypesId,
+                coordinatesId, participants, coordinates, workComplexityType, workColleagueReports, workStatusType, workReportResult,
+                imageNames, imageFiles, trashTypesIds);
         }
     }
 }

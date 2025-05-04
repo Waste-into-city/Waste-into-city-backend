@@ -13,7 +13,7 @@ namespace WasteIntoCity.Persistance.Repositories
             _mainDbContext = mainDbContext;
         }
 
-        public async Task AddAsync(Coordinates coordinates)
+        public async Task CreateAsync(Coordinates coordinates)
         {
             CoordinatesEntity coordinatesEntity = new CoordinatesEntity
             {

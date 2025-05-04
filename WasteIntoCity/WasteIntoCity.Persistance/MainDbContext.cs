@@ -57,7 +57,7 @@ namespace WasteIntoCity.Persistance
 
         public DbSet<WorkMarkTypeEntity> WorkMarkTypes { get; set; }
 
-        public DbSet<WorkParticipantEntity> WorkParticipants { get; set; }
+        public DbSet<WorkParticipantEntity> WorksParticipants { get; set; }
 
         public DbSet<WorkReportComplaintEntity> WorkReportComplaints { get; set; }
 
@@ -66,6 +66,12 @@ namespace WasteIntoCity.Persistance
         public DbSet<WorkReportResultEntity> WorkReportResults { get; set; }
 
         public DbSet<WorkStatusTypeEntity> WorkStatusTypes { get; set; }
+
+        public DbSet<TrashTypeEntity> TrashTypes { get; set; }
+
+        public DbSet<WorkApplicationTrashTypeEntity> WorkApplicationsTrashTypes { get; set; }
+
+        public DbSet<WorkTrashTypeEntity> WorksTrashTypes { get; set; }
 
         protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
         {

@@ -31,11 +31,11 @@ namespace WasteIntoCity.Api.AuthorizationPolicies.Handlers
                 return;
             }
 
-            if (!roles.Contains(nameof(RoleEnum.Moderator)) && !roles.Contains(nameof(RoleEnum.SuperAdmin)) && roles.Contains(nameof(RoleEnum.User)))
+            if (!roles.Contains(nameof(RoleEnum.Moderator)) && !roles.Contains(nameof(RoleEnum.Admin)) && roles.Contains(nameof(RoleEnum.User)))
             {
                 if (Guid.TryParse(context.User.Claims.Single(x => x.Type == "id").Value, out Guid parsedGuid))
                 {
-                    User user = await _usersRepository.FindByIdWithRolesAsync(parsedGuid);
+                    User user = await _usersRepository.FindWithRolesByIdAsync(parsedGuid);
 
                     if (user.Ranking < requirement.RankingMin)
                     {
