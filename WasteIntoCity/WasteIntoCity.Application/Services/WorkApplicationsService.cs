@@ -31,13 +31,13 @@ namespace WasteIntoCity.Application.Services
         private readonly RefreshTokensRepository _refreshTokensRepository;
         private readonly IWorkComplexityTypesRepository _workComplexityTypesRepository;
         private readonly IWorksRepository _worksRepository;
-        private readonly IScoreSettingsTypeRepository _scoreSettingsTypeRepository;
+        private readonly IScoreSettingsTypesRepository _scoreSettingsTypeRepository;
         private readonly IImagesRepository _imagesRepository;
 
 
         public WorkApplicationsService(IWorkApplicationsRepository workApplicationsRepository, ICoordinatesRepository coordinatesRepository,
             IUsersRepository usersRepository, RefreshTokensRepository refreshTokensRepository, IWorkComplexityTypesRepository workComplexityTypesRepository,
-            IWorksRepository worksRepository, IScoreSettingsTypeRepository scoreSettingsTypeRepository, IImagesRepository imagesRepository)
+            IWorksRepository worksRepository, IScoreSettingsTypesRepository scoreSettingsTypeRepository, IImagesRepository imagesRepository)
         {
             _workApplicationsRepository = workApplicationsRepository;
             _coordinatesRepository = coordinatesRepository;

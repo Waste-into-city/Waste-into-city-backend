@@ -12,7 +12,7 @@ namespace WasteIntoCity.Application.Services
     public class WorkReportComplaintsService : IWorkReportComplaintsService
     {
         private readonly IWorkReportComplaintsRepository _workReportComplaintsRepository;
-        private readonly IScoreSettingsTypeRepository _scoreSettingsTypeRepository;
+        private readonly IScoreSettingsTypesRepository _scoreSettingsTypeRepository;
         private readonly IUsersRepository _usersRepository;
         private readonly IWorksRepository _worksRepository;
         private readonly RefreshTokensRepository _refreshTokensRepository;
@@ -31,7 +31,7 @@ namespace WasteIntoCity.Application.Services
         };
 
         public WorkReportComplaintsService(IWorkReportComplaintsRepository workReportComplaintsRepository,
-            IScoreSettingsTypeRepository scoreSettingsTypeRepository, IUsersRepository usersRepository, IWorksRepository worksRepository,
+            IScoreSettingsTypesRepository scoreSettingsTypeRepository, IUsersRepository usersRepository, IWorksRepository worksRepository,
             RefreshTokensRepository refreshTokensRepository)
         {
             _workReportComplaintsRepository = workReportComplaintsRepository;

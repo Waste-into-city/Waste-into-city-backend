@@ -105,6 +105,8 @@
             public const string UPLOAD = $"{BASE}/{CONTROLLER_NAME}/upload";
 
             public const string GET_BY_NAME = $$"""{{BASE}}/{{CONTROLLER_NAME}}/get-by-name/{name}""";
+
+            public const string GET_BY_NAMES = $"{BASE}/{CONTROLLER_NAME}/get-by-names";
         }
 
         public static class WorkColleagueReports
@@ -114,6 +116,15 @@
             public const string CREATE_MARKS = $"{BASE}/{CONTROLLER_NAME}/create-marks";
 
             public const string GET_ALL_BY_WORKS_ID = $$"""{{BASE}}/{{CONTROLLER_NAME}}/get-all-works-by-id/{worksId:Guid}""";
+        }
+
+        public static class AdminPanel
+        {
+            private const string CONTROLLER_NAME = "admin-panel";
+
+            public const string SAVE_ALL_DATA = $"{BASE}/{CONTROLLER_NAME}/save-all-data";
+
+            public const string GET_ALL_DATA = $"{BASE}/{CONTROLLER_NAME}/get-all-data";
         }
     }
 }

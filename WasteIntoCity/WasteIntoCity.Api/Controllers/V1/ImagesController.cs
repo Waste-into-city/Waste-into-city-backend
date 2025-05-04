@@ -5,6 +5,7 @@ using WasteIntoCity.Api.Contracts.V1.Requests;
 using WasteIntoCity.Api.Contracts.V1.Responses;
 using WasteIntoCity.Application;
 using WasteIntoCity.Core.Interfaces.Services;
+using WasteIntoCity.Core.Structs;
 
 namespace WasteIntoCity.Api.Controllers.V1
 {
@@ -31,13 +32,40 @@ namespace WasteIntoCity.Api.Controllers.V1
             return Ok(imageUploadResponse);
         }
 
-        [Authorize(Policy = PolicyType.HONEST_USER)]
+        [AllowAnonymous]
         [HttpGet(ApiRoutes.Images.GET_BY_NAME)]
         public IActionResult GetImageByName(string name)
         {
-            (Stream imageStream, string mimeType) = _imageService.GetImageStreamAndMimeTypeAsync(name);
+            ImagesDataStruct imagesDataStruct = _imageService.GetImageStreamAndMimeTypeAsync(name);
 
-            return File(imageStream, mimeType);
+            return File(imagesDataStruct.ImageStream, imagesDataStruct.MimeType);
+        }
+
+        [AllowAnonymous]
+        [HttpPost(ApiRoutes.Images.GET_BY_NAMES)]
+        public async Task<IActionResult> GetImagesByNames([FromBody] ImagesGetImagesByNamesRequest imagesGetImagesByNamesRequest)
+        {
+            var result = new List<ImagesGetByImagesByNamesResponse>();
+
+            List<ImagesDataStruct> imageDataStructs = _imageService.GetImageStreamsAndMimeTypes(imagesGetImagesByNamesRequest.Names);
+
+            foreach (var s in imageDataStructs)
+            {
+                using var ms = new MemoryStream();
+                await s.ImageStream.CopyToAsync(ms);
+                string base64 = Convert.ToBase64String(ms.ToArray());
+
+                result.Add(new ImagesGetByImagesByNamesResponse
+                {
+                    Name = s.FileName,
+                    MimeType = s.MimeType,
+                    Base64 = $"data:{s.MimeType};base64,{base64}"
+                });
+
+                s.ImageStream.Dispose();
+            }
+
+            return Ok(result);
         }
     }
 }

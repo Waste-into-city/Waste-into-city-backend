@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using WasteIntoCity.Core.Structs;
 
 namespace WasteIntoCity.Core.Interfaces.Services
 {
@@ -6,6 +7,8 @@ namespace WasteIntoCity.Core.Interfaces.Services
     {
         Task<string> SaveImageAsync(IFormFile file);
 
-        (Stream imageStream, string mimeType) GetImageStreamAndMimeTypeAsync(string fileName);
+        ImagesDataStruct GetImageStreamAndMimeTypeAsync(string fileName);
+
+        List<ImagesDataStruct> GetImageStreamsAndMimeTypes(List<string> fileNames);
     }
 }

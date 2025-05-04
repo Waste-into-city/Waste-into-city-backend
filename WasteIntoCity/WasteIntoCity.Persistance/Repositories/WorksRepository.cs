@@ -298,7 +298,7 @@ namespace WasteIntoCity.Persistance.Repositories
                     {
                         if (wc.WorkMarkType is null)
                         {
-                            throw new DbIsNotFoundException(nameof(WorkComplexityType), 19, null);
+                            throw new DbIsNotFoundException(nameof(WorkComplexityType), 20, null);
                         }
 
                         return WorkColleagueReport.Create(

@@ -73,7 +73,7 @@ namespace WasteIntoCity.Application.BackgroundServices
             await worksRepository.UpdateStatusIdByIdAsync(work.Id, WorkStatusEnum.Closed);
         }
 
-        private async Task ClosePendingFinalizationWorksAsync(IWorksRepository worksRepository, IScoreSettingsTypeRepository scoreSettingsTypeRepository,
+        private async Task ClosePendingFinalizationWorksAsync(IWorksRepository worksRepository, IScoreSettingsTypesRepository scoreSettingsTypeRepository,
             IUsersRepository usersRepository, RefreshTokensRepository refreshTokensRepository, CancellationToken stoppingToken)
         {
             List<Work> works = await worksRepository.FindFirstPendingFinalizationWorksWithParticipantsByFinishedTimeAndClientStatuses(
@@ -101,7 +101,7 @@ namespace WasteIntoCity.Application.BackgroundServices
                 using IServiceScope scope = _scopeFactory.CreateScope();
 
                 IWorksRepository worksRepository = scope.ServiceProvider.GetRequiredService<IWorksRepository>();
-                IScoreSettingsTypeRepository scoreSettingsTypeRepository = scope.ServiceProvider.GetRequiredService<IScoreSettingsTypeRepository>();
+                IScoreSettingsTypesRepository scoreSettingsTypeRepository = scope.ServiceProvider.GetRequiredService<IScoreSettingsTypesRepository>();
                 IUsersRepository usersRepository = scope.ServiceProvider.GetRequiredService<IUsersRepository>();
                 RefreshTokensRepository refreshTokensRepository = scope.ServiceProvider.GetRequiredService<RefreshTokensRepository>();
 
