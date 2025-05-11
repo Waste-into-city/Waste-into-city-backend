@@ -2,16 +2,21 @@ using WasteIntoCity.Api.Extensions.BuilderExtensions;
 using WasteIntoCity.Api.Extensions.ServiceExtensions;
 using WasteIntoCity.Api.Middleware;
 
-var builder = WebApplication.CreateBuilder(args);
+DotNetEnv.Env.Load();
+
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 IConfiguration configuration = builder.Configuration;
 IServiceCollection services = builder.Services;
+
+string[]? allowedOrigins = Environment.GetEnvironmentVariable("CORS_ALLOWED_ORIGINS")
+    ?.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 
 services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy", builder =>
     {
-        builder.AllowAnyOrigin()
+        builder.SetIsOriginAllowed(origin => allowedOrigins?.Contains(origin) ?? true)
                .AllowCredentials()
                .AllowAnyHeader()
                .AllowAnyMethod();
