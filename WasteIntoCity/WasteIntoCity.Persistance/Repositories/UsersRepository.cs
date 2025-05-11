@@ -119,12 +119,12 @@ namespace WasteIntoCity.Persistance.Repositories
             UserEntity userEntity = await _mainDbContext.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Id == id)
                 ?? throw new DbIsNotFoundException(nameof(User), 11, null);
 
-            ImageEntity imageEntity = await _mainDbContext.Images.AsNoTracking().FirstOrDefaultAsync(i => i.UsersId == id)
-                ?? throw new DbIsNotFoundException(nameof(User), 12, null);
+            ImageEntity? imageEntity = await _mainDbContext.Images.AsNoTracking().FirstOrDefaultAsync(i => i.UsersId == id);
+            //?? throw new DbIsNotFoundException(nameof(Image), 12, null);
 
             return User.Create(userEntity.Id, Nickname.Create(userEntity.Nickname), Email.Create(userEntity.Email),
                 Password.Create(userEntity.Password), userEntity.Ranking, null, userEntity.NegativeScore, userEntity.IsBanned,
-                ImageName.Create(imageEntity.Name), null);
+                imageEntity == null ? null : ImageName.Create(imageEntity.Name), null);
         }
 
         public async Task UpdateByIdAsync(User user)
