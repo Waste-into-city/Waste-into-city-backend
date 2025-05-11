@@ -130,7 +130,7 @@ namespace WasteIntoCity.Api.Controllers.V1
                 };
             }).ToList();
 
-            ByPageResponse<WorksGetAllLookupResponse> workGetByIdResponse = new ByPageResponse<WorksGetAllLookupResponse>
+            BySkipItemsResponse<WorksGetAllLookupResponse> workGetByIdResponse = new BySkipItemsResponse<WorksGetAllLookupResponse>
             {
                 SkippedItems = skipItems + size,
                 Size = size,

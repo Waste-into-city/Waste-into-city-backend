@@ -1,6 +1,6 @@
 ﻿namespace WasteIntoCity.Api.Contracts.V1.Responses
 {
-    public record ByPageResponse<T>
+    public record BySkipItemsResponse<T>
     {
         required public int SkippedItems { get; init; }
 

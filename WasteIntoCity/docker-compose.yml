@@ -88,6 +88,6 @@ services:
     volumes:
       - mssql_data:/var/opt/mssql
 
-# volumes:
-#   mssql_data:
+volumes:
+  mssql_data:
 

@@ -149,7 +149,7 @@ namespace WasteIntoCity.Application.Controllers.V1
                 Ranking = u.Ranking
             }).ToList();
 
-            ByPageResponse<IdentityGetLeaderboardByPageResponse> byPageResponse = new ByPageResponse<IdentityGetLeaderboardByPageResponse>
+            BySkipItemsResponse<IdentityGetLeaderboardByPageResponse> byPageResponse = new BySkipItemsResponse<IdentityGetLeaderboardByPageResponse>
             {
                 SkippedItems = skipItems + size,
                 Size = size,
