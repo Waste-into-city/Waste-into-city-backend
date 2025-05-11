@@ -8,30 +8,34 @@
 
         WorkNegativeSubstracting = 3,
 
-        WorkApplicationRankingSubstracting = 4,
+        WorkRankingAdding = 4,
 
-        WorkApplicationNegativeAddingMultiplier = 5,
+        WorkRankingSubstracting = 5,
 
-        WorkApplicationRankingAdding = 6,
+        WorkApplicationRankingSubstracting = 6,
 
-        WorkApplicationNegativeSubstracting = 7,
+        WorkApplicationNegativeAddingMultiplier = 7,
 
-        UserBanRankingAtLeast = 8,
+        WorkApplicationRankingAdding = 8,
 
-        PendingFinalizationWorkRankingSubstracting = 9,
+        WorkApplicationNegativeSubstracting = 9,
 
-        PendingFinalizationWorkNegativeAdding = 10,
+        UserBanRankingAtLeast = 10,
 
-        WorkComplaintNegativeSubstracting = 11,
+        PendingFinalizationWorkRankingSubstracting = 11,
 
-        WorkComplaintParticipantNegativeAddingMultiplier = 12,
+        PendingFinalizationWorkNegativeAdding = 12,
 
-        WorkComplaintUserNegativeAddingMultiplier = 12,
+        WorkComplaintUserNegativeSubstracting = 13,
 
-        WorkComplaintParticipantRankingSubstracting = 13,
+        WorkComplaintParticipantNegativeAddingMultiplier = 14,
 
-        WorkComplaintUserRankingSubstracting = 13,
+        WorkComplaintUserNegativeAddingMultiplier = 15,
 
-        WorkComplaintUserRankingAdding = 14,
+        WorkComplaintParticipantRankingSubstracting = 16,
+
+        WorkComplaintUserRankingSubstracting = 17,
+
+        WorkComplaintUserRankingAdding = 18,
     }
 }

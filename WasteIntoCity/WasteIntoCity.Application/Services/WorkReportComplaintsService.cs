@@ -75,7 +75,7 @@ namespace WasteIntoCity.Application.Services
             User complaintUser = await _usersRepository.FindByIdAsync(workReportComplaint.FromUsersId);
 
             int negativeScore = Math.Max(0, complaintUser.NegativeScore -
-                scoreSettingsValues[ScoreSettingsEnum.WorkNegativeSubstracting]);
+                scoreSettingsValues[ScoreSettingsEnum.WorkComplaintUserNegativeSubstracting]);
 
             int ranking = complaintUser.Ranking + scoreSettingsValues[ScoreSettingsEnum.WorkComplaintUserRankingAdding];
 
@@ -104,7 +104,7 @@ namespace WasteIntoCity.Application.Services
                 }
                 else
                 {
-                    ranking = participant.Ranking - (scoreSettingsValues[ScoreSettingsEnum.WorkApplicationRankingSubstracting] *
+                    ranking = participant.Ranking - (scoreSettingsValues[ScoreSettingsEnum.WorkComplaintParticipantRankingSubstracting] *
                         participant.NegativeScore);
                     negativeScore = participant.NegativeScore *
                         scoreSettingsValues[ScoreSettingsEnum.WorkComplaintParticipantNegativeAddingMultiplier];
@@ -141,10 +141,21 @@ namespace WasteIntoCity.Application.Services
 
             User complaintUser = await _usersRepository.FindByIdAsync(workReportComplaint.FromUsersId);
 
-            int negativeScore = Math.Max(0, complaintUser.NegativeScore -
-                scoreSettingsValues[ScoreSettingsEnum.WorkNegativeSubstracting]);
-
-            int ranking = complaintUser.Ranking + scoreSettingsValues[ScoreSettingsEnum.WorkComplaintUserRankingAdding];
+            int negativeScore;
+            int ranking;
+            if (complaintUser.NegativeScore == 0)
+            {
+                negativeScore = 1;
+                ranking = complaintUser.Ranking - (scoreSettingsValues[ScoreSettingsEnum.WorkComplaintUserRankingSubstracting]
+                    * complaintUser.NegativeScore);
+            }
+            else
+            {
+                ranking = complaintUser.Ranking - (scoreSettingsValues[ScoreSettingsEnum.WorkComplaintUserRankingSubstracting] *
+                    complaintUser.NegativeScore);
+                negativeScore = complaintUser.NegativeScore *
+                    scoreSettingsValues[ScoreSettingsEnum.WorkComplaintUserNegativeAddingMultiplier];
+            }
 
             bool isBanned = false;
             if (ranking <= scoreSettingsValues[ScoreSettingsEnum.UserBanRankingAtLeast])
