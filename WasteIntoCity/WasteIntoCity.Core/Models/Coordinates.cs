@@ -4,13 +4,13 @@ namespace WasteIntoCity.Core.Models
 {
     public class Coordinates
     {
-        public const int LAT_PRECISION = 12;
+        public const int LAT_PRECISION = 20;
 
-        public const int LAT_SCALE = 9;
+        public const int LAT_SCALE = 17;
 
-        public const int LNG_PRECISION = 12;
+        public const int LNG_PRECISION = 20;
 
-        public const int LNG_SCALE = 9;
+        public const int LNG_SCALE = 17;
 
         private Coordinates(Guid id, decimal lat, decimal lng)
         {
