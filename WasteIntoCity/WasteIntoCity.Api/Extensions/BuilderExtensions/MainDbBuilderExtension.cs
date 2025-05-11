@@ -15,6 +15,7 @@ namespace WasteIntoCity.Api.Extensions.BuilderExtensions
             await scope.ServiceProvider.GetRequiredService<IWorkReportStatusTypesRepository>().AddAllIfEachNotExist(DefaultData.WorkReportStatusTypes.ToList());
             await scope.ServiceProvider.GetRequiredService<IWorkStatusTypesRepository>().AddAllIfEachNotExist(DefaultData.WorkStatusTypes.ToList());
             await scope.ServiceProvider.GetRequiredService<IScoreSettingsTypesRepository>().AddAllIfEachNotExist(DefaultData.ScoreSettingsTypes.ToList());
+            await scope.ServiceProvider.GetRequiredService<ITrashTypesRepository>().AddAllIfEachNotExist(DefaultData.TrashTypes.ToList());
 
             await scope.ServiceProvider.GetRequiredService<IUsersRepository>().AddAllIfNotExistWithRolesByEmailAsync(DefaultData.Users.ToList());
 

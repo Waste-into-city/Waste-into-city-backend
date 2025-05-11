@@ -33,6 +33,7 @@ namespace WasteIntoCity.Persistance.Repositories
             };
 
             await _mainDbContext.WorkApplications.AddAsync(workApplicationEntity);
+            await _mainDbContext.SaveChangesAsync();
 
             if (workApplication.TrashTypesIds != null)
             {

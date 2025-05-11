@@ -1,17 +1,14 @@
-﻿using AutoMapper;
+﻿using WasteIntoCity.Core.Interfaces.Repositories;
 
 namespace WasteIntoCity.Persistance.Repositories
 {
-    public class TrashcanTypesRepository
+    public class TrashcanTypesRepository : ITrashcanTypesRepository
     {
         private readonly MainDbContext _mainDbContext;
 
-        private readonly IMapper _mapper;
-
-        public TrashcanTypesRepository(MainDbContext mainDbContext, IMapper mapper)
+        public TrashcanTypesRepository(MainDbContext mainDbContext)
         {
             _mainDbContext = mainDbContext;
-            _mapper = mapper;
         }
     }
 }

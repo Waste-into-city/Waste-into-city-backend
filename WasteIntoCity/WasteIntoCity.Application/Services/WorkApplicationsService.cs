@@ -67,8 +67,8 @@ namespace WasteIntoCity.Application.Services
                 (WorkComplexityEnum)workComplexityId, coordinates.Id, DateTime.UtcNow, userId, WorkReportStatusEnum.Pending, trashTypes,
                 null, null, null);
 
-            await _workApplicationsRepository.CreateAsync(workApplication);
             await _coordinatesRepository.CreateAsync(coordinates);
+            await _workApplicationsRepository.CreateAsync(workApplication);
             await _imagesRepository.UpdateWorkApplicationsIdByNamesAsync(imageNames, workApplication.Id);
         }
 

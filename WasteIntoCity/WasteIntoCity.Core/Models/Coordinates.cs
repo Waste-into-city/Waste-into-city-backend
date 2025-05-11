@@ -43,13 +43,13 @@ namespace WasteIntoCity.Core.Models
 
         public static Coordinates Create(Guid id, decimal lat, decimal lng)
         {
-            if (IsValidDecimal(lat, LAT_PRECISION, LAT_SCALE))
+            if (!IsValidDecimal(lat, LAT_PRECISION, LAT_SCALE))
             {
                 throw new ValueOutOfRangeException<decimal>($"{nameof(lat)} of {nameof(Coordinates)}",
                     $"precision = {LAT_PRECISION}, scale = {LAT_SCALE}", 19);
             }
 
-            if (IsValidDecimal(lng, LNG_PRECISION, LNG_SCALE))
+            if (!IsValidDecimal(lng, LNG_PRECISION, LNG_SCALE))
             {
                 throw new ValueOutOfRangeException<decimal>($"{nameof(lng)} of {nameof(Coordinates)}",
                     $"precision = {LNG_PRECISION}, scale = {LNG_SCALE}", 20);
