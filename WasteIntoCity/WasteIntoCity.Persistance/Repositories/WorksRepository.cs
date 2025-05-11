@@ -69,9 +69,9 @@ namespace WasteIntoCity.Persistance.Repositories
             return await _mainDbContext.Works.AsNoTracking().CountAsync();
         }
 
-        public async Task<List<Work>> FindAllWithCoordinatesByPageAsync(int page, int pageSize)
+        public async Task<List<Work>> FindAllWithCoordinatesBySkipItemsAndSizeAsync(int skipItems, int size)
         {
-            List<WorkEntity> workEntities = await _mainDbContext.Works.AsNoTracking().Skip((page - 1) * pageSize).Take(pageSize)
+            List<WorkEntity> workEntities = await _mainDbContext.Works.AsNoTracking().Skip(skipItems).Take(size)
                 .Include(w => w.Coordinates).ToListAsync();
 
             List<Work> works = workEntities.Select(work =>

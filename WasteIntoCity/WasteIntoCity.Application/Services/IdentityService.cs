@@ -200,11 +200,11 @@ namespace WasteIntoCity.Application.Services
             return await _userRepository.FindWithImageById(userId);
         }
 
-        public async Task<(List<User>, int)> GetLeaderboardByPage(int page, int pageSize)
+        public async Task<(List<User>, int)> GetLeaderboardBySkipItemsAndSize(int skipItems, int size)
         {
             int total = await _userRepository.CountByUserRoleAsync();
 
-            List<User> users = await _userRepository.FindAllByRoleUserAndRankingDescendingAndPageAsync(page, pageSize);
+            List<User> users = await _userRepository.FindAllByRoleUserAndRankingDescendingBySkipItemsAndSizeAsync(skipItems, size);
 
             return (users, total);
         }

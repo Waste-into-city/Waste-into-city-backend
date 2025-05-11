@@ -31,7 +31,7 @@ namespace WasteIntoCity.Application.Services
         {
             int total = await _worksRepository.CountAsync();
 
-            List<Work> works = await _worksRepository.FindAllWithCoordinatesByPageAsync(page, pageSize);
+            List<Work> works = await _worksRepository.FindAllWithCoordinatesBySkipItemsAndSizeAsync(page, pageSize);
 
             return (works, total);
         }

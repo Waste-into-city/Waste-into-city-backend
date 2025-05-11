@@ -20,6 +20,6 @@ namespace WasteIntoCity.Core.Interfaces.Services
 
         Task<User> GetUserInfoForAdmin(Guid userId);
 
-        Task<(List<User>, int)> GetLeaderboardByPage(int page, int pageSize);
+        Task<(List<User>, int)> GetLeaderboardBySkipItemsAndSize(int page, int pageSize);
     }
 }

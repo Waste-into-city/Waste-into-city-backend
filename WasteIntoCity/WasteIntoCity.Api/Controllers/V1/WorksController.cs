@@ -110,9 +110,9 @@ namespace WasteIntoCity.Api.Controllers.V1
 
         [AllowAnonymous]
         [HttpGet(ApiRoutes.Works.GET_ALL_LOOKUP)]
-        public async Task<IActionResult> GetAllLookup([FromQuery] int page, [FromQuery] int pageSize)
+        public async Task<IActionResult> GetAllLookup([FromQuery] int skipItems, [FromQuery] int size)
         {
-            (List<Work> works, int total) = await _workService.GetAllLookup(page, pageSize);
+            (List<Work> works, int total) = await _workService.GetAllLookup(skipItems, size);
 
             List<WorksGetAllLookupResponse> items = works.Select(w =>
             {
@@ -132,8 +132,8 @@ namespace WasteIntoCity.Api.Controllers.V1
 
             ByPageResponse<WorksGetAllLookupResponse> workGetByIdResponse = new ByPageResponse<WorksGetAllLookupResponse>
             {
-                PageSize = pageSize,
-                Page = page,
+                SkippedItems = skipItems + size,
+                Size = size,
                 Total = total,
                 Items = items
             };

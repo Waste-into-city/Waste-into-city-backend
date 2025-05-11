@@ -68,11 +68,11 @@ namespace WasteIntoCity.Persistance.Repositories
                 .CountAsync();
         }
 
-        public async Task<List<User>> FindAllByRoleUserAndRankingDescendingAndPageAsync(int page, int pageSize)
+        public async Task<List<User>> FindAllByRoleUserAndRankingDescendingBySkipItemsAndSizeAsync(int skipItems, int size)
         {
-            List<UserEntity> userEntities = await _mainDbContext.Users.AsNoTracking().OrderByDescending(u => u.Ranking).Include(u => u.Roles).
-                Where(u => u.Roles.Any(r => r.Id == (int)RoleEnum.User)).Skip((page - 1) * pageSize).Take(pageSize)
-                .ToListAsync();
+            List<UserEntity> userEntities = await _mainDbContext.Users.AsNoTracking().OrderByDescending(u => u.Ranking).
+                Include(u => u.Roles).Where(u => u.Roles.Any(r => r.Id == (int)RoleEnum.User)).Skip(skipItems).
+                Take(size).ToListAsync();
 
             List<User> users = userEntities.Select(u =>
             {

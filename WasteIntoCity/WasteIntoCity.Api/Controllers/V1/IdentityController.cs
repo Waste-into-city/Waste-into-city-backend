@@ -138,9 +138,9 @@ namespace WasteIntoCity.Application.Controllers.V1
 
         [AllowAnonymous]
         [HttpGet(ApiRoutes.Identity.GET_LEADERBOARD_PAGE_BY_BEST_RANKING)]
-        public async Task<IActionResult> GetLeaderboardByPage([FromQuery] int page, [FromQuery] int pageSize)
+        public async Task<IActionResult> GetLeaderboardBySkipItems([FromQuery] int skipItems, [FromQuery] int size)
         {
-            (List<User> users, int total) = await _identityService.GetLeaderboardByPage(page, pageSize);
+            (List<User> users, int total) = await _identityService.GetLeaderboardBySkipItemsAndSize(skipItems, size);
 
             List<IdentityGetLeaderboardByPageResponse> items = users.Select(u => new IdentityGetLeaderboardByPageResponse
             {
@@ -151,8 +151,8 @@ namespace WasteIntoCity.Application.Controllers.V1
 
             ByPageResponse<IdentityGetLeaderboardByPageResponse> byPageResponse = new ByPageResponse<IdentityGetLeaderboardByPageResponse>
             {
-                Page = page,
-                PageSize = pageSize,
+                SkippedItems = skipItems + size,
+                Size = size,
                 Items = items,
                 Total = total
             };
