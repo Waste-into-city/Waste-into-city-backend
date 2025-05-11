@@ -192,7 +192,7 @@ namespace WasteIntoCity.Application.Services
 
         public async Task<User> GetSelfUserInfo(Guid userId)
         {
-            return await _userRepository.FindWithImageById(userId);
+            return await _userRepository.FindWithImageAndRolesById(userId);
         }
 
         public async Task<User> GetUserInfoForAdmin(Guid userId)

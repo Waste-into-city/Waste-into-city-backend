@@ -20,6 +20,8 @@ namespace WasteIntoCity.Core.Interfaces.Repositories
 
         Task<User> FindWithImageById(Guid id);
 
+        Task<User> FindWithImageAndRolesById(Guid id);
+
         Task UpdateByIdAsync(User user);
 
         Task AddAllIfNotExistWithRolesByEmailAsync(List<User> users);

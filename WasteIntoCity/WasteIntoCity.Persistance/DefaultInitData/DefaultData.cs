@@ -124,8 +124,8 @@ namespace WasteIntoCity.Persistance.DefaultInitData
             ),
             User.Create(
                 Guid.NewGuid(),
-                Nickname.Create("superadmin"),
-                Email.Create("superadmin@gmail.com"),
+                Nickname.Create("admin"),
+                Email.Create("admin@gmail.com"),
                 Password.Create(BCrypt.Net.BCrypt.EnhancedHashPassword("12345678")),
                 0,
                 new List<Role>

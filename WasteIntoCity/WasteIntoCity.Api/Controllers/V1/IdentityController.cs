@@ -7,6 +7,7 @@ using WasteIntoCity.Application.Enum;
 using WasteIntoCity.Application.Extensions;
 using WasteIntoCity.Application.Options;
 using WasteIntoCity.Core.Enums;
+using WasteIntoCity.Core.Exceptions.InternalServer500Exceptions;
 using WasteIntoCity.Core.Interfaces.Services;
 using WasteIntoCity.Core.Models;
 using WasteIntoCity.Core.Structs;
@@ -98,12 +99,21 @@ namespace WasteIntoCity.Application.Controllers.V1
 
             User user = await _identityService.GetSelfUserInfo(userId);
 
+            if (user.Roles == null)
+            {
+                throw new NullValueServerException(46, "roles", null);
+            }
+
+            Role highRole = user.Roles.OrderByDescending(r => r.Id).FirstOrDefault()
+                ?? throw new NullValueServerException(47, "roles", null); //TODO: Add new type exception
+
             IdentityGetSelfUserInfoResponse getSelfUserInfoResponse = new IdentityGetSelfUserInfoResponse
             {
                 Id = user.Id,
                 Nickname = user.Nickname.Value,
                 Email = user.Email.Value,
-                AvatarImageName = user.AvatarImageName != null ? user.AvatarImageName.Value : null
+                AvatarImageName = user.AvatarImageName != null ? user.AvatarImageName.Value : null,
+                HighRoleName = highRole.Name
             };
 
             return Ok(getSelfUserInfoResponse);

@@ -127,6 +127,22 @@ namespace WasteIntoCity.Persistance.Repositories
                 imageEntity == null ? null : ImageName.Create(imageEntity.Name), null);
         }
 
+
+        public async Task<User> FindWithImageAndRolesById(Guid id)
+        {
+            UserEntity userEntity = await _mainDbContext.Users.AsNoTracking().Include(u => u.Roles).
+                FirstOrDefaultAsync(u => u.Id == id) ?? throw new DbIsNotFoundException(nameof(User), 11, null);
+
+            ImageEntity? imageEntity = await _mainDbContext.Images.AsNoTracking().FirstOrDefaultAsync(i => i.UsersId == id);
+            //?? throw new DbIsNotFoundException(nameof(Image), 12, null);
+
+            List<Role> roles = userEntity.Roles.Select(r => Role.Create((RoleEnum)r.Id, r.Name)).ToList();
+
+            return User.Create(userEntity.Id, Nickname.Create(userEntity.Nickname), Email.Create(userEntity.Email),
+                Password.Create(userEntity.Password), userEntity.Ranking, roles, userEntity.NegativeScore,
+                userEntity.IsBanned, imageEntity == null ? null : ImageName.Create(imageEntity.Name), null);
+        }
+
         public async Task UpdateByIdAsync(User user)
         {
             await _mainDbContext.Users
