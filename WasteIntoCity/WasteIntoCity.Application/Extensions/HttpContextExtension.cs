@@ -57,8 +57,8 @@ namespace WasteIntoCity.Application.Extensions
                 userPrepareTokensContextResponse.AccessTokenValue, new CookieOptions
                 {
                     HttpOnly = true,
-                    Secure = false,
-                    SameSite = SameSiteMode.Lax,
+                    Secure = true,
+                    SameSite = SameSiteMode.None,
                     Expires = userPrepareTokensContextResponse.RefreshTokenExpiredTimestamp
                 });
 
@@ -66,8 +66,8 @@ namespace WasteIntoCity.Application.Extensions
                 userPrepareTokensContextResponse.RefreshTokenValue, new CookieOptions
                 {
                     HttpOnly = true,
-                    Secure = false,
-                    SameSite = SameSiteMode.Lax,
+                    Secure = true,
+                    SameSite = SameSiteMode.None,
                     Expires = userPrepareTokensContextResponse.RefreshTokenExpiredTimestamp
                 });
         }
