@@ -18,8 +18,6 @@
 
         public Guid FromUsersId { get; set; }
 
-        public int WorkTypesId { get; set; }
-
         public WorkComplexityTypeEntity? WorkComplexityType { get; set; }
 
         public WorkReportStatusTypeEntity? WorkReportStatusType { get; set; }
