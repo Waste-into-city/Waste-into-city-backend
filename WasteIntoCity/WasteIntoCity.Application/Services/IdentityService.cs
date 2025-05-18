@@ -22,20 +22,22 @@ namespace WasteIntoCity.Application.Services
         private const int USER_START_RANKING = 0;
         private const int USER_START_NEGATIVE_SCORE = 0;
 
-        private readonly IUsersRepository _userRepository;
+        private readonly IUsersRepository _usersRepository;
         private readonly RefreshTokensRepository _refreshTokensRepository;
         private readonly IRolesRepository _rolesRepository;
         private readonly JwtOptions _jwtOptions;
         private readonly TokenValidationParameters _tokenValidationParameters;
+        private readonly IImagesRepository _imagesRepository;
 
         public IdentityService(IUsersRepository usersRepository, JwtOptions jwtOptions, TokenValidationParameters tokenValidationParameters,
-            RefreshTokensRepository refreshTokensRepository, IRolesRepository rolesRepository)
+            RefreshTokensRepository refreshTokensRepository, IRolesRepository rolesRepository, IImagesRepository imagesRepository)
         {
-            _userRepository = usersRepository;
+            _usersRepository = usersRepository;
             _jwtOptions = jwtOptions;
             _tokenValidationParameters = tokenValidationParameters;
             _refreshTokensRepository = refreshTokensRepository;
             _rolesRepository = rolesRepository;
+            _imagesRepository = imagesRepository;
         }
 
         private async Task<UserPrepareTokensContextResponse> CreateTokens(User user)
@@ -93,7 +95,7 @@ namespace WasteIntoCity.Application.Services
 
         public async Task RegisterAsync(string nickname, string email, string password)
         {
-            if (await _userRepository.IsExistByEmailAsync(email))
+            if (await _usersRepository.IsExistByEmailAsync(email))
             {
                 throw new DbIsFoundException(nameof(User), "User with this email exists", 1);
             }
@@ -107,7 +109,7 @@ namespace WasteIntoCity.Application.Services
 
             try
             {
-                await _userRepository.AddWithRolesAsync(newUser);
+                await _usersRepository.AddWithRolesAsync(newUser);
             }
             catch (Exception ex)
             {
@@ -117,7 +119,7 @@ namespace WasteIntoCity.Application.Services
 
         public async Task<UserPrepareTokensContextResponse> LoginAsync(string email, string password)
         {
-            User user = await _userRepository.FindByEmailWithRolesAsync(email);
+            User user = await _usersRepository.FindByEmailWithRolesAsync(email);
 
             if (!BCrypt.Net.BCrypt.EnhancedVerify(password, user.Password.Value))
             {
@@ -165,7 +167,7 @@ namespace WasteIntoCity.Application.Services
 
             if (Guid.TryParse(accessTokenClaimsPrincipal.Claims.Single(x => x.Type == "id").Value, out Guid parsedGuid))
             {
-                user = await _userRepository.FindWithRolesByIdAsync(parsedGuid);
+                user = await _usersRepository.FindWithRolesByIdAsync(parsedGuid);
             }
             else
             {
@@ -174,7 +176,7 @@ namespace WasteIntoCity.Application.Services
 
             if (user.IsBanned)
             {
-                throw new UserWasBannedException(6);
+                throw new UserWasBannedException(7);
             }
 
             return await CreateTokens(user);
@@ -187,24 +189,24 @@ namespace WasteIntoCity.Application.Services
 
         public async Task<User> GetUserInfo(Guid userId)
         {
-            return await _userRepository.FindWithImageById(userId);
+            return await _usersRepository.FindWithImageNameById(userId);
         }
 
         public async Task<User> GetSelfUserInfo(Guid userId)
         {
-            return await _userRepository.FindWithImageAndRolesById(userId);
+            return await _usersRepository.FindWithImageAndRolesById(userId);
         }
 
         public async Task<User> GetUserInfoForAdmin(Guid userId)
         {
-            return await _userRepository.FindWithImageById(userId);
+            return await _usersRepository.FindWithImageNameById(userId);
         }
 
         public async Task<(List<User>, int)> GetLeaderboardBySkipItemsAndSize(int skipItems, int size)
         {
-            int total = await _userRepository.CountByUserRoleAsync();
+            int total = await _usersRepository.CountByUserRoleAsync();
 
-            List<User> users = await _userRepository.FindAllByRoleUserAndRankingDescendingBySkipItemsAndSizeAsync(skipItems, size);
+            List<User> users = await _usersRepository.FindAllByRoleUserAndRankingDescendingBySkipItemsAndSizeAsync(skipItems, size);
 
             return (users, total);
         }
@@ -235,6 +237,54 @@ namespace WasteIntoCity.Application.Services
             return (validatedAccessToken is JwtSecurityToken jwtSecurityToken) &&
                 jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256,
                     StringComparison.InvariantCultureIgnoreCase);
+        }
+
+        public async Task UpdateOwnUserInfoAsync(Guid userId, string email, string? password, string? newPassword, string nickname,
+            string? avatarImageName)
+        {
+            User user = await _usersRepository.FindWithImageNameById(userId);
+
+            if (user.Email.Value != email)
+            {
+                if (await _usersRepository.IsExistByEmailAsync(email))
+                {
+                    throw new DbIsFoundException(nameof(User), "User with this email already exists", 64);
+                }
+            }
+
+            string hashedPassword;
+            if (newPassword != null && password != null)
+            {
+                if (!BCrypt.Net.BCrypt.EnhancedVerify(password, user.Password.Value))
+                {
+                    throw new LoginException(6);
+                }
+
+                hashedPassword = BCrypt.Net.BCrypt.EnhancedHashPassword(newPassword);
+            }
+            else if (newPassword == null && password == null)
+            {
+                hashedPassword = user.Password.Value;
+            }
+            else
+            {
+                throw new IncorrectRequestFormatException("Password and new password should be both null or not null", 65);
+            }
+
+            User updatedUser = User.Create(userId, Nickname.Create(nickname), Email.Create(email), Password.Create(hashedPassword), user.Ranking,
+                null, user.NegativeScore, user.IsBanned, null, null);
+
+            await _usersRepository.UpdateByIdAsync(updatedUser);
+
+            if (user.AvatarImageName != null)
+            {
+                await _imagesRepository.UpdateUserIdByNameAsync(user.AvatarImageName, null);
+            }
+
+            if (avatarImageName != null)
+            {
+                await _imagesRepository.UpdateUserIdByNameAsync(ImageName.Create(avatarImageName), userId);
+            }
         }
     }
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WasteIntoCity.Persistance;
 
@@ -11,9 +12,11 @@ using WasteIntoCity.Persistance;
 namespace WasteIntoCity.Persistance.Migrations
 {
     [DbContext(typeof(MainDbContext))]
-    partial class MainDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250516165015_WorkStartedAndFinishDateTimeIsNotRequired")]
+    partial class WorkStartedAndFinishDateTimeIsNotRequired
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -76,8 +79,7 @@ namespace WasteIntoCity.Persistance.Migrations
                         .HasColumnName("work_report_results_id");
 
                     b.Property<Guid?>("WorksId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("works_id");
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 

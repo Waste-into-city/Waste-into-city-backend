@@ -21,5 +21,7 @@
         required public List<int> TrashTypesIds { get; init; }
 
         required public List<string> ImageNames { get; init; }
+
+        required public int WorkComplexityTypesId { get; init; }
     }
 }

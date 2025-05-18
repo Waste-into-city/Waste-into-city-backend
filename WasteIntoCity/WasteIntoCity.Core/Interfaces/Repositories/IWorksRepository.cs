@@ -17,9 +17,9 @@ namespace WasteIntoCity.Core.Interfaces.Repositories
 
         Task<List<Work>> FindAllAsync();
 
-        Task<List<Work>> FindAllWithCoordinatesBySkipItemsAndSizeAsync(int page, int pageSize);
+        Task<List<Work>> FindAllWithCoordinatesByNotClosedAsync();
 
-        Task<Work> FindWithCoordinatesAndParticipantsAndImagesAndTrashTypesByIdAsync(Guid id);
+        Task<Work> FindWithCoordinatesAndParticipantsAndAvatarImageNameAndImagesAndTrashTypesByIdAsync(Guid id);
 
         Task<Work> FindWithParticipantsByIdAsync(Guid id);
 

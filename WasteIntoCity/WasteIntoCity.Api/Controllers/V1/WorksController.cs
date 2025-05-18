@@ -81,8 +81,9 @@ namespace WasteIntoCity.Api.Controllers.V1
 
             List<WorkGetByIdResponseParticipant> participants = work.Participants.Select(p => new WorkGetByIdResponseParticipant
             {
-                Email = p.Email.Value,
-                Nickname = p.Nickname.Value
+                Id = p.Id,
+                Nickname = p.Nickname.Value,
+                AvatarImageName = p.AvatarImageName != null ? p.AvatarImageName.Value : null
             }).ToList();
 
             List<int> trashTypesIds = work.TrashTypesIds.Select(t => (int)t).ToList();
@@ -110,9 +111,9 @@ namespace WasteIntoCity.Api.Controllers.V1
 
         [AllowAnonymous]
         [HttpGet(ApiRoutes.Works.GET_ALL_LOOKUP)]
-        public async Task<IActionResult> GetAllLookup([FromQuery] int skipItems, [FromQuery] int size)
+        public async Task<IActionResult> GetAllLookup()
         {
-            (List<Work> works, int total) = await _workService.GetAllLookup(skipItems, size);
+            List<Work> works = await _workService.GetAllLookup();
 
             List<WorksGetAllLookupResponse> items = works.Select(w =>
             {
@@ -130,15 +131,7 @@ namespace WasteIntoCity.Api.Controllers.V1
                 };
             }).ToList();
 
-            BySkipItemsResponse<WorksGetAllLookupResponse> workGetByIdResponse = new BySkipItemsResponse<WorksGetAllLookupResponse>
-            {
-                SkippedItems = skipItems + size,
-                Size = size,
-                Total = total,
-                Items = items
-            };
-
-            return Ok(workGetByIdResponse);
+            return Ok(items);
         }
 
         [Authorize(Roles = $"{nameof(RoleEnum.Admin)},{nameof(RoleEnum.Moderator)},{nameof(RoleEnum.User)}")]

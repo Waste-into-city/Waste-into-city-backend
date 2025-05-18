@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using WasteIntoCity.Core.Enums;
 using WasteIntoCity.Core.Exceptions.InternalServer500Exceptions;
 using WasteIntoCity.Core.Exceptions.NotFound404Exceptions;
@@ -14,7 +13,7 @@ namespace WasteIntoCity.Persistance.Repositories
     {
         private readonly MainDbContext _mainDbContext;
 
-        public WorkReportComplaintsRepository(MainDbContext mainDbContext, IMapper mapper)
+        public WorkReportComplaintsRepository(MainDbContext mainDbContext)
         {
             _mainDbContext = mainDbContext;
         }

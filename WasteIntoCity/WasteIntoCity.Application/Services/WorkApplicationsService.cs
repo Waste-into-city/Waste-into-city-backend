@@ -121,7 +121,7 @@ namespace WasteIntoCity.Application.Services
         {
             Dictionary<ScoreSettingsEnum, int> scoreSettingsValues = await _scoreSettingsTypeRepository.FindAllValuesByIdsAsync(_scoreSettingsIdsForConfirm);
 
-            WorkApplication workApplication = await _workApplicationsRepository.FindById(workApplicationsId);
+            WorkApplication workApplication = await _workApplicationsRepository.FindWithTrashTypesAndImageNameById(workApplicationsId);
 
             if (workApplication.ImageNames == null)
             {
@@ -151,9 +151,9 @@ namespace WasteIntoCity.Application.Services
                 null, workApplication.WorkComplexityTypesId, WorkStatusEnum.NotFinished,
                 workApplication.CoordinatesId, null, null, null, null, null, null, null, null, workApplication.TrashTypesIds);
 
-            await _imagesRepository.UpdateWorksIdByNamesAsync(workApplication.ImageNames, work.Id);
-
             await _worksRepository.CreateAsync(work);
+
+            await _imagesRepository.UpdateWorksIdByNamesAsync(workApplication.ImageNames, work.Id);
 
             await _workApplicationsRepository.UpdateWorkReportStatusTypesIdByIdAsync(workApplicationsId, WorkReportStatusEnum.Accepted);
         }

@@ -12,6 +12,16 @@ IServiceCollection services = builder.Services;
 string[]? allowedOrigins = Environment.GetEnvironmentVariable("CORS_ALLOWED_ORIGINS")
     ?.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 
+var certPath = Path.Combine(AppContext.BaseDirectory, "localhost.pfx");
+
+builder.WebHost.ConfigureKestrel(serverOptions =>
+{
+    serverOptions.ListenAnyIP(8081, listenOptions =>
+    {
+        listenOptions.UseHttps(certPath, "MyPassword123");
+    });
+});
+
 services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy", builder =>

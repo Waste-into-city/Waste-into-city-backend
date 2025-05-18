@@ -114,7 +114,7 @@ namespace WasteIntoCity.Persistance.Repositories
                 userEntity.Ranking, null, userEntity.NegativeScore, userEntity.IsBanned, null, null);
         }
 
-        public async Task<User> FindWithImageById(Guid id)
+        public async Task<User> FindWithImageNameById(Guid id)
         {
             UserEntity userEntity = await _mainDbContext.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Id == id)
                 ?? throw new DbIsNotFoundException(nameof(User), 11, null);

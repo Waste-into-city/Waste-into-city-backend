@@ -90,10 +90,11 @@ namespace WasteIntoCity.Api.Controllers.V1
                 TrashTypesIds = workApplication.TrashTypesIds.Select(t => (int)t).ToList(),
                 ImageNames = workApplication.ImageNames.Select(t => t.Value).ToList(),
                 Lat = workApplication.Coordinates.Lat,
-                Lng = workApplication.Coordinates.Lng
+                Lng = workApplication.Coordinates.Lng,
+                WorkComplexityTypesId = (int)workApplication.WorkComplexityTypesId
             };
 
-            return Ok();
+            return Ok(workApplicationGetFromQueueResponse);
         }
     }
 }

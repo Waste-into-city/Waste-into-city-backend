@@ -76,5 +76,14 @@ namespace WasteIntoCity.Persistance.Repositories
                     .SetProperty(w => w.WorkApplicationsId, workApplicationsId)
                 );
         }
+
+        public async Task UpdateUserIdByNameAsync(ImageName imageName, Guid? usersId)
+        {
+            int updatedRows = await _mainDbContext.Images
+                .Where(w => imageName.Value == w.Name)
+                .ExecuteUpdateAsync(n => n
+                    .SetProperty(w => w.UsersId, usersId)
+                );
+        }
     }
 }

@@ -14,5 +14,7 @@ namespace WasteIntoCity.Core.Interfaces.Repositories
         Task UpdateWorkApplicationsIdByNamesAsync(List<ImageName> imageNames, Guid? workApplicationsId);
 
         Task DeleteByNames(List<string> imageNames);
+
+        Task UpdateUserIdByNameAsync(ImageName imageName, Guid? usersId);
     }
 }

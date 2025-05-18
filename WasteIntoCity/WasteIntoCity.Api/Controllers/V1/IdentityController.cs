@@ -159,5 +159,17 @@ namespace WasteIntoCity.Application.Controllers.V1
 
             return Ok(byPageResponse);
         }
+
+        [Authorize(Roles = $"{nameof(RoleEnum.User)},{nameof(RoleEnum.Moderator)},{nameof(RoleEnum.Admin)}")]
+        [HttpPut(ApiRoutes.Identity.UPDATE_OWN_USER_INFO)]
+        public async Task<IActionResult> UpdateOwnUserInfoAsync([FromBody] UserUpdateOwnUserInfo request)
+        {
+            Guid userId = HttpContext.TakeUserIdFromAccessToken();
+
+            await _identityService.UpdateOwnUserInfoAsync(userId, request.Email, request.Password,
+                request.NewPassword, request.Nickname, request.AvatarImageName);
+
+            return Ok();
+        }
     }
 }

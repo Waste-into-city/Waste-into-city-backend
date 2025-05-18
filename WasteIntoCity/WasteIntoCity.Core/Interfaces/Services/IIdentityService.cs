@@ -21,5 +21,8 @@ namespace WasteIntoCity.Core.Interfaces.Services
         Task<User> GetUserInfoForAdmin(Guid userId);
 
         Task<(List<User>, int)> GetLeaderboardBySkipItemsAndSize(int page, int pageSize);
+
+        Task UpdateOwnUserInfoAsync(Guid userId, string email, string? password, string? newPassword, string nickname,
+            string? avatarImageName);
     }
 }

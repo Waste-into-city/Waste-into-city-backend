@@ -34,6 +34,8 @@ namespace WasteIntoCity.Persistance.Repositories
 
             await _mainDbContext.Works.AddAsync(workEntity);
 
+            await _mainDbContext.SaveChangesAsync();
+
             if (work.TrashTypesIds != null)
             {
                 List<int> trashTypesIds = work.TrashTypesIds.Select(t => (int)t).ToList();
@@ -69,9 +71,9 @@ namespace WasteIntoCity.Persistance.Repositories
             return await _mainDbContext.Works.AsNoTracking().CountAsync();
         }
 
-        public async Task<List<Work>> FindAllWithCoordinatesBySkipItemsAndSizeAsync(int skipItems, int size)
+        public async Task<List<Work>> FindAllWithCoordinatesByNotClosedAsync()
         {
-            List<WorkEntity> workEntities = await _mainDbContext.Works.AsNoTracking().Skip(skipItems).Take(size)
+            List<WorkEntity> workEntities = await _mainDbContext.Works.AsNoTracking().Where(w => w.WorkStatusTypesId != (int)WorkStatusEnum.Closed)
                 .Include(w => w.Coordinates).ToListAsync();
 
             List<Work> works = workEntities.Select(work =>
@@ -150,7 +152,7 @@ namespace WasteIntoCity.Persistance.Repositories
 
             if (workEntity.WorkComplexityType == null)
             {
-                throw new NullValueServerException(48, "work complexity type", null);
+                throw new NullValueServerException(47, "work complexity type", null);
             }
 
             WorkComplexityTypeEntity workComplexityTypeEntity = workEntity.WorkComplexityType;
@@ -164,14 +166,15 @@ namespace WasteIntoCity.Persistance.Repositories
                 workEntity.CoordinatesId, null, null, workComplexityType, null, null, null, null, null, null);
         }
 
-        public async Task<Work> FindWithCoordinatesAndParticipantsAndImagesAndTrashTypesByIdAsync(Guid id)
+        public async Task<Work> FindWithCoordinatesAndParticipantsAndAvatarImageNameAndImagesAndTrashTypesByIdAsync(Guid id)
         {
             WorkEntity work = await _mainDbContext.Works.AsNoTracking().Include(w => w.Coordinates).Include(w => w.Users).
                 Include(w => w.Images).Include(w => w.TrashTypes).FirstOrDefaultAsync(w => w.Id == id)
                 ?? throw new DbIsNotFoundException(nameof(Work), 8, null);
 
             List<User> participants = work.Users.Select(u => User.Create(u.Id, Nickname.Create(u.Nickname), Email.Create(u.Email),
-                Password.Create(u.Password), u.Ranking, null, u.NegativeScore, u.IsBanned, null, null)).ToList();
+                Password.Create(u.Password), u.Ranking, null, u.NegativeScore, u.IsBanned,
+                u.Image != null ? ImageName.Create(u.Image.Name) : null, null)).ToList();
 
             List<ImageName> imageNames = work.Images.Select(i => ImageName.Create(i.Name)).ToList();
 
