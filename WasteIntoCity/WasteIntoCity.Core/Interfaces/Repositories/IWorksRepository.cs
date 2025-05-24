@@ -11,6 +11,8 @@ namespace WasteIntoCity.Core.Interfaces.Repositories
 
         Task<int> CountAsync();
 
+        Task<int> CountByParticipantIdAsync(Guid userId);
+
         Task<Work> FindByIdAsync(Guid id);
 
         Task<Work> FindWithWorkComplexityTypeByIdAsync(Guid id);
@@ -23,7 +25,7 @@ namespace WasteIntoCity.Core.Interfaces.Repositories
 
         Task<Work> FindWithParticipantsByIdAsync(Guid id);
 
-        Task<List<Work>> FindAllWithCoordinatesByParticipantIdAsync(Guid participantId);
+        Task<List<Work>> FindAllWithCoordinatesAndTrashTypesIdsByParticipantIdAndSkipItemsAsync(Guid participantId, int skipItems, int size);
 
         Task UpdateAsync(Work work);
 

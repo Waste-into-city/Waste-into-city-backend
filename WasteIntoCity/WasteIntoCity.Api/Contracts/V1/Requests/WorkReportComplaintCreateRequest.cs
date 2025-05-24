@@ -7,5 +7,7 @@
         required public string Description { get; init; }
 
         required public Guid WorksId { get; init; }
+
+        required public List<string> ImageNames { get; init; }
     }
 }

@@ -51,7 +51,7 @@ namespace WasteIntoCity.Persistance.Repositories
             WorkReportComplaintEntity workReportComplaintEntity = await _mainDbContext.WorkReportComplaints.AsNoTracking().Include(w => w.FromUser)
                 .Include(w => w.Images).OrderBy(w => w.StartedDatetime).
                 FirstOrDefaultAsync(w => w.WorkReportStatusTypesId == (int)WorkReportStatusEnum.Pending)
-                ?? throw new DbIsNotFoundException(nameof(WorkApplication), 17, null);
+                ?? throw new DbIsNotFoundException(nameof(WorkReportComplaint), 17, null);
 
             List<ImageName> imageNames = workReportComplaintEntity.Images.Select(i => ImageName.Create(i.Name)).ToList();
 

@@ -27,7 +27,8 @@ namespace WasteIntoCity.Persistance.Repositories
                 Description = workReportResult.Description.Value,
                 FromParticipantsId = workReportResult.FromParticipantId,
                 WorkComplexityTypesId = (int)workReportResult.WorkComplexityTypesId,
-                WorkStatusTypesId = (int)workReportResult.WorkStatusTypesId
+                WorkStatusTypesId = (int)workReportResult.WorkStatusTypesId,
+                WorksId = workReportResult.WorksId
             };
 
             await _mainDbContext.WorkReportResults.AddAsync(workReportResultEntity);

@@ -46,7 +46,8 @@ namespace WasteIntoCity.Core.Models
         public List<ImageName>? ImageNames { get; }
 
         public static WorkReportComplaint Create(Guid id, Title title, Description description, DateTime startedDatetime,
-            Guid worksId, Guid fromUsersId, WorkReportStatusEnum workReportStatusTypesId, User? fromUser, List<ImageName>? imageNames)
+            Guid worksId, Guid fromUsersId, WorkReportStatusEnum workReportStatusTypesId, User? fromUser,
+            List<ImageName>? imageNames)
         {
             return new WorkReportComplaint(id, title, description, startedDatetime, worksId, fromUsersId, workReportStatusTypesId, fromUser,
                 imageNames);

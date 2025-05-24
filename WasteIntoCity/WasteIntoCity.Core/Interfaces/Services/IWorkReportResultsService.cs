@@ -6,6 +6,6 @@ namespace WasteIntoCity.Core.Interfaces.Services
     {
         Task CreateAsync(Guid fromParticipantId, string title, string description, int workComplexityTypesId, int workStatusTypesId, Guid worksId);
 
-        Task<WorkReportResult> GetAsync(Guid id);
+        Task<(WorkReportResult, Work)> GetAsync(Guid id);
     }
 }

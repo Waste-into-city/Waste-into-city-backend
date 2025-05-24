@@ -6,6 +6,7 @@ using WasteIntoCity.Application;
 using WasteIntoCity.Application.Extensions;
 using WasteIntoCity.Core.Enums;
 using WasteIntoCity.Core.Exceptions.InternalServer500Exceptions;
+using WasteIntoCity.Core.Extensions;
 using WasteIntoCity.Core.Interfaces.Services;
 using WasteIntoCity.Core.Models;
 
@@ -37,7 +38,7 @@ namespace WasteIntoCity.Api.Controllers.V1
         [HttpGet(ApiRoutes.WorkReportResults.GET)]
         public async Task<IActionResult> GetAsync([FromRoute] Guid id)
         {
-            WorkReportResult workReportResult = await _workReportResultsService.GetAsync(id);
+            (WorkReportResult workReportResult, Work work) = await _workReportResultsService.GetAsync(id);
 
             if (workReportResult.FromParticipant == null)
             {
@@ -50,9 +51,10 @@ namespace WasteIntoCity.Api.Controllers.V1
                 FromParticipantEmail = workReportResult.FromParticipant.Email.Value,
                 FromParticipantNickname = workReportResult.FromParticipant.Nickname.Value,
                 Title = workReportResult.Title.Value,
-                Description = workReportResult.Title.Value,
+                Description = workReportResult.Description.Value,
                 WorkComplexityTypesId = (int)workReportResult.WorkComplexityTypesId,
-                WorkStatusTypesId = (int)workReportResult.WorkStatusTypesId,
+                WorkStatusTypesId = (int)EnumOperationsExtension.TakeWorkStatusForClientEnum(work.StartedDatetime,
+                    work.FinishDatetime, work.WorkStatusTypesId)
             };
 
             return Ok(workReportResultGetResponse);

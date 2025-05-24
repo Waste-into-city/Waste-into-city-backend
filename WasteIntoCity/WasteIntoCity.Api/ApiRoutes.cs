@@ -82,7 +82,7 @@
 
             public const string CREATE = $"{BASE}/{CONTROLLER_NAME}/create";
 
-            public const string GET = $$"""{{BASE}}/{{CONTROLLER_NAME}}/{workReportResultId:Guid}""";
+            public const string GET = $$"""{{BASE}}/{{CONTROLLER_NAME}}/{id:Guid}""";
         }
 
         public static class WorkReportComplaints

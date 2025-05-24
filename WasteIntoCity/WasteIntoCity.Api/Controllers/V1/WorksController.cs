@@ -79,6 +79,11 @@ namespace WasteIntoCity.Api.Controllers.V1
                 throw new NullValueServerException(32, "participants", null);
             }
 
+            if (work.WorkStatusForClient is null)
+            {
+                throw new NullValueServerException(48, "participants", null);
+            }
+
             List<WorkGetByIdResponseParticipant> participants = work.Participants.Select(p => new WorkGetByIdResponseParticipant
             {
                 Id = p.Id,
@@ -101,7 +106,7 @@ namespace WasteIntoCity.Api.Controllers.V1
                 StartedDatetime = work.StartedDatetime,
                 FinishDatetime = work.FinishDatetime,
                 WorkComplexityTypesId = (int)work.WorkComplexityTypesId,
-                WorkStatusTypesId = (int)work.WorkStatusTypesId,
+                WorkStatusTypesId = (int)work.WorkStatusForClient,
                 Lat = work.Coordinates.Lat,
                 Lng = work.Coordinates.Lng,
             };
@@ -125,7 +130,6 @@ namespace WasteIntoCity.Api.Controllers.V1
                 return new WorksGetAllLookupResponse
                 {
                     Id = w.Id,
-                    WorkStatusTypesId = (int)w.WorkStatusTypesId,
                     Lat = w.Coordinates.Lat,
                     Lng = w.Coordinates.Lng
                 };
@@ -136,18 +140,23 @@ namespace WasteIntoCity.Api.Controllers.V1
 
         [Authorize(Roles = $"{nameof(RoleEnum.Admin)},{nameof(RoleEnum.Moderator)},{nameof(RoleEnum.User)}")]
         [HttpGet(ApiRoutes.Works.GET_ALL_OWN_TAKE_PART_IN)]
-        public async Task<IActionResult> GetAllOwnTakePartInAsync()
+        public async Task<IActionResult> GetAllOwnTakePartInAsync([FromQuery] int skipItems, [FromQuery] int size)
         {
             Guid userId = HttpContext.TakeUserIdFromAccessToken();
 
-            List<Work> works = await _workService.GetAllOwnTakePartIn(userId);
+            (List<Work> works, int total) = await _workService.GetAllOwnTakePartIn(userId, skipItems, size);
 
-            List<WorkGetAllOwnTakePartInResponse> workGetAllOwnTakePartInResponse = new List<WorkGetAllOwnTakePartInResponse>(
+            List<WorkGetAllOwnTakePartInResponse> items = new List<WorkGetAllOwnTakePartInResponse>(
                 works.Select(work =>
                 {
                     if (work.Coordinates is null)
                     {
                         throw new NullValueServerException(13, nameof(work.Coordinates), null);
+                    }
+
+                    if (work.TrashTypesIds is null)
+                    {
+                        throw new NullValueServerException(47, "trash types ids", null);
                     }
 
                     return new WorkGetAllOwnTakePartInResponse
@@ -161,11 +170,20 @@ namespace WasteIntoCity.Api.Controllers.V1
                         WorkStatusTypesId = (int)work.WorkStatusTypesId,
                         Lat = work.Coordinates.Lat,
                         Lng = work.Coordinates.Lng,
+                        TrashTypesIds = work.TrashTypesIds.Select(t => (int)t).ToList()
                     };
                 }).ToList()
             );
 
-            return Ok(workGetAllOwnTakePartInResponse);
+            BySkipItemsResponse<WorkGetAllOwnTakePartInResponse> response = new BySkipItemsResponse<WorkGetAllOwnTakePartInResponse>
+            {
+                SkippedItems = skipItems + size,
+                Size = size,
+                Items = items,
+                Total = total
+            };
+
+            return Ok(response);
         }
 
         [Authorize(Roles = $"{nameof(RoleEnum.Admin)},{nameof(RoleEnum.Moderator)},{nameof(RoleEnum.User)}")]

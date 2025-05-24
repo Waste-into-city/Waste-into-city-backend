@@ -68,7 +68,7 @@ namespace WasteIntoCity.Core.Models
 
         public WorkReportResult? WorkReportResult { get; }
 
-        public WorkStatusForClientEnum? WorkStatusForClient { get; }
+        public WorkStatusForClientEnum? WorkStatusForClient { get; set; }
 
         public List<ImageName>? ImageNames { get; }
 

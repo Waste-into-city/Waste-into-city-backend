@@ -13,6 +13,8 @@ namespace WasteIntoCity.Core.Interfaces.Repositories
 
         Task UpdateWorkApplicationsIdByNamesAsync(List<ImageName> imageNames, Guid? workApplicationsId);
 
+        Task UpdateWorkReportComplaintsIdByNamesAsync(List<ImageName> imageNames, Guid? workReportComplaintsId);
+
         Task DeleteByNames(List<string> imageNames);
 
         Task UpdateUserIdByNameAsync(ImageName imageName, Guid? usersId);

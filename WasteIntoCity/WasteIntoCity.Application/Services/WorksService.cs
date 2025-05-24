@@ -34,14 +34,22 @@ namespace WasteIntoCity.Application.Services
             return works;
         }
 
-        public async Task<List<Work>> GetAllOwnTakePartIn(Guid userId)
+        public async Task<(List<Work>, int)> GetAllOwnTakePartIn(Guid userId, int skipItems, int size)
         {
-            return await _worksRepository.FindAllWithCoordinatesByParticipantIdAsync(userId);
+            int total = await _worksRepository.CountByParticipantIdAsync(userId);
+
+            List<Work> works = await _worksRepository.FindAllWithCoordinatesAndTrashTypesIdsByParticipantIdAndSkipItemsAsync(userId, skipItems, size);
+
+            return (works, total);
         }
 
         public async Task<Work> GetByIdAsync(Guid id)
         {
-            return await _worksRepository.FindWithCoordinatesAndParticipantsAndAvatarImageNameAndImagesAndTrashTypesByIdAsync(id);
+            Work work = await _worksRepository.FindWithCoordinatesAndParticipantsAndAvatarImageNameAndImagesAndTrashTypesByIdAsync(id);
+
+            work.WorkStatusForClient = EnumOperationsExtension.TakeWorkStatusForClientEnum(work.StartedDatetime, work.FinishDatetime, work.WorkStatusTypesId);
+
+            return work;
         }
 
         public async Task UpdateAsync(Guid id, string title, string description, DateTime startedDatetime, DateTime finishDatetime, int workComplexityTypesId,

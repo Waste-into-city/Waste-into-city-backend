@@ -16,37 +16,46 @@ namespace WasteIntoCity.Application.Services
         private readonly IUsersRepository _usersRepository;
         private readonly IWorksRepository _worksRepository;
         private readonly RefreshTokensRepository _refreshTokensRepository;
+        private readonly IImagesRepository _imagesRepository;
+        private readonly IWorkReportResultsRepository _workReportResultsRepository;
 
         private readonly List<ScoreSettingsEnum> _scoreSettingsIdsForReject = new List<ScoreSettingsEnum>
         {
-            ScoreSettingsEnum.WorkApplicationRankingSubstracting,
-            ScoreSettingsEnum.WorkApplicationNegativeAddingMultiplier,
+            ScoreSettingsEnum.WorkComplaintUserNegativeAddingMultiplier,
             ScoreSettingsEnum.UserBanRankingAtLeast,
+            ScoreSettingsEnum.WorkComplaintUserRankingSubstracting,
         };
 
         private readonly List<ScoreSettingsEnum> _scoreSettingsIdsForConfirm = new List<ScoreSettingsEnum>
         {
-            ScoreSettingsEnum.WorkApplicationRankingAdding,
-            ScoreSettingsEnum.WorkApplicationNegativeSubstracting,
+            ScoreSettingsEnum.UserBanRankingAtLeast,
+            ScoreSettingsEnum.WorkComplaintUserNegativeSubstracting,
+            ScoreSettingsEnum.WorkComplaintUserRankingAdding,
+            ScoreSettingsEnum.WorkComplaintParticipantRankingSubstracting
         };
 
         public WorkReportComplaintsService(IWorkReportComplaintsRepository workReportComplaintsRepository,
             IScoreSettingsTypesRepository scoreSettingsTypeRepository, IUsersRepository usersRepository, IWorksRepository worksRepository,
-            RefreshTokensRepository refreshTokensRepository)
+            RefreshTokensRepository refreshTokensRepository, IImagesRepository imagesRepository, IWorkReportResultsRepository workReportResultsRepository)
         {
             _workReportComplaintsRepository = workReportComplaintsRepository;
             _scoreSettingsTypeRepository = scoreSettingsTypeRepository;
             _usersRepository = usersRepository;
             _worksRepository = worksRepository;
             _refreshTokensRepository = refreshTokensRepository;
+            _imagesRepository = imagesRepository;
+            _workReportResultsRepository = workReportResultsRepository;
         }
 
-        public async Task CreateAsync(string title, string description, Guid worksId, Guid fromUsersId)
+        public async Task CreateAsync(string title, string description, Guid worksId, Guid fromUsersId, List<string> imageNamesLines)
         {
             WorkReportComplaint workReportComplaint = WorkReportComplaint.Create(Guid.NewGuid(), Title.Create(title),
                 Description.Create(description), DateTime.UtcNow, worksId, fromUsersId, WorkReportStatusEnum.Pending, null, null);
 
+            List<ImageName> imageNames = imageNamesLines.Select(i => ImageName.Create(i)).ToList();
+
             await _workReportComplaintsRepository.CreateAsync(workReportComplaint);
+            await _imagesRepository.UpdateWorkReportComplaintsIdByNamesAsync(imageNames, workReportComplaint.Id);
         }
 
         public async Task<WorkReportComplaint> GetAsync(Guid id)
@@ -54,14 +63,30 @@ namespace WasteIntoCity.Application.Services
             return await _workReportComplaintsRepository.FindByIdAsync(id);
         }
 
-        public async Task<WorkReportComplaint> GetFromQueueAsync()
+        public async Task<(WorkReportComplaint, Guid)> GetFromQueueAsync()
         {
-            return await _workReportComplaintsRepository.FindPendingWithFromUserAndImageNamesByStartedDatetimeAscending();
+            WorkReportComplaint workReportComplaint = await _workReportComplaintsRepository.FindPendingWithFromUserAndImageNamesByStartedDatetimeAscending();
+
+            WorkReportResult workReportResult = await _workReportResultsRepository.FindByWorksIdAsync(workReportComplaint.WorksId);
+
+            return (workReportComplaint, workReportResult.Id);
         }
 
         public async Task ConfirmAsync(Guid id)
         {
             WorkReportComplaint workReportComplaint = await _workReportComplaintsRepository.FindByIdAsync(id);
+
+            Work work = await _worksRepository.FindWithParticipantsByIdAsync(workReportComplaint.WorksId);
+
+            if (work.Participants == null)
+            {
+                throw new NullValueServerException(27, "participants", null);
+            }
+
+            if (work.WorkStatusTypesId != WorkStatusEnum.FinishedSuccessfully)
+            {
+                throw new NullValueServerException(50, "work status types id", null);
+            }
 
             if (workReportComplaint.WorkReportStatusTypesId != WorkReportStatusEnum.Pending)
             {
@@ -83,14 +108,6 @@ namespace WasteIntoCity.Application.Services
 
             updatedUsers.Add(User.Create(complaintUser.Id, complaintUser.Nickname, complaintUser.Email, complaintUser.Password,
                 ranking, complaintUser.Roles, negativeScore, complaintUser.IsBanned, null, null));
-
-            Work work = await _worksRepository.FindWithParticipantsByIdAsync(id);
-
-            if (work.Participants == null)
-            {
-                throw new NullValueServerException(27, "participants", null);
-            }
-
 
             for (int i = 0; i < work.Participants.Count; i++)
             {

@@ -165,7 +165,7 @@ namespace WasteIntoCity.Persistance.Repositories
                 if (existingUser != null)
                 {
                     existingUser.Nickname = user.Nickname.Value;
-                    existingUser.Email = user.Nickname.Value;
+                    existingUser.Email = user.Email.Value;
                     existingUser.Password = user.Password.Value;
                     existingUser.Ranking = user.Ranking;
                     existingUser.NegativeScore = user.NegativeScore;

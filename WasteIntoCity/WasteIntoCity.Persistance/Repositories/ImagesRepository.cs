@@ -77,6 +77,17 @@ namespace WasteIntoCity.Persistance.Repositories
                 );
         }
 
+        public async Task UpdateWorkReportComplaintsIdByNamesAsync(List<ImageName> imageNames, Guid? workReportComplaintsId)
+        {
+            List<string> imageNamesLines = imageNames.Select(i => i.Value).ToList();
+
+            int updatedRows = await _mainDbContext.Images
+                .Where(w => imageNamesLines.Contains(w.Name))
+                .ExecuteUpdateAsync(n => n
+                    .SetProperty(w => w.WorkReportComplaintsId, workReportComplaintsId)
+                );
+        }
+
         public async Task UpdateUserIdByNameAsync(ImageName imageName, Guid? usersId)
         {
             int updatedRows = await _mainDbContext.Images
