@@ -6,6 +6,6 @@ namespace WasteIntoCity.Core.Interfaces.Repositories
     {
         Task AddMarksAsync(List<WorkColleagueReport> workColleagueReports);
 
-        Task<List<WorkColleagueReport>> FindAllWithAboutColleagueByWorksIdAsync(Guid worksId);
+        Task<List<WorkColleagueReport>> FindAllWithAboutColleagueWithAvatarImageNameByWorksIdAndUserIdAsync(Guid usersId, Guid worksId);
     }
 }

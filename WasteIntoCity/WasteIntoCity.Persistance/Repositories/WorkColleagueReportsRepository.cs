@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WasteIntoCity.Core.Enums;
+using WasteIntoCity.Core.Exceptions.InternalServer500Exceptions;
 using WasteIntoCity.Core.Exceptions.NotFound404Exceptions;
 using WasteIntoCity.Core.Interfaces.Repositories;
 using WasteIntoCity.Core.Models;
@@ -32,17 +33,39 @@ namespace WasteIntoCity.Persistance.Repositories
             await _mainDbContext.SaveChangesAsync();
         }
 
-        public async Task<List<WorkColleagueReport>> FindAllWithAboutColleagueByWorksIdAsync(Guid worksId)
+        public async Task<List<WorkColleagueReport>> FindAllWithAboutColleagueWithAvatarImageNameByWorksIdAndUserIdAsync(Guid usersId, Guid worksId)
         {
-            List<WorkColleagueReportEntity> workApplicationEntities = await _mainDbContext.WorkColleagueReports.AsNoTracking()
-                .Where(r => r.WorksId == worksId).Include(r => r.UserAboutColleague).ToListAsync()
+            List<WorkColleagueReportEntity> workColleagueReports = await _mainDbContext.WorkColleagueReports
+                .AsNoTracking()
+                .Where(r => r.WorksId == worksId && r.FromParticipantId == usersId)
+                .Include(r => r.UserAboutColleague)
+                    .ThenInclude(u => u!.Image)
+                .ToListAsync()
                 ?? throw new DbIsNotFoundException(nameof(WorkColleagueReport), 17, null);
 
-            return workApplicationEntities.Select(a => WorkColleagueReport.Create(a.Id, a.FromParticipantId, a.AboutColleagueId, a.WorksId,
-                (WorkMarkEnum)a.WorkMarkTypesId, null,
-                User.Create(a.UserAboutColleague!.Id, Nickname.Create(a.UserAboutColleague.Nickname), Email.Create(a.UserAboutColleague.Email),
-                Password.Create(a.UserAboutColleague.Password), a.UserAboutColleague.Ranking, null, a.UserAboutColleague.NegativeScore,
-                a.UserAboutColleague.IsBanned, null, null))).ToList();
+
+            return workColleagueReports.Select(a => WorkColleagueReport.Create(
+                a.Id,
+                a.FromParticipantId,
+                a.AboutColleagueId,
+                a.WorksId,
+                (WorkMarkEnum)a.WorkMarkTypesId,
+                null,
+                a.UserAboutColleague is null ? throw new NullValueServerException(52, "about colleague exception", null) : User.Create(
+                    a.UserAboutColleague.Id,
+                    Nickname.Create(a.UserAboutColleague.Nickname),
+                    Email.Create(a.UserAboutColleague.Email),
+                    Password.Create(a.UserAboutColleague.Password),
+                    a.UserAboutColleague.Ranking,
+                    null,
+                    a.UserAboutColleague.NegativeScore,
+                    a.UserAboutColleague.IsBanned,
+                    a.UserAboutColleague.Image is null ? null :
+                        ImageName.Create(a.UserAboutColleague.Image.Name),
+                    null
+                )
+            )).ToList();
         }
+
     }
 }

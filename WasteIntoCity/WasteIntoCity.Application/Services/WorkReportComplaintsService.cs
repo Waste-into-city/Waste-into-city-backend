@@ -31,7 +31,8 @@ namespace WasteIntoCity.Application.Services
             ScoreSettingsEnum.UserBanRankingAtLeast,
             ScoreSettingsEnum.WorkComplaintUserNegativeSubstracting,
             ScoreSettingsEnum.WorkComplaintUserRankingAdding,
-            ScoreSettingsEnum.WorkComplaintParticipantRankingSubstracting
+            ScoreSettingsEnum.WorkComplaintParticipantRankingSubstracting,
+            ScoreSettingsEnum.WorkComplaintParticipantNegativeAddingMultiplier
         };
 
         public WorkReportComplaintsService(IWorkReportComplaintsRepository workReportComplaintsRepository,

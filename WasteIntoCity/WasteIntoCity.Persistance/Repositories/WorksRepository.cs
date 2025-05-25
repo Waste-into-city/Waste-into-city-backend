@@ -163,7 +163,7 @@ namespace WasteIntoCity.Persistance.Repositories
 
             if (workEntity.WorkComplexityType == null)
             {
-                throw new NullValueServerException(52, "work complexity type", null);
+                throw new NullValueServerException(53, "work complexity type", null);
             }
 
             WorkComplexityTypeEntity workComplexityTypeEntity = workEntity.WorkComplexityType;

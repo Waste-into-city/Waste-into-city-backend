@@ -7,6 +7,6 @@ namespace WasteIntoCity.Core.Interfaces.Services
     {
         Task CreateMarksAsync(Guid WorksId, Guid FromParticipantId, List<MarkColleaguePairStruct> workColleaguePairStructs);
 
-        Task<List<WorkColleagueReport>> GetAllByWorksIdAsync(Guid worksId);
+        Task<List<WorkColleagueReport>> GetAllByWorksIdAndUserIdAsync(Guid usersId, Guid worksId);
     }
 }
