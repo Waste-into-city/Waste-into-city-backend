@@ -418,21 +418,32 @@ namespace WasteIntoCity.Persistance.Repositories
             return works;
         }
 
-        public async Task<List<Guid>> FindFirstPreparingWorksIdsByBeforeStartedTime(int worksAmount, TimeSpan minWorkIntervalBeforeStart)
+        public async Task<List<Guid>> FindFirstPreparingWorksIdsByBeforeStartedTimeAndNotEnoughParticipants(
+            int worksAmount, TimeSpan minWorkIntervalBeforeStart,
+            Dictionary<WorkComplexityEnum, WorkComplexityType> workComplexityValues)
         {
-            DateTime minAppropriateStartedWorkTime = DateTime.UtcNow.Add(minWorkIntervalBeforeStart);
+            DateTime currentDatetime = DateTime.UtcNow;
+            DateTime minAppropriateStartedWorkTime = currentDatetime.Add(minWorkIntervalBeforeStart);
 
-            List<WorkEntity> workEntities = await _mainDbContext.Works
-                .Where(w => w.StartedDatetime >= minAppropriateStartedWorkTime && w.WorkStatusTypesId == (int)WorkStatusEnum.NotFinished)
-                .Take(worksAmount)
+            // started - range <= current <= started
+
+            List<WorkEntity> candidateWorks = await _mainDbContext.Works
+                .Include(w => w.Users)
+                .Where(w =>
+                    w.StartedDatetime <= minAppropriateStartedWorkTime &&
+                    currentDatetime <= w.StartedDatetime &&
+                    w.WorkStatusTypesId == (int)WorkStatusEnum.NotFinished)
                 .ToListAsync();
 
-            List<Guid> workIds = workEntities.Select(w =>
-            {
-                return w.Id;
-            }).ToList();
+            List<Guid> filteredWorks = candidateWorks
+                .Where(w =>
+                    workComplexityValues.TryGetValue((WorkComplexityEnum)w.WorkComplexityTypesId, out var type) &&
+                    w.Users.Count < type.ParticipantsMin)
+                .Take(worksAmount)
+                .Select(w => w.Id)
+                .ToList();
 
-            return workIds;
+            return filteredWorks;
         }
 
         public async Task RemoveParticipants(Guid id, List<Guid> participantsIds)

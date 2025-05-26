@@ -18,9 +18,11 @@ namespace WasteIntoCity.Application.BackgroundServices
 
         private readonly List<ScoreSettingsEnum> _scoreSettingsIds = new List<ScoreSettingsEnum>
         {
-            ScoreSettingsEnum.WorkApplicationRankingSubstracting,
-            ScoreSettingsEnum.WorkApplicationNegativeAddingMultiplier,
+            ScoreSettingsEnum.WorkRankingSubstracting,
+            ScoreSettingsEnum.WorkNegativeAddingMultiplier,
             ScoreSettingsEnum.UserBanRankingAtLeast,
+            ScoreSettingsEnum.WorkRankingDefaultReviewAdding,
+            ScoreSettingsEnum.WorkNegativeSubstracting,
         };
 
         public FinishedWorksHandlerBackgroundService(IServiceScopeFactory scopeFactory, IOptions<FinishedWorksHandlerBackgroundServiceOptions> options)
@@ -91,13 +93,13 @@ namespace WasteIntoCity.Application.BackgroundServices
                     if (participant.NegativeScore == 0)
                     {
                         ranking = participant.Ranking + rankingAddingScore + work.WorkStatusType.AddingRanking - scoreSettingsValues
-                            [ScoreSettingsEnum.WorkApplicationRankingSubstracting];
+                            [ScoreSettingsEnum.WorkRankingSubstracting];
                         negativeScore = 1;
                     }
                     else
                     {
                         ranking = participant.Ranking + rankingAddingScore + work.WorkStatusType.AddingRanking - scoreSettingsValues
-                            [ScoreSettingsEnum.WorkApplicationRankingSubstracting] * negativeScore;
+                            [ScoreSettingsEnum.WorkRankingSubstracting] * negativeScore;
                         negativeScore = participant.NegativeScore * scoreSettingsValues[ScoreSettingsEnum.WorkNegativeAddingMultiplier];
                     }
 

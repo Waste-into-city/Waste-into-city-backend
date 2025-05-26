@@ -61,6 +61,7 @@ services:
       - ASPNETCORE_HTTPS_PORTS=8081
       - ASPNETCORE_HTTP_PORTS=8080
     volumes:
+      - ./WasteIntoCity.Api/wwwroot/uploads:/var/opt/uploads
       - ~/.aspnet/https:/https:ro  # Подключаем SSL для Kestrel
     depends_on:
       - mssql

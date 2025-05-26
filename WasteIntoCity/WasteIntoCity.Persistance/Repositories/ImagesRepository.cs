@@ -42,7 +42,7 @@ namespace WasteIntoCity.Persistance.Repositories
 
             List<ImageEntity> imageEntities = await _mainDbContext.Images
                 .Where(w => w.UploadedTime <= minAppropriateUploadedWorkTime && w.WorkApplicationsId == null && w.WorkReportComplaintsId == null
-                    && w.WorkReportResultsId == null)
+                    && w.WorkReportResultsId == null && w.UsersId == null && w.WorksId == null)
                 .Take(imagesAmount)
                 .ToListAsync();
 

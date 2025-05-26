@@ -47,5 +47,14 @@ namespace WasteIntoCity.Persistance.Repositories
             await _mainDbContext.AddToDbTypesBasedEntitiesIfEachNotExistById(_mainDbContext.WorkComplexityTypes, workComplexityTypeEntities,
                 WorkComplexityTypeConfiguration.TABLE_NAME);
         }
+
+        public async Task<List<WorkComplexityType>> FindAll()
+        {
+            List<WorkComplexityTypeEntity> workComplexityTypeEntities = await _mainDbContext.WorkComplexityTypes.AsNoTracking().
+                ToListAsync();
+
+            return workComplexityTypeEntities.Select(w => WorkComplexityType.Create((WorkComplexityEnum)w.Id, MeanText.Create(w.Name),
+                w.ParticipantsMin, w.ParticipantsMax, w.DurationHours, w.MultiplierRanking, w.RadiusOnMap)).ToList();
+        }
     }
 }

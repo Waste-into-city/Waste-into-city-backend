@@ -37,7 +37,8 @@ namespace WasteIntoCity.Core.Interfaces.Repositories
 
         Task<List<Work>> FindFirstPendingFinalizationWorksWithParticipantsByFinishedTimeAndClientStatuses(int worksAmount, TimeSpan minWorkIntervalAfterFinished);
 
-        Task<List<Guid>> FindFirstPreparingWorksIdsByBeforeStartedTime(int worksAmount, TimeSpan minWorkIntervalBeforeStart);
+        Task<List<Guid>> FindFirstPreparingWorksIdsByBeforeStartedTimeAndNotEnoughParticipants(int worksAmount, TimeSpan minWorkIntervalBeforeStart,
+            Dictionary<WorkComplexityEnum, WorkComplexityType> workComplexityValues);
 
         Task RemoveParticipants(Guid id, List<Guid> userId);
     }

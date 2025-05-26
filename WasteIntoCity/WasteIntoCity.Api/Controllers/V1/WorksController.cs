@@ -6,6 +6,7 @@ using WasteIntoCity.Application.Contracts.V1.Requests;
 using WasteIntoCity.Application.Extensions;
 using WasteIntoCity.Core.Enums;
 using WasteIntoCity.Core.Exceptions.InternalServer500Exceptions;
+using WasteIntoCity.Core.Extensions;
 using WasteIntoCity.Core.Interfaces.Services;
 using WasteIntoCity.Core.Models;
 using static WasteIntoCity.Api.Contracts.V1.Responses.WorkGetByIdResponse;
@@ -106,7 +107,8 @@ namespace WasteIntoCity.Api.Controllers.V1
                 StartedDatetime = work.StartedDatetime,
                 FinishDatetime = work.FinishDatetime,
                 WorkComplexityTypesId = (int)work.WorkComplexityTypesId,
-                WorkStatusTypesId = (int)work.WorkStatusForClient,
+                WorkStatusTypesId = (int)EnumOperationsExtension.TakeWorkStatusForClientEnum(
+                    work.StartedDatetime, work.FinishDatetime, work.WorkStatusTypesId),
                 Lat = work.Coordinates.Lat,
                 Lng = work.Coordinates.Lng,
             };
@@ -167,7 +169,8 @@ namespace WasteIntoCity.Api.Controllers.V1
                         StartedDatetime = work.StartedDatetime,
                         FinishDatetime = work.FinishDatetime,
                         WorkComplexityTypesId = (int)work.WorkComplexityTypesId,
-                        WorkStatusTypesId = (int)work.WorkStatusTypesId,
+                        WorkStatusTypesId = (int)EnumOperationsExtension.TakeWorkStatusForClientEnum(
+                            work.StartedDatetime, work.FinishDatetime, work.WorkStatusTypesId),
                         Lat = work.Coordinates.Lat,
                         Lng = work.Coordinates.Lng,
                         TrashTypesIds = work.TrashTypesIds.Select(t => (int)t).ToList()
