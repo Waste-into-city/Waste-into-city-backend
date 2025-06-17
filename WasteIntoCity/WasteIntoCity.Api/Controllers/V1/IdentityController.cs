@@ -146,7 +146,8 @@ namespace WasteIntoCity.Application.Controllers.V1
             {
                 Nickname = u.Nickname.Value,
                 Email = u.Email.Value,
-                Ranking = u.Ranking
+                Ranking = u.Ranking,
+                AvatarImageName = u.AvatarImageName == null ? null : u.AvatarImageName.Value
             }).ToList();
 
             BySkipItemsResponse<IdentityGetLeaderboardByPageResponse> byPageResponse = new BySkipItemsResponse<IdentityGetLeaderboardByPageResponse>

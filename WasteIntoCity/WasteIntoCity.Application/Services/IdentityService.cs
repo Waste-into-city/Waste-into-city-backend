@@ -206,7 +206,8 @@ namespace WasteIntoCity.Application.Services
         {
             int total = await _usersRepository.CountByUserRoleAsync();
 
-            List<User> users = await _usersRepository.FindAllByRoleUserAndRankingDescendingBySkipItemsAndSizeAsync(skipItems, size);
+            List<User> users = await _usersRepository.FindAllWithImageNameByRoleUserAndRankingDescendingBySkipItemsAndSizeAsync(
+                skipItems, size);
 
             return (users, total);
         }

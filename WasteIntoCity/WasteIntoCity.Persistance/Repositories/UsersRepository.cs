@@ -68,16 +68,16 @@ namespace WasteIntoCity.Persistance.Repositories
                 .CountAsync();
         }
 
-        public async Task<List<User>> FindAllByRoleUserAndRankingDescendingBySkipItemsAndSizeAsync(int skipItems, int size)
+        public async Task<List<User>> FindAllWithImageNameByRoleUserAndRankingDescendingBySkipItemsAndSizeAsync(int skipItems, int size)
         {
             List<UserEntity> userEntities = await _mainDbContext.Users.AsNoTracking().OrderByDescending(u => u.Ranking).
                 Include(u => u.Roles).Where(u => u.Roles.Any(r => r.Id == (int)RoleEnum.User)).Skip(skipItems).
-                Take(size).ToListAsync();
+                Take(size).Include(u => u.Image).ToListAsync();
 
             List<User> users = userEntities.Select(u =>
             {
                 return User.Create(u.Id, Nickname.Create(u.Nickname), Email.Create(u.Email), Password.Create(u.Password), u.Ranking, null,
-                    u.NegativeScore, u.IsBanned, null, null);
+                    u.NegativeScore, u.IsBanned, u.Image == null ? null : ImageName.Create(u.Image.Name), null);
             }).ToList();
 
             return users;

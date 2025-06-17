@@ -179,8 +179,8 @@ namespace WasteIntoCity.Persistance.Repositories
 
         public async Task<Work> FindWithCoordinatesAndParticipantsAndAvatarImageNameAndImagesAndTrashTypesByIdAsync(Guid id)
         {
-            WorkEntity work = await _mainDbContext.Works.AsNoTracking().Include(w => w.Coordinates).Include(w => w.Users).
-                Include(w => w.Images).Include(w => w.TrashTypes).FirstOrDefaultAsync(w => w.Id == id)
+            WorkEntity work = await _mainDbContext.Works.AsNoTracking().Include(w => w.Coordinates).Include(w => w.Users)
+                .ThenInclude(w => w.Image).Include(w => w.Images).Include(w => w.TrashTypes).FirstOrDefaultAsync(w => w.Id == id)
                 ?? throw new DbIsNotFoundException(nameof(Work), 8, null);
 
             List<User> participants = work.Users.Select(u => User.Create(u.Id, Nickname.Create(u.Nickname), Email.Create(u.Email),
