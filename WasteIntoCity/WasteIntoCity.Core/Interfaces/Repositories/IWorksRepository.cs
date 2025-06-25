@@ -1,0 +1,45 @@
+﻿using WasteIntoCity.Core.Enums;
+using WasteIntoCity.Core.Models;
+
+namespace WasteIntoCity.Core.Interfaces.Repositories
+{
+    public interface IWorksRepository
+    {
+        Task CreateAsync(Work work);
+
+        Task AddParticipants(Guid id, List<Guid> participantsIds);
+
+        Task<int> CountAsync();
+
+        Task<int> CountByParticipantIdAsync(Guid userId);
+
+        Task<Work> FindByIdAsync(Guid id);
+
+        Task<Work> FindWithWorkComplexityTypeByIdAsync(Guid id);
+
+        Task<List<Work>> FindAllAsync();
+
+        Task<List<Work>> FindAllWithCoordinatesByNotClosedAsync();
+
+        Task<Work> FindWithCoordinatesAndParticipantsAndAvatarImageNameAndImagesAndTrashTypesByIdAsync(Guid id);
+
+        Task<Work> FindWithParticipantsByIdAsync(Guid id);
+
+        Task<List<Work>> FindAllWithCoordinatesAndTrashTypesIdsByParticipantIdAndSkipItemsAsync(Guid participantId, int skipItems, int size);
+
+        Task UpdateAsync(Work work);
+
+        Task UpdateStatusIdByIdAsync(Guid id, WorkStatusEnum workStatusTypesId);
+
+        Task UpdateToAvailableWorksByIds(List<Guid> ids);
+
+        Task<List<Work>> FindFirstFinishedWithParticipantsAndMultiplierRankingAndWorkColleagueReportsByFinishedTimeAndClientStatuses(int worksAmount, TimeSpan minWorkIntervalAfterFinished);
+
+        Task<List<Work>> FindFirstPendingFinalizationWorksWithParticipantsByFinishedTimeAndClientStatuses(int worksAmount, TimeSpan minWorkIntervalAfterFinished);
+
+        Task<List<Guid>> FindFirstPreparingWorksIdsByBeforeStartedTimeAndNotEnoughParticipants(int worksAmount, TimeSpan minWorkIntervalBeforeStart,
+            Dictionary<WorkComplexityEnum, WorkComplexityType> workComplexityValues);
+
+        Task RemoveParticipants(Guid id, List<Guid> userId);
+    }
+}

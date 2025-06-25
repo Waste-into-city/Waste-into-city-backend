@@ -1,0 +1,31 @@
+﻿namespace WasteIntoCity.Persistance.Entities
+{
+    public class ImageEntity
+    {
+        public Guid Id { get; set; }
+
+        public string Name { get; set; } = string.Empty;
+
+        public DateTime UploadedTime { get; set; }
+
+        public Guid? WorkApplicationsId { get; set; }
+
+        public Guid? WorkReportComplaintsId { get; set; }
+
+        public Guid? WorkReportResultsId { get; set; }
+
+        public Guid? UsersId { get; set; }
+
+        public Guid? WorksId { get; set; }
+
+        public WorkApplicationEntity? WorkApplication { get; set; }
+
+        public WorkReportComplaintEntity? WorkReportComplaint { get; set; }
+
+        public WorkReportResultEntity? WorkReportResult { get; set; }
+
+        public UserEntity? User { get; set; }
+
+        public WorkEntity? Work { get; set; }
+    }
+}
