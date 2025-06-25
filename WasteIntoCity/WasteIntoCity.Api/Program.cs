@@ -20,7 +20,7 @@ string[]? allowedOrigins = Environment.GetEnvironmentVariable("CORS_ALLOWED_ORIG
 //    {
 //        listenOptions.UseHttps(certPath, "MyPassword123");
 //    });
-//});
+});
 
 services.AddCors(options =>
 {

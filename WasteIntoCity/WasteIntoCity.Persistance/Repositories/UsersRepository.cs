@@ -153,6 +153,7 @@ namespace WasteIntoCity.Persistance.Repositories
                     .SetProperty(r => r.Password, user.Password.Value)
                     .SetProperty(r => r.Ranking, user.Ranking)
                     .SetProperty(r => r.NegativeScore, user.NegativeScore)
+                    .SetProperty(r => r.IsBanned, user.IsBanned)
                 );
         }
 
