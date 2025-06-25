@@ -7,5 +7,7 @@ namespace WasteIntoCity.Core.Interfaces.Repositories
         Task<WorkComplexityType> FindById(int id);
 
         Task AddAllIfEachNotExist(List<WorkComplexityType> roles);
+
+        Task<List<WorkComplexityType>> FindAll();
     }
 }

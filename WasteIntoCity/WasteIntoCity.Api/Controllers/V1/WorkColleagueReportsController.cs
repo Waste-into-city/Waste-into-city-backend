@@ -36,7 +36,10 @@ namespace WasteIntoCity.Api.Controllers.V1
         [HttpGet(ApiRoutes.WorkColleagueReports.GET_ALL_BY_WORKS_ID)]
         public async Task<IActionResult> GetAllByWorksIdAsync([FromRoute] Guid worksId)
         {
-            List<WorkColleagueReport> workColleagueReports = await _workColleagueReportsService.GetAllByWorksIdAsync(worksId);
+            Guid userId = HttpContext.TakeUserIdFromAccessToken();
+
+            List<WorkColleagueReport> workColleagueReports = await _workColleagueReportsService.GetAllByWorksIdAndUserIdAsync(
+                userId, worksId);
 
 
             List<WorkColleagueReportGetAllByWorksIdResponse> response = workColleagueReports.Select(
@@ -51,7 +54,9 @@ namespace WasteIntoCity.Api.Controllers.V1
                     {
                         AboutColleagueNickname = r.AboutColleague.Nickname.Value,
                         AboutColleagueEmail = r.AboutColleague.Email.Value,
-                        WorkMarkTypesId = (int)r.WorkMarkTypesId
+                        WorkMarkTypesId = (int)r.WorkMarkTypesId,
+                        AvatarImageName = r.AboutColleague.AvatarImageName == null ? null
+                            : r.AboutColleague.AvatarImageName.Value
                     };
                 }
             ).ToList();

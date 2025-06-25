@@ -11,6 +11,10 @@ namespace WasteIntoCity.Api.Extensions.ServiceExtensions
             services.AddScoped<IWorksService, WorksService>();
             services.AddScoped<IWorkApplicationsService, WorkApplicationsService>();
             services.AddScoped<IImagesService, ImagesService>();
+            services.AddScoped<IAdminPanelService, AdminPanelService>();
+            services.AddScoped<IWorkColleagueReportsService, WorkColleagueReportsService>();
+            services.AddScoped<IWorkReportComplaintsService, WorkReportComplaintsService>();
+            services.AddScoped<IWorkReportResultsService, WorkReportResultsService>();
 
             return services;
         }

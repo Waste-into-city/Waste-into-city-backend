@@ -9,6 +9,8 @@ namespace WasteIntoCity.Core.Interfaces.Repositories
 
         Task<WorkApplication> FindById(Guid id);
 
+        Task<WorkApplication> FindWithTrashTypesAndImageNameById(Guid id);
+
         Task<WorkApplication> FindPendingWithFromUserAndTrashTypesIdsAndImageNamesAndCoordinatesByStartedDatetimeAscending();
 
         Task UpdateWorkReportStatusTypesIdByIdAsync(Guid id, WorkReportStatusEnum workReportStatusTypesId);

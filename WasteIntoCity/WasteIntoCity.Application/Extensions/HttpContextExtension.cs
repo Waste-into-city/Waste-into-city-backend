@@ -58,7 +58,7 @@ namespace WasteIntoCity.Application.Extensions
                 {
                     HttpOnly = true,
                     Secure = true,
-                    SameSite = SameSiteMode.Lax,
+                    SameSite = SameSiteMode.None,
                     Expires = userPrepareTokensContextResponse.RefreshTokenExpiredTimestamp
                 });
 
@@ -67,7 +67,7 @@ namespace WasteIntoCity.Application.Extensions
                 {
                     HttpOnly = true,
                     Secure = true,
-                    SameSite = SameSiteMode.Lax,
+                    SameSite = SameSiteMode.None,
                     Expires = userPrepareTokensContextResponse.RefreshTokenExpiredTimestamp
                 });
         }

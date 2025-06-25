@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using WasteIntoCity.Core.Enums;
 using WasteIntoCity.Core.Exceptions.InternalServer500Exceptions;
 using WasteIntoCity.Core.Exceptions.NotFound404Exceptions;
@@ -14,7 +13,7 @@ namespace WasteIntoCity.Persistance.Repositories
     {
         private readonly MainDbContext _mainDbContext;
 
-        public WorkReportComplaintsRepository(MainDbContext mainDbContext, IMapper mapper)
+        public WorkReportComplaintsRepository(MainDbContext mainDbContext)
         {
             _mainDbContext = mainDbContext;
         }
@@ -52,7 +51,7 @@ namespace WasteIntoCity.Persistance.Repositories
             WorkReportComplaintEntity workReportComplaintEntity = await _mainDbContext.WorkReportComplaints.AsNoTracking().Include(w => w.FromUser)
                 .Include(w => w.Images).OrderBy(w => w.StartedDatetime).
                 FirstOrDefaultAsync(w => w.WorkReportStatusTypesId == (int)WorkReportStatusEnum.Pending)
-                ?? throw new DbIsNotFoundException(nameof(WorkApplication), 17, null);
+                ?? throw new DbIsNotFoundException(nameof(WorkReportComplaint), 17, null);
 
             List<ImageName> imageNames = workReportComplaintEntity.Images.Select(i => ImageName.Create(i.Name)).ToList();
 

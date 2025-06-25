@@ -11,19 +11,21 @@ namespace WasteIntoCity.Core.Interfaces.Repositories
 
         Task<int> CountAsync();
 
+        Task<int> CountByParticipantIdAsync(Guid userId);
+
         Task<Work> FindByIdAsync(Guid id);
 
         Task<Work> FindWithWorkComplexityTypeByIdAsync(Guid id);
 
         Task<List<Work>> FindAllAsync();
 
-        Task<List<Work>> FindAllWithCoordinatesByPageAsync(int page, int pageSize);
+        Task<List<Work>> FindAllWithCoordinatesByNotClosedAsync();
 
-        Task<Work> FindWithCoordinatesAndParticipantsAndImagesAndTrashTypesByIdAsync(Guid id);
+        Task<Work> FindWithCoordinatesAndParticipantsAndAvatarImageNameAndImagesAndTrashTypesByIdAsync(Guid id);
 
         Task<Work> FindWithParticipantsByIdAsync(Guid id);
 
-        Task<List<Work>> FindAllWithCoordinatesByParticipantIdAsync(Guid participantId);
+        Task<List<Work>> FindAllWithCoordinatesAndTrashTypesIdsByParticipantIdAndSkipItemsAsync(Guid participantId, int skipItems, int size);
 
         Task UpdateAsync(Work work);
 
@@ -35,7 +37,8 @@ namespace WasteIntoCity.Core.Interfaces.Repositories
 
         Task<List<Work>> FindFirstPendingFinalizationWorksWithParticipantsByFinishedTimeAndClientStatuses(int worksAmount, TimeSpan minWorkIntervalAfterFinished);
 
-        Task<List<Guid>> FindFirstPreparingWorksIdsByBeforeStartedTime(int worksAmount, TimeSpan minWorkIntervalBeforeStart);
+        Task<List<Guid>> FindFirstPreparingWorksIdsByBeforeStartedTimeAndNotEnoughParticipants(int worksAmount, TimeSpan minWorkIntervalBeforeStart,
+            Dictionary<WorkComplexityEnum, WorkComplexityType> workComplexityValues);
 
         Task RemoveParticipants(Guid id, List<Guid> userId);
     }

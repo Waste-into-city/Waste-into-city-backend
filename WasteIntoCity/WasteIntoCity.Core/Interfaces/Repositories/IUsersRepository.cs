@@ -8,7 +8,7 @@ namespace WasteIntoCity.Core.Interfaces.Repositories
 
         Task<int> CountByUserRoleAsync();
 
-        Task<List<User>> FindAllByRoleUserAndRankingDescendingAndPageAsync(int page, int pageSize);
+        Task<List<User>> FindAllWithImageNameByRoleUserAndRankingDescendingBySkipItemsAndSizeAsync(int page, int pageSize);
 
         Task<bool> IsExistByEmailAsync(string email);
 
@@ -18,7 +18,9 @@ namespace WasteIntoCity.Core.Interfaces.Repositories
 
         Task<User> FindByEmailWithRolesAsync(string email);
 
-        Task<User> FindWithImageById(Guid id);
+        Task<User> FindWithImageNameById(Guid id);
+
+        Task<User> FindWithImageAndRolesById(Guid id);
 
         Task UpdateByIdAsync(User user);
 

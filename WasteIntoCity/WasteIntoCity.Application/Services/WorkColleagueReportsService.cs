@@ -35,9 +35,11 @@ namespace WasteIntoCity.Application.Services
             await _workColleagueReportsRepository.AddMarksAsync(workColleagueReports);
         }
 
-        public async Task<List<WorkColleagueReport>> GetAllByWorksIdAsync(Guid worksId)
+        public async Task<List<WorkColleagueReport>> GetAllByWorksIdAndUserIdAsync(Guid usersId, Guid worksId)
         {
-            return await _workColleagueReportsRepository.FindAllWithAboutColleagueByWorksIdAsync(worksId);
+            return await _workColleagueReportsRepository.FindAllWithAboutColleagueWithAvatarImageNameByWorksIdAndUserIdAsync(
+                usersId, worksId);
         }
     }
 }
+

@@ -19,5 +19,7 @@
         required public decimal Lat { get; init; }
 
         required public decimal Lng { get; init; }
+
+        required public List<int> TrashTypesIds { get; init; }
     }
 }

@@ -9,5 +9,7 @@
         required public string Email { get; init; }
 
         required public string? AvatarImageName { get; init; }
+
+        required public string HighRoleName { get; init; }
     }
 }

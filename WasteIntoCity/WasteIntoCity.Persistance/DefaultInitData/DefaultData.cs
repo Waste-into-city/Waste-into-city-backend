@@ -75,6 +75,18 @@ namespace WasteIntoCity.Persistance.DefaultInitData
             ),
 
             ScoreSettingsType.Create(
+                ScoreSettingsEnum.WorkRankingAdding,
+                MeanText.Create(nameof(ScoreSettingsEnum.WorkRankingAdding)),
+                1
+            ),
+
+            ScoreSettingsType.Create(
+                ScoreSettingsEnum.WorkRankingSubstracting,
+                MeanText.Create(nameof(ScoreSettingsEnum.WorkRankingSubstracting)),
+                1
+            ),
+
+            ScoreSettingsType.Create(
                 ScoreSettingsEnum.WorkApplicationRankingSubstracting,
                 MeanText.Create(nameof(ScoreSettingsEnum.WorkApplicationRankingSubstracting)),
                 2
@@ -103,6 +115,54 @@ namespace WasteIntoCity.Persistance.DefaultInitData
                 MeanText.Create(nameof(ScoreSettingsEnum.UserBanRankingAtLeast)),
                 -30
             ),
+
+            ScoreSettingsType.Create(
+                ScoreSettingsEnum.PendingFinalizationWorkRankingSubstracting,
+                MeanText.Create(nameof(ScoreSettingsEnum.PendingFinalizationWorkRankingSubstracting)),
+                2
+            ),
+
+            ScoreSettingsType.Create(
+                ScoreSettingsEnum.PendingFinalizationWorkNegativeAdding,
+                MeanText.Create(nameof(ScoreSettingsEnum.PendingFinalizationWorkNegativeAdding)),
+                1
+            ),
+
+            ScoreSettingsType.Create(
+                ScoreSettingsEnum.WorkComplaintUserNegativeSubstracting,
+                MeanText.Create(nameof(ScoreSettingsEnum.WorkComplaintUserNegativeSubstracting)),
+                1
+            ),
+
+            ScoreSettingsType.Create(
+                ScoreSettingsEnum.WorkComplaintParticipantNegativeAddingMultiplier,
+                MeanText.Create(nameof(ScoreSettingsEnum.WorkComplaintParticipantNegativeAddingMultiplier)),
+                1
+            ),
+
+            ScoreSettingsType.Create(
+                ScoreSettingsEnum.WorkComplaintUserNegativeAddingMultiplier,
+                MeanText.Create(nameof(ScoreSettingsEnum.WorkComplaintUserNegativeAddingMultiplier)),
+                2
+            ),
+
+            ScoreSettingsType.Create(
+                ScoreSettingsEnum.WorkComplaintParticipantRankingSubstracting,
+                MeanText.Create(nameof(ScoreSettingsEnum.WorkComplaintParticipantRankingSubstracting)),
+                1
+            ),
+
+            ScoreSettingsType.Create(
+                ScoreSettingsEnum.WorkComplaintUserRankingSubstracting,
+                MeanText.Create(nameof(ScoreSettingsEnum.WorkComplaintUserRankingSubstracting)),
+                3
+            ),
+
+            ScoreSettingsType.Create(
+                ScoreSettingsEnum.WorkComplaintUserRankingAdding,
+                MeanText.Create(nameof(ScoreSettingsEnum.WorkComplaintUserRankingAdding)),
+                1
+            ),
         };
 
         public static readonly User[] Users = new User[]
@@ -124,8 +184,8 @@ namespace WasteIntoCity.Persistance.DefaultInitData
             ),
             User.Create(
                 Guid.NewGuid(),
-                Nickname.Create("superadmin"),
-                Email.Create("superadmin@gmail.com"),
+                Nickname.Create("admin"),
+                Email.Create("admin@gmail.com"),
                 Password.Create(BCrypt.Net.BCrypt.EnhancedHashPassword("12345678")),
                 0,
                 new List<Role>

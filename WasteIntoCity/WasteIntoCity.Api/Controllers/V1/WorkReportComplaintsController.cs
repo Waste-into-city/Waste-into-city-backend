@@ -28,13 +28,13 @@ namespace WasteIntoCity.Api.Controllers.V1
             Guid fromUsersId = HttpContext.TakeUserIdFromAccessToken();
 
             await _workReportComplaintsService.CreateAsync(workReportComplaintCreateRequest.Title, workReportComplaintCreateRequest.Description,
-                workReportComplaintCreateRequest.WorksId, fromUsersId);
+                workReportComplaintCreateRequest.WorksId, fromUsersId, workReportComplaintCreateRequest.ImageNames);
 
             return Created();
         }
 
         [AllowAnonymous]
-        [HttpPost(ApiRoutes.WorkReportComplaints.GET)]
+        [HttpGet(ApiRoutes.WorkReportComplaints.GET)]
         public async Task<IActionResult> GetAsync([FromRoute] Guid workReportComplaintId)
         {
             WorkReportComplaint workReportComplaint = await _workReportComplaintsService.GetAsync(workReportComplaintId);
@@ -64,7 +64,7 @@ namespace WasteIntoCity.Api.Controllers.V1
         [HttpGet(ApiRoutes.WorkReportComplaints.GET_FROM_QUEUE)]
         public async Task<IActionResult> GetFromQueueAsync()
         {
-            WorkReportComplaint workReportComplaint = await _workReportComplaintsService.GetFromQueueAsync();
+            (WorkReportComplaint workReportComplaint, Guid workReportResultsId) = await _workReportComplaintsService.GetFromQueueAsync();
 
             if (workReportComplaint.FromUser == null)
             {
@@ -78,16 +78,18 @@ namespace WasteIntoCity.Api.Controllers.V1
 
             WorkReportComplaintGetFromQueueResponse workReportComplaintGetFromQueueResponse = new WorkReportComplaintGetFromQueueResponse
             {
+                Id = workReportComplaint.Id,
                 Title = workReportComplaint.Title.Value,
                 Description = workReportComplaint.Description.Value,
                 FromUserEmail = workReportComplaint.FromUser.Email.Value,
                 FromUserNickname = workReportComplaint.FromUser.Nickname.Value,
                 WorksId = workReportComplaint.WorksId,
                 StartedDatime = workReportComplaint.StartedDatime,
-                ImageNames = workReportComplaint.ImageNames.Select(i => i.Value).ToList()
+                ImageNames = workReportComplaint.ImageNames.Select(i => i.Value).ToList(),
+                WorkReportResultsId = workReportResultsId
             };
 
-            return Ok();
+            return Ok(workReportComplaintGetFromQueueResponse);
         }
     }
 }

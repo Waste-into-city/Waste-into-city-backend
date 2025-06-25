@@ -42,7 +42,7 @@ namespace WasteIntoCity.Persistance.Repositories
 
             List<ImageEntity> imageEntities = await _mainDbContext.Images
                 .Where(w => w.UploadedTime <= minAppropriateUploadedWorkTime && w.WorkApplicationsId == null && w.WorkReportComplaintsId == null
-                    && w.WorkReportResultsId == null)
+                    && w.WorkReportResultsId == null && w.UsersId == null && w.WorksId == null)
                 .Take(imagesAmount)
                 .ToListAsync();
 
@@ -74,6 +74,26 @@ namespace WasteIntoCity.Persistance.Repositories
                 .Where(w => imageNamesLines.Contains(w.Name))
                 .ExecuteUpdateAsync(n => n
                     .SetProperty(w => w.WorkApplicationsId, workApplicationsId)
+                );
+        }
+
+        public async Task UpdateWorkReportComplaintsIdByNamesAsync(List<ImageName> imageNames, Guid? workReportComplaintsId)
+        {
+            List<string> imageNamesLines = imageNames.Select(i => i.Value).ToList();
+
+            int updatedRows = await _mainDbContext.Images
+                .Where(w => imageNamesLines.Contains(w.Name))
+                .ExecuteUpdateAsync(n => n
+                    .SetProperty(w => w.WorkReportComplaintsId, workReportComplaintsId)
+                );
+        }
+
+        public async Task UpdateUserIdByNameAsync(ImageName imageName, Guid? usersId)
+        {
+            int updatedRows = await _mainDbContext.Images
+                .Where(w => imageName.Value == w.Name)
+                .ExecuteUpdateAsync(n => n
+                    .SetProperty(w => w.UsersId, usersId)
                 );
         }
     }

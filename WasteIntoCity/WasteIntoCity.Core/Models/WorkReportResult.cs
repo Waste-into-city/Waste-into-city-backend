@@ -14,13 +14,14 @@ namespace WasteIntoCity.Core.Models
         public const int DESCRIPTION_LENGTH_MAX = Description.VALUE_LENGTH_MAX;
 
         private WorkReportResult(Guid id, Guid fromParticipantId, Title title, Description description, WorkComplexityEnum workComplexityTypesId,
-            WorkStatusEnum workStatusesId, Guid worksId, User? fromParticipant)
+            WorkStatusEnum workStatusTypesId, Guid worksId, User? fromParticipant)
         {
             Id = id;
             FromParticipantId = fromParticipantId;
             Title = title;
             Description = description;
             WorkComplexityTypesId = workComplexityTypesId;
+            WorkStatusTypesId = workStatusTypesId;
             WorksId = worksId;
             FromParticipant = fromParticipant;
         }

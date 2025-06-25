@@ -7,5 +7,7 @@
         required public string AboutColleagueEmail { get; init; }
 
         required public int WorkMarkTypesId { get; init; }
+
+        required public string? AvatarImageName { get; init; }
     }
 }

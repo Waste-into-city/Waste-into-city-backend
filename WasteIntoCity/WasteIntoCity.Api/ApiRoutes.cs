@@ -34,6 +34,8 @@
             public const string GET_USER_INFO_FOR_ADMIN = $$"""{{BASE}}/{{CONTROLLER_NAME}}/get-user-info-for-admin/{userId:Guid}""";
 
             public const string GET_LEADERBOARD_PAGE_BY_BEST_RANKING = $$"""{{BASE}}/{{CONTROLLER_NAME}}/get-leaderboard-page-by-best-ranking""";
+
+            public const string UPDATE_OWN_USER_INFO = $"{BASE}/{CONTROLLER_NAME}/update-own-user-info";
         }
 
         public static class Works
@@ -80,7 +82,7 @@
 
             public const string CREATE = $"{BASE}/{CONTROLLER_NAME}/create";
 
-            public const string GET = $$"""{{BASE}}/{{CONTROLLER_NAME}}/{workReportResultId:Guid}""";
+            public const string GET = $$"""{{BASE}}/{{CONTROLLER_NAME}}/{id:Guid}""";
         }
 
         public static class WorkReportComplaints

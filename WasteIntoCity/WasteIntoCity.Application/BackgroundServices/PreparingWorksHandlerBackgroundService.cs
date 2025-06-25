@@ -2,7 +2,9 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using WasteIntoCity.Api.Options;
+using WasteIntoCity.Core.Enums;
 using WasteIntoCity.Core.Interfaces.Repositories;
+using WasteIntoCity.Core.Models;
 
 namespace WasteIntoCity.Application.BackgroundServices
 {
@@ -21,11 +23,14 @@ namespace WasteIntoCity.Application.BackgroundServices
             _optionsPreparingWorks = optionsPreparingWorks;
         }
 
-        public async Task ReturnPreparingWorksToAvaliableAsync(IWorksRepository worksRepository, CancellationToken stoppingToken)
+        public async Task ReturnPreparingWorksToAvaliableAsync(IWorksRepository worksRepository,
+            IWorkComplexityTypesRepository workComplexityTypesRepository, Dictionary<WorkComplexityEnum, WorkComplexityType> workComplexityValues,
+            CancellationToken stoppingToken)
         {
-            List<Guid> workIds = await worksRepository.FindFirstPreparingWorksIdsByBeforeStartedTime(
+            List<Guid> workIds = await worksRepository.FindFirstPreparingWorksIdsByBeforeStartedTimeAndNotEnoughParticipants(
                 _optionsBackgroundService.Value.WorksAtTimeAmount,
-                _optionsPreparingWorks.Value.MinIntervalStartAfterNow
+                _optionsPreparingWorks.Value.MinIntervalStartAfterNow,
+                workComplexityValues
             );
 
             await worksRepository.UpdateToAvailableWorksByIds(workIds);
@@ -40,8 +45,21 @@ namespace WasteIntoCity.Application.BackgroundServices
                 using IServiceScope scope = _scopeFactory.CreateScope();
 
                 IWorksRepository worksRepository = scope.ServiceProvider.GetRequiredService<IWorksRepository>();
+                IWorkComplexityTypesRepository workComplexityTypesRepository = scope.ServiceProvider.
+                    GetRequiredService<IWorkComplexityTypesRepository>();
 
-                await ReturnPreparingWorksToAvaliableAsync(worksRepository, stoppingToken);
+                Dictionary<WorkComplexityEnum, WorkComplexityType> workComplexityValues =
+                    new Dictionary<WorkComplexityEnum, WorkComplexityType>();
+
+                List<WorkComplexityType> workComplexityTypes = await workComplexityTypesRepository.FindAll();
+
+                foreach (WorkComplexityType workComplexityType in workComplexityTypes)
+                {
+                    workComplexityValues.Add(workComplexityType.Id, workComplexityType);
+                }
+
+                await ReturnPreparingWorksToAvaliableAsync(worksRepository, workComplexityTypesRepository,
+                    workComplexityValues, stoppingToken);
 
                 await Task.Delay(_optionsBackgroundService.Value.IntervalTime, stoppingToken);
             }

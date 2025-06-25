@@ -6,11 +6,11 @@ namespace WasteIntoCity.Core.Interfaces.Services
     {
         Task<List<Work>> GetAll();
 
-        Task<(List<Work>, int)> GetAllLookup(int page, int pageSize);
+        Task<List<Work>> GetAllLookup();
 
         Task<Work> GetByIdAsync(Guid id);
 
-        Task<List<Work>> GetAllOwnTakePartIn(Guid userId);
+        Task<(List<Work> works, int total)> GetAllOwnTakePartIn(Guid userId, int skipItems, int size);
 
         Task UpdateAsync(Guid id, string title, string description, DateTime startedDatetime, DateTime finishDatetime, int workComplexityTypesId,
             int workStatusesId, Guid coordinatesId);

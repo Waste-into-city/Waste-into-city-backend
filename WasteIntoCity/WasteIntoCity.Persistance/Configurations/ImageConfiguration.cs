@@ -27,6 +27,8 @@ namespace WasteIntoCity.Persistance.Configurations
 
             builder.Property(i => i.UsersId).HasColumnName("users_id");
 
+            builder.Property(i => i.WorksId).HasColumnName("works_id");
+
             builder.HasKey(i => i.Id);
 
             builder.HasIndex(i => i.Name).IsUnique();

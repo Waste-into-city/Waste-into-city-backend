@@ -45,11 +45,11 @@ namespace WasteIntoCity.Core.Extensions
                 {
                     workStatusForClient = WorkStatusForClientEnum.Closed;
                 }
-                else if (startedDatetime > currentDateTime)
+                else if (startedDatetime >= currentDateTime)
                 {
                     workStatusForClient = WorkStatusForClientEnum.Preparing;
                 }
-                else if (startedDatetime < currentDateTime && finishDatetime > currentDateTime)
+                else if (startedDatetime <= currentDateTime && finishDatetime >= currentDateTime)
                 {
                     workStatusForClient = WorkStatusForClientEnum.InProgress;
                 }

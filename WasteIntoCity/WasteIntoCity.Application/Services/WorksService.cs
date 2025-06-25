@@ -27,23 +27,29 @@ namespace WasteIntoCity.Application.Services
             return await _worksRepository.FindAllAsync();
         }
 
-        public async Task<(List<Work>, int)> GetAllLookup(int page, int pageSize)
+        public async Task<List<Work>> GetAllLookup()
         {
-            int total = await _worksRepository.CountAsync();
+            List<Work> works = await _worksRepository.FindAllWithCoordinatesByNotClosedAsync();
 
-            List<Work> works = await _worksRepository.FindAllWithCoordinatesByPageAsync(page, pageSize);
+            return works;
+        }
+
+        public async Task<(List<Work>, int)> GetAllOwnTakePartIn(Guid userId, int skipItems, int size)
+        {
+            int total = await _worksRepository.CountByParticipantIdAsync(userId);
+
+            List<Work> works = await _worksRepository.FindAllWithCoordinatesAndTrashTypesIdsByParticipantIdAndSkipItemsAsync(userId, skipItems, size);
 
             return (works, total);
         }
 
-        public async Task<List<Work>> GetAllOwnTakePartIn(Guid userId)
-        {
-            return await _worksRepository.FindAllWithCoordinatesByParticipantIdAsync(userId);
-        }
-
         public async Task<Work> GetByIdAsync(Guid id)
         {
-            return await _worksRepository.FindWithCoordinatesAndParticipantsAndImagesAndTrashTypesByIdAsync(id);
+            Work work = await _worksRepository.FindWithCoordinatesAndParticipantsAndAvatarImageNameAndImagesAndTrashTypesByIdAsync(id);
+
+            work.WorkStatusForClient = EnumOperationsExtension.TakeWorkStatusForClientEnum(work.StartedDatetime, work.FinishDatetime, work.WorkStatusTypesId);
+
+            return work;
         }
 
         public async Task UpdateAsync(Guid id, string title, string description, DateTime startedDatetime, DateTime finishDatetime, int workComplexityTypesId,
@@ -97,7 +103,7 @@ namespace WasteIntoCity.Application.Services
                 finishedDatetime, work.WorkComplexityTypesId, WorkStatusEnum.NotFinished, work.CoordinatesId, null, null, null, null, null, null,
                 null, null, null);
 
-            await _worksRepository.UpdateAsync(work);
+            await _worksRepository.UpdateAsync(updatedWork);
             await _worksRepository.AddParticipants(work.Id, [userId]);
         }
 
@@ -123,7 +129,12 @@ namespace WasteIntoCity.Application.Services
 
         public async Task LeaveFromParticipationSelfAsync(Guid id, Guid userId)
         {
-            Work work = await _worksRepository.FindByIdAsync(id);
+            Work work = await _worksRepository.FindWithParticipantsByIdAsync(id);
+
+            if (work.Participants == null)
+            {
+                throw new NullValueServerException(45, "participants", null);
+            }
 
             WorkStatusForClientEnum workStatusForClienEnum = EnumOperationsExtension.TakeWorkStatusForClientEnum(work.StartedDatetime,
                 work.FinishDatetime, work.WorkStatusTypesId);
@@ -139,6 +150,11 @@ namespace WasteIntoCity.Application.Services
             }
 
             await _worksRepository.RemoveParticipants(id, [userId]);
+
+            if (work.Participants.Count == 1)
+            {
+                await _worksRepository.UpdateToAvailableWorksByIds([id]);
+            }
         }
     }
 }

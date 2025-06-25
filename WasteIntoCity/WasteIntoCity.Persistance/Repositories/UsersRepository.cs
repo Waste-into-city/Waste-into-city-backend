@@ -68,16 +68,16 @@ namespace WasteIntoCity.Persistance.Repositories
                 .CountAsync();
         }
 
-        public async Task<List<User>> FindAllByRoleUserAndRankingDescendingAndPageAsync(int page, int pageSize)
+        public async Task<List<User>> FindAllWithImageNameByRoleUserAndRankingDescendingBySkipItemsAndSizeAsync(int skipItems, int size)
         {
-            List<UserEntity> userEntities = await _mainDbContext.Users.AsNoTracking().OrderByDescending(u => u.Ranking).Include(u => u.Roles).
-                Where(u => u.Roles.Any(r => r.Id == (int)RoleEnum.User)).Skip((page - 1) * pageSize).Take(pageSize)
-                .ToListAsync();
+            List<UserEntity> userEntities = await _mainDbContext.Users.AsNoTracking().OrderByDescending(u => u.Ranking).
+                Include(u => u.Roles).Where(u => u.Roles.Any(r => r.Id == (int)RoleEnum.User)).Skip(skipItems).
+                Take(size).Include(u => u.Image).ToListAsync();
 
             List<User> users = userEntities.Select(u =>
             {
                 return User.Create(u.Id, Nickname.Create(u.Nickname), Email.Create(u.Email), Password.Create(u.Password), u.Ranking, null,
-                    u.NegativeScore, u.IsBanned, null, null);
+                    u.NegativeScore, u.IsBanned, u.Image == null ? null : ImageName.Create(u.Image.Name), null);
             }).ToList();
 
             return users;
@@ -114,17 +114,33 @@ namespace WasteIntoCity.Persistance.Repositories
                 userEntity.Ranking, null, userEntity.NegativeScore, userEntity.IsBanned, null, null);
         }
 
-        public async Task<User> FindWithImageById(Guid id)
+        public async Task<User> FindWithImageNameById(Guid id)
         {
             UserEntity userEntity = await _mainDbContext.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Id == id)
                 ?? throw new DbIsNotFoundException(nameof(User), 11, null);
 
-            ImageEntity imageEntity = await _mainDbContext.Images.AsNoTracking().FirstOrDefaultAsync(i => i.UsersId == id)
-                ?? throw new DbIsNotFoundException(nameof(User), 12, null);
+            ImageEntity? imageEntity = await _mainDbContext.Images.AsNoTracking().FirstOrDefaultAsync(i => i.UsersId == id);
+            //?? throw new DbIsNotFoundException(nameof(Image), 12, null);
 
             return User.Create(userEntity.Id, Nickname.Create(userEntity.Nickname), Email.Create(userEntity.Email),
                 Password.Create(userEntity.Password), userEntity.Ranking, null, userEntity.NegativeScore, userEntity.IsBanned,
-                ImageName.Create(imageEntity.Name), null);
+                imageEntity == null ? null : ImageName.Create(imageEntity.Name), null);
+        }
+
+
+        public async Task<User> FindWithImageAndRolesById(Guid id)
+        {
+            UserEntity userEntity = await _mainDbContext.Users.AsNoTracking().Include(u => u.Roles).
+                FirstOrDefaultAsync(u => u.Id == id) ?? throw new DbIsNotFoundException(nameof(User), 11, null);
+
+            ImageEntity? imageEntity = await _mainDbContext.Images.AsNoTracking().FirstOrDefaultAsync(i => i.UsersId == id);
+            //?? throw new DbIsNotFoundException(nameof(Image), 12, null);
+
+            List<Role> roles = userEntity.Roles.Select(r => Role.Create((RoleEnum)r.Id, r.Name)).ToList();
+
+            return User.Create(userEntity.Id, Nickname.Create(userEntity.Nickname), Email.Create(userEntity.Email),
+                Password.Create(userEntity.Password), userEntity.Ranking, roles, userEntity.NegativeScore,
+                userEntity.IsBanned, imageEntity == null ? null : ImageName.Create(imageEntity.Name), null);
         }
 
         public async Task UpdateByIdAsync(User user)
@@ -137,6 +153,7 @@ namespace WasteIntoCity.Persistance.Repositories
                     .SetProperty(r => r.Password, user.Password.Value)
                     .SetProperty(r => r.Ranking, user.Ranking)
                     .SetProperty(r => r.NegativeScore, user.NegativeScore)
+                    .SetProperty(r => r.IsBanned, user.IsBanned)
                 );
         }
 
@@ -149,7 +166,7 @@ namespace WasteIntoCity.Persistance.Repositories
                 if (existingUser != null)
                 {
                     existingUser.Nickname = user.Nickname.Value;
-                    existingUser.Email = user.Nickname.Value;
+                    existingUser.Email = user.Email.Value;
                     existingUser.Password = user.Password.Value;
                     existingUser.Ranking = user.Ranking;
                     existingUser.NegativeScore = user.NegativeScore;

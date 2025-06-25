@@ -7,6 +7,7 @@ using WasteIntoCity.Application.Enum;
 using WasteIntoCity.Application.Extensions;
 using WasteIntoCity.Application.Options;
 using WasteIntoCity.Core.Enums;
+using WasteIntoCity.Core.Exceptions.InternalServer500Exceptions;
 using WasteIntoCity.Core.Interfaces.Services;
 using WasteIntoCity.Core.Models;
 using WasteIntoCity.Core.Structs;
@@ -98,12 +99,21 @@ namespace WasteIntoCity.Application.Controllers.V1
 
             User user = await _identityService.GetSelfUserInfo(userId);
 
+            if (user.Roles == null)
+            {
+                throw new NullValueServerException(46, "roles", null);
+            }
+
+            Role highRole = user.Roles.OrderByDescending(r => r.Id).FirstOrDefault()
+                ?? throw new NullValueServerException(47, "roles", null); //TODO: Add new type exception
+
             IdentityGetSelfUserInfoResponse getSelfUserInfoResponse = new IdentityGetSelfUserInfoResponse
             {
                 Id = user.Id,
                 Nickname = user.Nickname.Value,
                 Email = user.Email.Value,
-                AvatarImageName = user.AvatarImageName != null ? user.AvatarImageName.Value : null
+                AvatarImageName = user.AvatarImageName != null ? user.AvatarImageName.Value : null,
+                HighRoleName = highRole.Name
             };
 
             return Ok(getSelfUserInfoResponse);
@@ -128,26 +138,39 @@ namespace WasteIntoCity.Application.Controllers.V1
 
         [AllowAnonymous]
         [HttpGet(ApiRoutes.Identity.GET_LEADERBOARD_PAGE_BY_BEST_RANKING)]
-        public async Task<IActionResult> GetLeaderboardByPage([FromQuery] int page, [FromQuery] int pageSize)
+        public async Task<IActionResult> GetLeaderboardBySkipItems([FromQuery] int skipItems, [FromQuery] int size)
         {
-            (List<User> users, int total) = await _identityService.GetLeaderboardByPage(page, pageSize);
+            (List<User> users, int total) = await _identityService.GetLeaderboardBySkipItemsAndSize(skipItems, size);
 
             List<IdentityGetLeaderboardByPageResponse> items = users.Select(u => new IdentityGetLeaderboardByPageResponse
             {
                 Nickname = u.Nickname.Value,
                 Email = u.Email.Value,
-                Ranking = u.Ranking
+                Ranking = u.Ranking,
+                AvatarImageName = u.AvatarImageName == null ? null : u.AvatarImageName.Value
             }).ToList();
 
-            ByPageResponse<IdentityGetLeaderboardByPageResponse> byPageResponse = new ByPageResponse<IdentityGetLeaderboardByPageResponse>
+            BySkipItemsResponse<IdentityGetLeaderboardByPageResponse> byPageResponse = new BySkipItemsResponse<IdentityGetLeaderboardByPageResponse>
             {
-                Page = page,
-                PageSize = pageSize,
+                SkippedItems = skipItems + size,
+                Size = size,
                 Items = items,
                 Total = total
             };
 
             return Ok(byPageResponse);
+        }
+
+        [Authorize(Roles = $"{nameof(RoleEnum.User)},{nameof(RoleEnum.Moderator)},{nameof(RoleEnum.Admin)}")]
+        [HttpPut(ApiRoutes.Identity.UPDATE_OWN_USER_INFO)]
+        public async Task<IActionResult> UpdateOwnUserInfoAsync([FromBody] UserUpdateOwnUserInfo request)
+        {
+            Guid userId = HttpContext.TakeUserIdFromAccessToken();
+
+            await _identityService.UpdateOwnUserInfoAsync(userId, request.Email, request.Password,
+                request.NewPassword, request.Nickname, request.AvatarImageName);
+
+            return Ok();
         }
     }
 }

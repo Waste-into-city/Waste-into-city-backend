@@ -30,11 +30,11 @@ namespace WasteIntoCity.Persistance.Migrations
                         .HasColumnName("id");
 
                     b.Property<decimal>("Lat")
-                        .HasColumnType("decimal(12,9)")
+                        .HasColumnType("decimal(20,17)")
                         .HasColumnName("lat");
 
                     b.Property<decimal>("Lng")
-                        .HasColumnType("decimal(12,9)")
+                        .HasColumnType("decimal(20,17)")
                         .HasColumnName("lng");
 
                     b.HasKey("Id");
@@ -76,7 +76,8 @@ namespace WasteIntoCity.Persistance.Migrations
                         .HasColumnName("work_report_results_id");
 
                     b.Property<Guid?>("WorksId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("works_id");
 
                     b.HasKey("Id");
 
@@ -488,9 +489,6 @@ namespace WasteIntoCity.Persistance.Migrations
                         .HasColumnType("int")
                         .HasColumnName("work_report_status_types_id");
 
-                    b.Property<int>("WorkTypesId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CoordinatesId");
@@ -617,11 +615,11 @@ namespace WasteIntoCity.Persistance.Migrations
                         .HasColumnType("nvarchar(1000)")
                         .HasColumnName("description");
 
-                    b.Property<DateTime>("FinishDatetime")
+                    b.Property<DateTime?>("FinishDatetime")
                         .HasColumnType("datetime2")
                         .HasColumnName("finish_datetime");
 
-                    b.Property<DateTime>("StartedDatetime")
+                    b.Property<DateTime?>("StartedDatetime")
                         .HasColumnType("datetime2")
                         .HasColumnName("start_datetime");
 
@@ -711,7 +709,7 @@ namespace WasteIntoCity.Persistance.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("from_users_id");
 
-                    b.Property<DateTime>("StartedDatime")
+                    b.Property<DateTime>("StartedDatetime")
                         .HasColumnType("datetime2")
                         .HasColumnName("started_datetime");
 
@@ -758,8 +756,8 @@ namespace WasteIntoCity.Persistance.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(1)
-                        .HasColumnType("nvarchar(1)")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
                         .HasColumnName("title");
 
                     b.Property<int?>("WorkComplexityTypeId")
